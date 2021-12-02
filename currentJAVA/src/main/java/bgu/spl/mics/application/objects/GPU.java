@@ -14,5 +14,6 @@ public class GPU {
     private Type type;
     private int currTick;
     private int startTick;
+    private int checking;
 
 }
