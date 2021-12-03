@@ -1,4 +1,6 @@
 package bgu.spl.mics.application.objects;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Passive object representing single student.
@@ -12,10 +14,33 @@ public class Student {
         MSc, PhD
     }
 
-    private int name;
+    private String  name;
     private String department;
     private Degree status;
     private int publications;
     private int papersRead;
+    private List<Model> models;
+    int currModel;
 
+
+    public Student(String name, String department, String status) {
+        this.name = name;
+        this.department = department;
+        switch (status){
+            case("MSc"):
+                this.status = Degree.MSc;
+                break;
+            default:
+                this.status = Degree.PhD;
+        }
+        models = new LinkedList<>();
+        currModel = 0;
+        publications = 0;
+        papersRead = 0;
+    }
+
+
+    public Degree getStatus() {
+        return status;
+    }
 }

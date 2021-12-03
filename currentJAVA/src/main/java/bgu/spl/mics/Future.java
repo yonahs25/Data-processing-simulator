@@ -12,13 +12,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class Future<T> {
 
-	boolean isDone;
-	T answer;
+	private boolean isDone;
+	private T answer;
 	/**
 	 * This should be the the only public constructor in this class.
 	 */
 	public Future() {
-		//TODO: implement this
 		isDone = false;
 		answer = null;
 	}

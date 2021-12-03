@@ -28,4 +28,16 @@ public class Model {
     public Data getData() {
         return data;
     }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
 }

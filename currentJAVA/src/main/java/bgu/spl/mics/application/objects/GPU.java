@@ -14,7 +14,6 @@ public class GPU {
      * Enum representing the type of the GPU.
      */
     enum Type {RTX3090, RTX2080, GTX1080}
-    enum ModelType {Train, Test, None}
 
     private Type type;
     //private int startTick;
@@ -54,15 +53,31 @@ public class GPU {
         //workingOn = null;
     }
 
+    /**
+     *
+     * @param model
+     * processing model it got from the bus
+     * checking if the model was trained or need to be trained and acting accordingly
+     */
     public void setModel(Model model) {
-        this.model = model;
-        Data data = model.getData();
-        int amountBatches = data.getSize() / 1000;
-        for (int i = 0; i <amountBatches; i++){
-            unprocessedData.add(new DataBatch(data, i*1000,this));
+        if(model.getStatus() == Model.Status.PreTrained) {
+            this.model = model;
+            Data data = model.getData();
+            int amountBatches = data.getSize() / 1000;
+            for (int i = 0; i < amountBatches; i++) {
+                unprocessedData.add(new DataBatch(data, i * 1000, this));
+            }
+            model.setStatus(Model.Status.Training);
+        }
+        else if (model.getStatus() == Model.Status.Trained){
+            testModel();
         }
     }
 
+
+    /**
+     * sending list of unprocessed chunk to cluster
+     */
     public void sendUnprocessed(){
         //need to check how to deal with empty unprocessedData.
         List<DataBatch> toSend = new ArrayList<>();
@@ -72,17 +87,29 @@ public class GPU {
         cluster.getUnprocessedData(toSend);
     }
 
+    /**
+     * processing data, checking if model is done and sending back to bus
+     */
     public void processData(){
         if (currTick - startTick >= tickTimer){
             if (!processedData.isEmpty()){
                 DataBatch removed = processedData.remove();
                 removed.getData().increment();
                 startTick = currTick;
+
+                //finished training
                 //if removed.getData().getProcessed == max
+                //model.setStatus(Model.Status.Trained);
                 // return model to bus
+
+
             }
         }
     }
+
+    /**
+     * get processed data from cluster to start working on
+     */
     private void getDataFromCluster(){
         if(processedData.isEmpty())
             startTick = currTick;
@@ -91,8 +118,28 @@ public class GPU {
             processedData.add(myList.remove(0));
         }
     }
+
+    /**
+     * test model
+     */
+    private void testModel(){
+        if (model.getStudent().getStatus() == Student.Degree.MSc){
+            //test
+        } else{
+            //test
+        }
+    }
+
+    /**
+     * main function, service is updating time for gpu and doing main job here
+     */
     public void updateTick(){
         currTick++;
+        if (model.getStatus() == Model.Status.Training){
+            sendUnprocessed();
+            getDataFromCluster();
+            processData();
+        }
 
     }
 }

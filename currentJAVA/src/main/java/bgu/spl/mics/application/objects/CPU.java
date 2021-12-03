@@ -25,12 +25,9 @@ public class CPU {
         int limit = cores/4;
     }
 
-    public void updateTime(){
-        currTick++;
-        //calling other functions
-    }
 
-    DataBatch getProcessed(){
+
+    public void getProcessed(){
 
         Queue<DataBatch> toTakeFrom = cluster.getWaitingUnprocessedBatches();
         while (!toTakeFrom.isEmpty() && waitingOnProcess.size() < limit){
@@ -42,8 +39,14 @@ public class CPU {
         DataBatch curr = waitingOnProcess.peek(); //TODO write check if this data has been processed
         //if dataBatch has been processed call cluster.putProcessedData
 
-
-
-        return null;
     }
+
+
+    public void updateTime(){
+        currTick++;
+        //calling other functions
+        getProcessed();
+
+    }
+
 }

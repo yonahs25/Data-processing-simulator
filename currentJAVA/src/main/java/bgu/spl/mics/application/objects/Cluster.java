@@ -31,9 +31,11 @@ public class Cluster {
 		return null;
 	}
 
+	//add data from big queue to cpu queue
 	public void getUnprocessedData(List<DataBatch> list){
 		//TODO added each dataBatch from list to queues
 
+		//wrong need to delete
 		for (DataBatch e : list){
 			waitingUnprocessedBatches.add(e);
 		}
@@ -43,12 +45,15 @@ public class Cluster {
 		return waitingUnprocessedBatches;
 	}
 
+
+	// cpu calling this function to send processed data to the cluster
 	public void putProcessedData(DataBatch e){
 		//put dataBatch in his right queue
 		List toAddTo = returningProcessedBatches.get(e.getOwner());
 		toAddTo.add(e);
 	}
 
+	// get gpu queue
 	public List<DataBatch> getGpuProcessed(GPU gpu){
 		return returningProcessedBatches.get(gpu);
 	}
