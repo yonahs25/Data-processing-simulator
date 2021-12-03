@@ -1,5 +1,8 @@
 package bgu.spl.mics.application.objects;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Passive object representing a single CPU.
  * Add all the fields described in the assignment as private fields.
@@ -7,6 +10,40 @@ package bgu.spl.mics.application.objects;
  */
 public class CPU {
 
+    private int cores;
+    private Cluster cluster;
     private int currTick;
-    private int startTick;
+    Queue<DataBatch> waitingOnProcess;
+    int limit; // how much the have in queue
+
+
+    public CPU(int cores, Cluster cluster) {
+        this.cores = cores;
+        this.cluster = cluster;
+        currTick = 0;
+        waitingOnProcess = new LinkedList<>();
+        int limit = cores/4;
+    }
+
+    public void updateTime(){
+        currTick++;
+        //calling other functions
+    }
+
+    DataBatch getProcessed(){
+
+        Queue<DataBatch> toTakeFrom = cluster.getWaitingUnprocessedBatches();
+        while (!toTakeFrom.isEmpty() && waitingOnProcess.size() < limit){
+            waitingOnProcess.add((toTakeFrom.remove()));
+        }
+
+
+
+        DataBatch curr = waitingOnProcess.peek(); //TODO write check if this data has been processed
+        //if dataBatch has been processed call cluster.putProcessedData
+
+
+
+        return null;
+    }
 }

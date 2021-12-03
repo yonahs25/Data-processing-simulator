@@ -15,4 +15,20 @@ public class Data {
     private Type type;
     private int processed;
     private int size;
+
+    public Data(Type type, int size) {
+        this.type = type;
+        this.size = size;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public int getSize() {
+        return size;
+    }
+    public void increment(){
+        processed++;
+    }
 }

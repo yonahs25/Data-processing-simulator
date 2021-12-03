@@ -1,5 +1,5 @@
 package bgu.spl.mics.application.objects;
-
+import java.util.*;
 
 /**
  * Passive object representing the cluster.
@@ -10,6 +10,18 @@ package bgu.spl.mics.application.objects;
  */
 public class Cluster {
 
+	List<CPU> Cpus;
+	List<GPU> Gpus;
+	HashMap<GPU, List<DataBatch>> returningProcessedBatches;
+	//HashMap<CPU, Queue<DataBatch>> waitingUnprocessedBatches;
+	Queue<DataBatch> waitingUnprocessedBatches;
+
+	public Cluster() {
+		Cpus = new ArrayList<>();
+		Gpus = new ArrayList<>();
+		returningProcessedBatches = new HashMap<>();
+		waitingUnprocessedBatches = new LinkedList<>();
+	}
 
 	/**
      * Retrieves the single instance of this class.
@@ -19,4 +31,25 @@ public class Cluster {
 		return null;
 	}
 
+	public void getUnprocessedData(List<DataBatch> list){
+		//TODO added each dataBatch from list to queues
+
+		for (DataBatch e : list){
+			waitingUnprocessedBatches.add(e);
+		}
+	}
+	// ????????????????????
+	public Queue<DataBatch> getWaitingUnprocessedBatches() {
+		return waitingUnprocessedBatches;
+	}
+
+	public void putProcessedData(DataBatch e){
+		//put dataBatch in his right queue
+		List toAddTo = returningProcessedBatches.get(e.getOwner());
+		toAddTo.add(e);
+	}
+
+	public List<DataBatch> getGpuProcessed(GPU gpu){
+		return returningProcessedBatches.get(gpu);
+	}
 }

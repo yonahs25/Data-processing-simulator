@@ -1,8 +1,6 @@
 package bgu.spl.mics;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import javax.swing.plaf.metal.MetalIconFactory;
+import java.util.*;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -11,11 +9,21 @@ import java.util.Scanner;
  */
 public class MessageBusImpl implements MessageBus {
 
+	private HashMap<MicroService, Queue> microServiceQueue = new HashMap();
+	private HashMap<Class<? extends Broadcast>, LinkedList<MicroService>> BroadcastList = new HashMap();
+	private HashMap<Class<? extends Event>,LinkedList<MicroService>> EventList = new HashMap<>();
+
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 		// TODO Auto-generated method stub
 
 	}
+
+	public  <T> List<T> getEventSubscribers(Class<? extends Event<T>> type){ //TODO finish
+
+		return null;
+	}
+
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {

@@ -1,4 +1,10 @@
 package bgu.spl.mics;
+import javax.swing.plaf.metal.MetalIconFactory;
+import java.util.Arrays;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * The message-bus is a shared object used for communication between
@@ -17,25 +23,45 @@ public interface MessageBus {
      * @param <T>  The type of the result expected by the completed event.
      * @param type The type to subscribe to,
      * @param m    The subscribing micro-service.
-     * @pre m should know to handle this kind of event
-     * @post
+     * @pre getEventSubscribers(type).contains(m)==false
+     * @post getEventSubscribers(type).contains(m)==true
+     *       if @pre getEventSubscribers(type) == null then @post getEventSubscribers(type).instanceof(List)
      */
     <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m);
+
+
+    /**
+     * creates new list for this event if there isn't
+     * @param type type of event
+     * @param <T>
+     * @pre none
+     * @post getEventSubscribers(type) != null
+     * @return list of subscribed to this event
+     */
+    <T> List<T> getEventSubscribers(Class<? extends Event<T>> type);
+
 
     /**
      * Subscribes {@code m} to receive {@link Broadcast}s of type {@code type}.
      * <p>
      * @param type 	The type to subscribe to.
      * @param m    	The subscribing micro-service.
-     * @pre
+     * @pre getBroadcastSubscribers(type).contains(m)==false
+     * @post getBroadcastSubscribers(type).contains(m)==true
+     *       if @pre getBroadcastSubscribers(type) == null then @post getBroadcastSubscribers(type).instanceof(List)
+     *
      */
-
-    //List<T> getEventSubscribers(Class<? extends Event<T>> type)
-
     void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m);
 
-    //Class<? extends Broadcast> getBroadcastType();  //**********//
-    //List<T> getBroadcastSubscribers(Class<? extends Broadcast> type)
+    /**
+     * creates new list for broadcast if there isnt
+     * @param type type of event
+     * @param <T>
+     * @pre none
+     * @post getBroadcastSubscribers(type) != null
+     * @return list of subscribed to this broadcast
+     */
+    <T> List<T> getBroadcastSubscribers(Class<? extends Broadcast> type);
 
 
     /**
@@ -55,6 +81,8 @@ public interface MessageBus {
      * micro-services subscribed to {@code b.getClass()}.
      * <p>
      * @param b 	The message to added to the queues.
+     * @pre none
+     * @post for each (MicroService m: getBroadCastSubscribers) @pre getMicroServiceQueue.size() + 1  == @post getMicroServiceQueue.size()
      */
     void sendBroadcast(Broadcast b);
 
@@ -74,12 +102,18 @@ public interface MessageBus {
      * Allocates a message-queue for the {@link MicroService} {@code m}.
      * <p>
      * @param m the micro-service to create a queue for.
-     * @pre: none
-     * @post: hasmap1.lookFor(m) != null && getMicroServiceQueue(m.getName()).isEmpty() == true
+     * @pre: getMicroServiceQueue(m) == null
+     * @post: getMicroServiceQueue(m).size() == 0
      */
     void register(MicroService m);
 
-     // MicroService getMicroServiceQueue(String name);//**********//
+    /**
+     *
+     * @param m the micro-service with the queue we want
+     *
+     * @return queue if exists in Bus, else null
+     */
+    MicroService getMicroServiceQueue(MicroService m);//**********//
 
     /**
      * Removes the message queue allocated to {@code m} via the call to
@@ -88,8 +122,9 @@ public interface MessageBus {
      * registered, nothing should happen.
      * <p>
      * @param m the micro-service to unregister.
-     * @pre hashmap1.getService(m) != null
-     * @post @pre hasmap1.getService(m).queue.IsEmpty() == true  && hasmap1.getService(m) == null && removed from his broadcast
+     * @pre
+     * @post if @pre getMicroServiceQueue(m) != null queue = @pre getMicroServiceQueue(m) , queue.size() == 0
+     *       get MicroServiceQueue(m) == null
      */
     void unregister(MicroService m);
 
