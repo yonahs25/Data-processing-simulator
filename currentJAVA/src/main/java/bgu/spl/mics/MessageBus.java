@@ -29,9 +29,14 @@ public interface MessageBus {
      * @param m    	The subscribing micro-service.
      * @pre
      */
+
+    //List<T> getEventSubscribers(Class<? extends Event<T>> type)
+
     void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m);
 
-    Class<? extends Broadcast> getBroadcastType()
+    //Class<? extends Broadcast> getBroadcastType();  //**********//
+    //List<T> getBroadcastSubscribers(Class<? extends Broadcast> type)
+
 
     /**
      * Notifies the MessageBus that the event {@code e} is completed and its
@@ -70,11 +75,11 @@ public interface MessageBus {
      * <p>
      * @param m the micro-service to create a queue for.
      * @pre: none
-     * @post: hasmap1.lookFor(m) != null && hashamp1.getm().getQueue().isEmpty() == true
+     * @post: hasmap1.lookFor(m) != null && getMicroServiceQueue(m.getName()).isEmpty() == true
      */
     void register(MicroService m);
 
-    MicroService getMS(String name);
+     // MicroService getMicroServiceQueue(String name);//**********//
 
     /**
      * Removes the message queue allocated to {@code m} via the call to
