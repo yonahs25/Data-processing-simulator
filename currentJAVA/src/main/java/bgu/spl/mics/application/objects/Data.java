@@ -21,6 +21,10 @@ public class Data {
         this.size = size;
     }
 
+    public int getProcessed() {
+        return processed;
+    }
+
     public Type getType() {
         return type;
     }

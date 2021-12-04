@@ -62,4 +62,10 @@ public class Cluster {
 	public List<DataBatch> getGpuProcessed(GPU gpu){
 		return returningProcessedBatches.get(gpu);
 	}
+
+
+	//can make a clone to avoid long syncronize
+	public List<DataBatch> getProccesedData(GPU gpu) {
+		return returningProcessedBatches.get(gpu);
+	}
 }
