@@ -1,10 +1,4 @@
 package bgu.spl.mics;
-import javax.swing.plaf.metal.MetalIconFactory;
-import java.util.Arrays;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 
 /**
  * The message-bus is a shared object used for communication between
@@ -147,8 +141,13 @@ public interface MessageBus {
 
     boolean isMicroServiceRegistered(MicroService m);
 
-    <T> boolean isMicroServiceInEvent(MicroService m , Class<? extends Event<T>> type);
+    <T> boolean isMicroServiceInEvent( Class<? extends Event<T>> type , MicroService m);
 
-    <T> boolean isMicroServiceInBroadcast(MicroService m , Class<? extends Broadcast> type);
+    <T> boolean isMicroServiceInBroadcast( Class<? extends Broadcast> type , MicroService m );
+
+    <T> boolean isMicroServiceReceiveBroadcast(Class<? extends Broadcast> type , MicroService m);
+
+    <T> boolean isMicroServiceReceiveEvent(Class<? extends Event<T>> type , MicroService m);
+
     
 }

@@ -1,6 +1,9 @@
 package bgu.spl.mics;
-import javax.swing.plaf.metal.MetalIconFactory;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -73,12 +76,19 @@ public class MessageBusImpl implements MessageBus {
 		return true; //TODO finish
 	}
 
-	public <T> boolean isMicroServiceInEvent(MicroService m, Class<? extends Event<T>> type){
+	public <T> boolean isMicroServiceInEvent(Class<? extends Event<T>> type , MicroService m){
 		return true; //TODO finish
 	}
 
-	public <T> boolean isMicroServiceInBroadcast(MicroService m, Class<? extends Broadcast> type){
+	public <T> boolean isMicroServiceInBroadcast( Class<? extends Broadcast> type , MicroService m){
 		return true; //TODO finish
 	}
 
+	public <T> boolean isMicroServiceReceiveBroadcast(Class<? extends Broadcast> type , MicroService m){
+		return true; //TODO finish
+	}
+
+	public <T> boolean isMicroServiceReceiveEvent(Class<? extends Event<T>> type , MicroService m) {
+		return true; //TODO finish
+	}
 }

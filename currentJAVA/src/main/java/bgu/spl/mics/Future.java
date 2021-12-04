@@ -14,6 +14,7 @@ public class Future<T> {
 
 	private boolean isDone;
 	private T answer;
+	Object lock = new Object();
 	/**
 	 * This should be the the only public constructor in this class.
 	 */
@@ -35,8 +36,10 @@ public class Future<T> {
 		//	return answer;
 		//else
 		//	return null;
+		synchronized (lock) {
 			while (isDone == false) ;
-		return answer;
+				return answer;
+		}
 	}
 	
 	/**
@@ -66,8 +69,13 @@ public class Future<T> {
      *         elapsed, return null.
      */
 	public T get(long timeout, TimeUnit unit) {
-		//TODO: implement this.
-		return null;
+		if(isDone){
+			return answer;
+		}
+		try{unit.sleep(timeout);}catch(Exception e){}
+		if(isDone)
+			return  answer;
+		else
+			return null;
 	}
-
 }

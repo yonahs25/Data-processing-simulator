@@ -47,6 +47,17 @@ public class FutureTest {
 
     @Test
     public void testGet() {
+        assertTrue(answer == null)
+        t1 = new Thread(() ->  future.get(500,TimeUnit.MILLISECONDS));
+        t1.start();
+        t2 = new Thread(()->future.resolve("aaaa"));
+
+//        try{
+//            Thread.sleep(2000);
+//        } catch (Exception E) {}
+
+        //t1.notifyAll();
+        assertEquals("aaaa", future.get());
     }
 }
 
