@@ -145,9 +145,9 @@ public interface MessageBus {
 
     <T> boolean isMicroServiceInBroadcast( Class<? extends Broadcast> type , MicroService m );
 
-    <T> boolean isMicroServiceReceiveBroadcast(Class<? extends Broadcast> type , MicroService m);
+    <T> boolean didMicroServiceReceiveBroadcast(Broadcast type , MicroService m);
 
-    <T> boolean isMicroServiceReceiveEvent(Class<? extends Event<T>> type , MicroService m);
+    <T> boolean didMicroServiceReceiveEvent(Event<T> type , MicroService m);
 
     
 }

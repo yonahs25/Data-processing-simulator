@@ -2,6 +2,9 @@ package bgu.spl.mics;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.Assert.*;
 
 public class FutureTest {
@@ -47,8 +50,8 @@ public class FutureTest {
 
     @Test
     public void testGet() {
-        assertTrue(answer == null)
-        t1 = new Thread(() ->  future.get(500,TimeUnit.MILLISECONDS));
+
+        t1 = new Thread(() ->  future.get(500, TimeUnit.MILLISECONDS));
         t1.start();
         t2 = new Thread(()->future.resolve("aaaa"));
 

@@ -7,12 +7,18 @@ import static org.junit.Assert.*;
 
 public class GPUTest {
 
+    private static GPU gpu;
+    private static Cluster cluster;
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
+        cluster=new Cluster();
+        gpu = new GPU(GPU.Type.RTX3090 , cluster);
     }
 
     @Test
     public void setModel() {
+        Model model = new Model()
     }
 
     @Test

@@ -13,7 +13,6 @@ public class GPU {
     enum Type {RTX3090, RTX2080, GTX1080}
 
     private Type type;
-    //private int startTick;
     private Model model;
     private Cluster cluster;
 
@@ -22,7 +21,9 @@ public class GPU {
     private List<DataBatch> unprocessedData;
     private Queue<DataBatch> processedData; //has a limit
     //private DataBatch workingOn;
+    //how many processed data he can have in queue
     private int limit;
+    //time it takes to process data
     private int tickTimer;
 
 
@@ -48,6 +49,14 @@ public class GPU {
         currTick = 0;
         startTick = 0;
         //workingOn = null;
+    }
+
+    public List<DataBatch> getUnprocessedData() {
+        return unprocessedData;
+    }
+
+    public Queue<DataBatch> getProcessedData() {
+        return processedData;
     }
 
     /**

@@ -3,22 +3,45 @@ package bgu.spl.mics.application.objects;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class CPUTest {
 
-    private static CPU cpu1;
-    private static CPU cpu2;
+    private static CPU cpu;
     private static Cluster cluster;
 
     @Before
     public void setUp() throws Exception {
         cluster=new Cluster();
-        cpu1 = new CPU(32,cluster);
-        cpu2 = new CPU(16,cluster);
+        cpu = new CPU(32,cluster);
     }
 
     @Test
-    public void updateTime() {
+    public void testGetChunk() {
+        GPU gpu = new GPU(GPU.Type.RTX2080, cluster);
+        Data data = new Data(Data.Type.Images, 5);
+        List<DataBatch> list = new LinkedList<>();
+        list.add(new DataBatch(data,0, gpu));
+        cluster.getUnprocessedData(list);
+        cpu.updateTime();
+        assertTrue(cpu.isProcessing());
+    }
+
+    @Test
+    public void testSendBack(){
+        GPU gpu = new GPU(GPU.Type.RTX2080, cluster);
+        Data data = new Data(Data.Type.Images, 5);
+        List<DataBatch> list = new LinkedList<>();
+        list.add(new DataBatch(data,0, gpu));
+        cluster.getUnprocessedData(list);
+        cpu.updateTime();
+        cpu.updateTime();
+        cpu.updateTime();
+        cpu.updateTime();
+        cpu.updateTime();
+        assertFalse(cpu.isProcessing());
     }
 }

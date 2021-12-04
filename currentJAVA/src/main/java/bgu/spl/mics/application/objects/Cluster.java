@@ -31,6 +31,11 @@ public class Cluster {
 		return null;
 	}
 
+	public void addUnprocessedData(List<DataBatch> list){
+
+
+	}
+
 	//add data from big queue to cpu queue
 	public void getUnprocessedData(List<DataBatch> list){
 		//TODO added each dataBatch from list to queues

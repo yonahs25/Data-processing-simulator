@@ -22,7 +22,7 @@ public class MessageBusImpl implements MessageBus {
 
 	}
 
-	public  <T> List<T> getEventSubscribers(Class<? extends Event<T>> type){ //TODO finish
+	private   <T> List<T> getEventSubscribers(Class<? extends Event<T>> type){ //TODO finish check if neede
 
 		return null;
 	}
@@ -37,6 +37,7 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public <T> void complete(Event<T> e, T result) {
 		// TODO Auto-generated method stub
+		//resolve of future
 
 	}
 
@@ -84,11 +85,11 @@ public class MessageBusImpl implements MessageBus {
 		return true; //TODO finish
 	}
 
-	public <T> boolean isMicroServiceReceiveBroadcast(Class<? extends Broadcast> type , MicroService m){
+	public <T> boolean didMicroServiceReceiveBroadcast(Broadcast type , MicroService m){
 		return true; //TODO finish
 	}
 
-	public <T> boolean isMicroServiceReceiveEvent(Class<? extends Event<T>> type , MicroService m) {
+	public <T> boolean didMicroServiceReceiveEvent(Event<T> type , MicroService m) {
 		return true; //TODO finish
 	}
 }

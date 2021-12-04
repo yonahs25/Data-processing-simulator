@@ -56,4 +56,8 @@ public class CPU {
 
     }
 
+    public boolean isProcessing (){
+        return true; //TODO
+    }
+
 }
