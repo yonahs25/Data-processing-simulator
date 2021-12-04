@@ -36,10 +36,10 @@ public class Future<T> {
 		//	return answer;
 		//else
 		//	return null;
-		synchronized (lock) {
-			while (isDone == false) ;
-				return answer;
-		}
+
+		while (isDone == false) ;
+		return answer;
+
 	}
 	
 	/**

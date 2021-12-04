@@ -29,7 +29,6 @@ public class FutureTest {
             Thread.sleep(2000);
         } catch (Exception E) {}
         future.resolve("aaaa");
-        //t1.notifyAll();
         assertEquals("aaaa", future.get());
 
     }
@@ -50,17 +49,10 @@ public class FutureTest {
 
     @Test
     public void testGet() {
-
-        t1 = new Thread(() ->  future.get(500, TimeUnit.MILLISECONDS));
-        t1.start();
-        t2 = new Thread(()->future.resolve("aaaa"));
-
-//        try{
-//            Thread.sleep(2000);
-//        } catch (Exception E) {}
-
-        //t1.notifyAll();
-        assertEquals("aaaa", future.get());
+        assertNull(future.get(1,TimeUnit.SECONDS));
+        String ans = "aaa";
+        future.resolve("aaaa");
+        assertEquals(future.get(1,TimeUnit.SECONDS), "aaaa" );
     }
 }
 

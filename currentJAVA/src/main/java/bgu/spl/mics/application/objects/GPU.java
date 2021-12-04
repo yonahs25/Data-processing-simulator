@@ -70,8 +70,8 @@ public class GPU {
      *
      */
     public void setModel(Model model) {
+        this.model = model;
         if(model.getStatus() == Model.Status.PreTrained) {
-            this.model = model;
             Data data = model.getData();
             //need to deal with Incomplete number of data (4876)
             int amountBatches = data.getSize() / 1000;
@@ -152,7 +152,7 @@ public class GPU {
     private void testModel(){
         Random rn = new Random();
         int random =rn.nextInt(100);
-        if (model.getStudent().getStatus() == Student.Degree.MSc){
+        if (model.getStudent().getStatus().equals(Student.Degree.MSc)){
             if (random<10)
                 model.setResults(Model.Results.Good);
             else
