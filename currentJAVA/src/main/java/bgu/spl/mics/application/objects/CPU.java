@@ -31,7 +31,7 @@ public class CPU {
      * @post waitingOnProcess.size() == @pre waitingOnProcess.size() + toTakeFrom.size()
      */
 
-    public void getProcessed(){
+    private void getProcessed(){
 
         Queue<DataBatch> toTakeFrom = cluster.getWaitingUnprocessedBatches();
         while (!toTakeFrom.isEmpty() && waitingOnProcess.size() < limit){

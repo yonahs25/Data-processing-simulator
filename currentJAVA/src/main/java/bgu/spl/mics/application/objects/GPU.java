@@ -87,7 +87,7 @@ public class GPU {
      * // k= number of dataBatches to send
      * @post unprocessedData.size() == (@pre unprocessedData.size() - k)
      */
-    public void sendUnprocessed(){
+    private void sendUnprocessed(){
         //need to check how to deal with empty unprocessedData.
         List<DataBatch> toSend = new ArrayList<>();
         for (int i = 0; i < 10; i++){
@@ -102,7 +102,7 @@ public class GPU {
      * @pre none
      * @post
      */
-    public void processData(){
+    private void processData(){
         if (currTick - startTick >= tickTimer){
             if (!processedData.isEmpty()){
                 DataBatch removed = processedData.remove();

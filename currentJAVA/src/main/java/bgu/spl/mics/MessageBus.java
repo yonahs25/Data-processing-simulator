@@ -30,15 +30,15 @@ public interface MessageBus {
     <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m);
 
 
-    /**
-     * creates new list for this event if there isn't
-     * @param type type of event
-     * @param <T>
-     * @pre none
-     * @post getEventSubscribers(type) != null
-     * @return list of subscribed to this event
-     */
-    <T> List<T> getEventSubscribers(Class<? extends Event<T>> type);
+    ///**
+    // * creates new list for this event if there isn't
+    // * @param type type of event
+    // * @param <T>
+    // * @pre none
+    // * @post getEventSubscribers(type) != null
+    // * @return list of subscribed to this event
+    // */
+    //<T> List<T> getEventSubscribers(Class<? extends Event<T>> type);
 
 
     /**
@@ -53,15 +53,15 @@ public interface MessageBus {
      */
     void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m);
 
-    /**
-     * creates new list for broadcast if there isnt
-     * @param type type of event
-     * @param <T>
-     * @pre none
-     * @post getBroadcastSubscribers(type) != null
-     * @return list of subscribed to this broadcast
-     */
-    <T> List<T> getBroadcastSubscribers(Class<? extends Broadcast> type);
+    ///**
+    // * creates new list for broadcast if there isnt
+    // * @param type type of event
+    // * @param <T>
+    // * @pre none
+    // * @post getBroadcastSubscribers(type) != null
+    // * @return list of subscribed to this broadcast
+    // */
+    //<T> List<T> getBroadcastSubscribers(Class<? extends Broadcast> type);
 
 
     /**
@@ -107,13 +107,13 @@ public interface MessageBus {
      */
     void register(MicroService m);
 
-    /**
-     *
-     * @param m the micro-service with the queue we want
-     *
-     * @return queue if exists in Bus, else null
-     */
-    MicroService getMicroServiceQueue(MicroService m);//**********//
+    ///**
+    // *
+    // * @param m the micro-service with the queue we want
+    // *
+    // * @return queue if exists in Bus, else null
+    // */
+    //MicroService getMicroServiceQueue(MicroService m);//**********//
 
     /**
      * Removes the message queue allocated to {@code m} via the call to
@@ -144,5 +144,11 @@ public interface MessageBus {
      *                              to became available.
      */
     Message awaitMessage(MicroService m) throws InterruptedException;
+
+    boolean isMicroServiceRegistered(MicroService m);
+
+    <T> boolean isMicroServiceInEvent(MicroService m , Class<? extends Event<T>> type);
+
+    <T> boolean isMicroServiceInBroadcast(MicroService m , Class<? extends Broadcast> type);
     
 }

@@ -28,13 +28,15 @@ public class Future<T> {
      * not been completed.
      * <p>
      * @return return the result of type T if it is available, if not wait until it is available.
-     * 	       
+	 *      *
      */
 	public T get() {
-		if (isDone)
-			return answer;
-		else
-			return null;
+		//if (isDone)
+		//	return answer;
+		//else
+		//	return null;
+			while (isDone == false) ;
+		return answer;
 	}
 	
 	/**

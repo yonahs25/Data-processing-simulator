@@ -7,26 +7,42 @@ import static org.junit.Assert.*;
 public class FutureTest {
 
     private static Future<String> future;
+    private static Thread t1;
+    private static Thread t2;
 
 
     @Before
     public void SetUp() {
         future = new Future<>();
-        Thread t1;
-        Thread t2;
+        Thread t1 = null;
+        Thread t2 = null;
     }
 
     @Test
     public void get() {
-        String ans;
+        t1 = new Thread(() ->  future.get());
+        t1.start();
+        try{
+            Thread.sleep(2000);
+        } catch (Exception E) {}
+        future.resolve("aaaa");
+        //t1.notifyAll();
+        assertEquals("aaaa", future.get());
+
     }
 
     @Test
     public void resolve() {
+        future.resolve("aaa");
+        assertEquals("aaa", future.get());
+
     }
 
     @Test
     public void isDone() {
+        String ans = "aaaa";
+        future.resolve(ans);
+        assertEquals(true, future.isDone());
     }
 
     @Test

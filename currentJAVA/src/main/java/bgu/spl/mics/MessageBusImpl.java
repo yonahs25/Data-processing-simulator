@@ -69,5 +69,16 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 
+	public boolean isMicroServiceRegistered(MicroService m){
+		return true; //TODO finish
+	}
+
+	public <T> boolean isMicroServiceInEvent(MicroService m, Class<? extends Event<T>> type){
+		return true; //TODO finish
+	}
+
+	public <T> boolean isMicroServiceInBroadcast(MicroService m, Class<? extends Broadcast> type){
+		return true; //TODO finish
+	}
 
 }
