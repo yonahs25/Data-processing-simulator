@@ -40,4 +40,8 @@ public class Model {
     public Status getStatus() {
         return status;
     }
+
+    public void setResults(Results results) {
+        this.results = results;
+    }
 }

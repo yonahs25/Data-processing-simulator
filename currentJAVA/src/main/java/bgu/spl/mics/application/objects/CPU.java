@@ -26,6 +26,10 @@ public class CPU {
     }
 
 
+    /**
+     * @pre none
+     * @post waitingOnProcess.size() == @pre waitingOnProcess.size() + toTakeFrom.size()
+     */
 
     public void getProcessed(){
 
@@ -41,6 +45,9 @@ public class CPU {
 
     }
 
+    /**
+     *
+     */
 
     public void updateTime(){
         currTick++;

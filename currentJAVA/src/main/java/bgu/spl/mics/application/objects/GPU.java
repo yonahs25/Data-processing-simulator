@@ -1,8 +1,5 @@
 package bgu.spl.mics.application.objects;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Passive object representing a single GPU.
@@ -58,16 +55,24 @@ public class GPU {
      * @param model
      * processing model it got from the bus
      * checking if the model was trained or need to be trained and acting accordingly
+     * @pre unprocessedData.size()==0
+     * @pre this.model == null && other.model != null
+     * @post this.model.getStatus() != @pre this.model.getStatus()
+     *
      */
     public void setModel(Model model) {
         if(model.getStatus() == Model.Status.PreTrained) {
             this.model = model;
             Data data = model.getData();
+            //need to deal with Incomplete number of data (4876)
             int amountBatches = data.getSize() / 1000;
             for (int i = 0; i < amountBatches; i++) {
                 unprocessedData.add(new DataBatch(data, i * 1000, this));
             }
-            model.setStatus(Model.Status.Training);
+            if(amountBatches == 0)
+                model.setStatus(Model.Status.Trained);
+            else
+                model.setStatus(Model.Status.Training);
         }
         else if (model.getStatus() == Model.Status.Trained){
             testModel();
@@ -77,6 +82,10 @@ public class GPU {
 
     /**
      * sending list of unprocessed chunk to cluster
+     * @inv this.model.getStatus()==Training
+     * @pre unprocessedData.size()>0
+     * // k= number of dataBatches to send
+     * @post unprocessedData.size() == (@pre unprocessedData.size() - k)
      */
     public void sendUnprocessed(){
         //need to check how to deal with empty unprocessedData.
@@ -89,6 +98,9 @@ public class GPU {
 
     /**
      * processing data, checking if model is done and sending back to bus
+     * @inv this.model.getStatus()==Training
+     * @pre none
+     * @post
      */
     public void processData(){
         if (currTick - startTick >= tickTimer){
@@ -109,6 +121,9 @@ public class GPU {
 
     /**
      * get processed data from cluster to start working on
+     * @inv this.model.getStatus()==Training
+     * @pre none
+     * @post processedData.size() == @pre processedData.size() + myList.size()
      */
     private void getDataFromCluster(){
         if(processedData.isEmpty())
@@ -121,17 +136,29 @@ public class GPU {
 
     /**
      * test model
+     * @pre model.getStatus() == Trained
+     * @post model.getStatus() == Tested
      */
     private void testModel(){
+        Random rn = new Random();
+        int random =rn.nextInt(100);
         if (model.getStudent().getStatus() == Student.Degree.MSc){
-            //test
+            if (random<10)
+                model.setResults(Model.Results.Good);
+            else
+                model.setResults(Model.Results.Bad);
         } else{
-            //test
+            if (random<20)
+                model.setResults(Model.Results.Good);
+            else
+                model.setResults(Model.Results.Bad);
         }
+        model.setStatus(Model.Status.Tested);
     }
 
     /**
      * main function, service is updating time for gpu and doing main job here
+     * @inv this.model.getStatus()==Training
      */
     public void updateTick(){
         currTick++;
