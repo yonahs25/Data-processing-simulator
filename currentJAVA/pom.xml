@@ -28,7 +28,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>bgu.spl</mainClass>
+                            <mainClass>bgu.spl.mics</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

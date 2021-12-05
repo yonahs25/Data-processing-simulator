@@ -55,7 +55,7 @@ public interface MessageBus {
      * <p>
      * @param b 	The message to added to the queues.
      * @pre none
-     * @post if(isMicroServiceInBroadcast(b.getClass(),m) == true) than didMicroServiceReceiveBroadcast(m) == true
+     * @post wasBroadcastSent(b) == true
      */
     void sendBroadcast(Broadcast b);
 
@@ -69,7 +69,7 @@ public interface MessageBus {
      * @return {@link Future<T>} object to be resolved once the processing is complete,
      * 	       null in case no micro-service has subscribed to {@code e.getClass()}.
      * @pre none
-     * @post sending to registered Microservice m that is the first to get this type of event in round robbing pattern
+     * @post wasEventSent(e) == true
      */
     <T> Future<T> sendEvent(Event<T> e);
 
@@ -122,7 +122,11 @@ public interface MessageBus {
 
     <T> boolean didMicroServiceReceiveBroadcast(Broadcast type , MicroService m);
 
+    <T> boolean wasBroadcastSent(Broadcast type);
+
     <T> boolean didMicroServiceReceiveEvent(Event<T> type , MicroService m);
+
+    <T> boolean wasEventSent(Event<T> type);
 
     
 }

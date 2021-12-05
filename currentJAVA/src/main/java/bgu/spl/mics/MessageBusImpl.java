@@ -83,7 +83,13 @@ public class MessageBusImpl implements MessageBus {
 		return true; //TODO finish
 	}
 
+	public <T> boolean wasBroadcastSent(Broadcast type) {return true;} //TODO finish
+
+
 	public <T> boolean didMicroServiceReceiveEvent(Event<T> type , MicroService m) {
 		return true; //TODO finish
 	}
+
+	public <T> boolean wasEventSent(Event<T> type) {return true;} //TODO finish
+
 }

@@ -68,8 +68,8 @@ public class MessageBusImplTest {
         messageBus.subscribeBroadcast(x.getClass(),m);
         messageBus.subscribeBroadcast(x.getClass(),k);
         messageBus.sendBroadcast(x);
-        assertTrue(messageBus.didMicroServiceReceiveBroadcast(x,m));
-        assertTrue(messageBus.didMicroServiceReceiveBroadcast(x,k));
+        assertTrue(messageBus.wasBroadcastSent(x));
+        assertTrue(messageBus.wasBroadcastSent(x));
 
     }
 
@@ -80,7 +80,7 @@ public class MessageBusImplTest {
         messageBus.register(m);
         messageBus.subscribeEvent(x.getClass(),m);
         messageBus.sendEvent(x);
-        assertTrue(messageBus.didMicroServiceReceiveEvent(x,m));
+        assertTrue(messageBus.wasEventSent(x));
     }
 
     @Test
