@@ -154,12 +154,12 @@ public class GPU {
         Random rn = new Random();
         int random =rn.nextInt(100);
         if (model.getStudent().getStatus().equals(Student.Degree.MSc)){
-            if (random<10)
+            if (random<60)
                 model.setResults(Model.Results.Good);
             else
                 model.setResults(Model.Results.Bad);
         } else{
-            if (random<20)
+            if (random<80)
                 model.setResults(Model.Results.Good);
             else
                 model.setResults(Model.Results.Bad);

@@ -17,9 +17,8 @@ public interface MessageBus {
      * @param <T>  The type of the result expected by the completed event.
      * @param type The type to subscribe to,
      * @param m    The subscribing micro-service.
-     * @pre getEventSubscribers(type).contains(m)==false
-     * @post getEventSubscribers(type).contains(m)==true
-     *       if @pre getEventSubscribers(type) == null then @post getEventSubscribers(type).instanceof(List)
+     * @pre none
+     * @post isMicroServiceInEvent(type,m) == true
      */
     <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m);
 
@@ -40,9 +39,8 @@ public interface MessageBus {
      * <p>
      * @param type 	The type to subscribe to.
      * @param m    	The subscribing micro-service.
-     * @pre getBroadcastSubscribers(type).contains(m)==false
-     * @post getBroadcastSubscribers(type).contains(m)==true
-     *       if @pre getBroadcastSubscribers(type) == null then @post getBroadcastSubscribers(type).instanceof(List)
+     * @pre none
+     * @post isMicroServiceInBroadcast(type,m) == true
      *
      */
     void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m);
@@ -67,8 +65,8 @@ public interface MessageBus {
      * @param <T>    The type of the result expected by the completed event.
      * @param e      The completed event.
      * @param result The resolved result of the completed event.
-     * @pre
-     * @post
+     * @pre none
+     * @post  the Future<T> that sendEvent e creates should be resolved with result
      */
     <T> void complete(Event<T> e, T result);
 
@@ -78,7 +76,7 @@ public interface MessageBus {
      * <p>
      * @param b 	The message to added to the queues.
      * @pre none
-     * @post for each (MicroService m: getBroadCastSubscribers) @pre getMicroServiceQueue.size() + 1  == @post getMicroServiceQueue.size()
+     * @post if(isMicroServiceInBroadcast(b.getClass(),m) == true) than didMicroServiceReceiveBroadcast(m) == true
      */
     void sendBroadcast(Broadcast b);
 
@@ -91,8 +89,8 @@ public interface MessageBus {
      * @param e     	The event to add to the queue.
      * @return {@link Future<T>} object to be resolved once the processing is complete,
      * 	       null in case no micro-service has subscribed to {@code e.getClass()}.
-     * @pre
-     * @post
+     * @pre none
+     * @post sending to registered Microservice m that is the first to get this type of event in round robbing pattern
      */
     <T> Future<T> sendEvent(Event<T> e);
 
@@ -100,8 +98,8 @@ public interface MessageBus {
      * Allocates a message-queue for the {@link MicroService} {@code m}.
      * <p>
      * @param m the micro-service to create a queue for.
-     * @pre getMicroServiceQueue(m) == null
-     * @post getMicroServiceQueue(m).size() == 0
+     * @pre none
+     * @post isMicroServiceRegistered(m) == true
      */
     void register(MicroService m);
 
@@ -120,9 +118,8 @@ public interface MessageBus {
      * registered, nothing should happen.
      * <p>
      * @param m the micro-service to unregister.
-     * @pre
-     * @post if @pre getMicroServiceQueue(m) != null queue = @pre getMicroServiceQueue(m) , queue.size() == 0
-     *       get MicroServiceQueue(m) == null
+     * @pre none
+     * @post isMicroServiceRegistered(m) == false
      */
     void unregister(MicroService m);
 
@@ -140,8 +137,8 @@ public interface MessageBus {
      * @return The next message in the {@code m}'s queue (blocking).
      * @throws InterruptedException if interrupted while waiting for a message
      *                              to became available.
-     * @pre
-     * @post
+     * @pre Microservice m has a Message waiting for him && isMicroServiceRegistered(m) == true
+     * @post the amount of Messages waiting for Microservice m is the amount @pre -1
      */
     Message awaitMessage(MicroService m) throws InterruptedException;
 

@@ -99,7 +99,9 @@ public class MessageBusImplTest {
 
     @Test
     public void awaitMessage() {
+
         TestMicroService m = new TestMicroService("mmm");
+        assertThrows("need to get Exception because not registered",Exception.class, () ->messageBus.awaitMessage((m)));
         ExampleBroadcast x = new ExampleBroadcast("aaa");
         messageBus.register(m);
         assertThrows("need to get Exception because no messages",Exception.class, () ->messageBus.awaitMessage((m)));
