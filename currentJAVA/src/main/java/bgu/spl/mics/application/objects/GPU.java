@@ -148,6 +148,7 @@ public class GPU {
      * test model
      * @pre model.getStatus() == Trained
      * @post model.getStatus() == Tested
+     * @post model.getResults() != none
      */
     private void testModel(){
         Random rn = new Random();
@@ -168,7 +169,8 @@ public class GPU {
 
     /**
      * main function, service is updating time for gpu and doing main job here
-     * @inv this.model.getStatus()==Training
+     * @pre
+     * @post
      */
     public void updateTick(){
         currTick++;

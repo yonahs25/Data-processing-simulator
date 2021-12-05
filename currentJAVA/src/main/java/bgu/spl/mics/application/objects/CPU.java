@@ -46,7 +46,8 @@ public class CPU {
     }
 
     /**
-     *
+     * @pre
+     * @post
      */
 
     public void updateTime(){
@@ -56,6 +57,11 @@ public class CPU {
 
     }
 
+    /**
+     * @pre none
+     * @post none
+     * @return if cpu is processing data
+     */
     public boolean isProcessing (){
         return true; //TODO
     }

@@ -67,6 +67,8 @@ public interface MessageBus {
      * @param <T>    The type of the result expected by the completed event.
      * @param e      The completed event.
      * @param result The resolved result of the completed event.
+     * @pre
+     * @post
      */
     <T> void complete(Event<T> e, T result);
 
@@ -89,6 +91,8 @@ public interface MessageBus {
      * @param e     	The event to add to the queue.
      * @return {@link Future<T>} object to be resolved once the processing is complete,
      * 	       null in case no micro-service has subscribed to {@code e.getClass()}.
+     * @pre
+     * @post
      */
     <T> Future<T> sendEvent(Event<T> e);
 
@@ -96,8 +100,8 @@ public interface MessageBus {
      * Allocates a message-queue for the {@link MicroService} {@code m}.
      * <p>
      * @param m the micro-service to create a queue for.
-     * @pre: getMicroServiceQueue(m) == null
-     * @post: getMicroServiceQueue(m).size() == 0
+     * @pre getMicroServiceQueue(m) == null
+     * @post getMicroServiceQueue(m).size() == 0
      */
     void register(MicroService m);
 
@@ -136,6 +140,8 @@ public interface MessageBus {
      * @return The next message in the {@code m}'s queue (blocking).
      * @throws InterruptedException if interrupted while waiting for a message
      *                              to became available.
+     * @pre
+     * @post
      */
     Message awaitMessage(MicroService m) throws InterruptedException;
 
