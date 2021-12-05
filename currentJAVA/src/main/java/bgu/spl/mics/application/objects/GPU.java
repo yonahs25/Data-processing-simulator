@@ -101,6 +101,7 @@ public class GPU {
         //need to check how to deal with empty unprocessedData.
         List<DataBatch> toSend = new ArrayList<>();
         for (int i = 0; i < 10; i++){
+            if (!unprocessedData.isEmpty())
             toSend.add(unprocessedData.remove(0));
         }
         cluster.getUnprocessedData(toSend);
@@ -167,7 +168,7 @@ public class GPU {
         currTick++;
         if (model.getStatus() == Model.Status.Training){
             sendUnprocessed();
-            getDataFromCluster();
+            //getDataFromCluster();
             processData();
         }
 

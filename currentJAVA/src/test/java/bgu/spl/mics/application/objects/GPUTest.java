@@ -25,7 +25,7 @@ public class GPUTest {
         gpu.setModel(model);
         List<DataBatch> list = gpu.getUnprocessedData();
         assertEquals(list.size(), 200000/1000);
-        assertEquals(Model.Status.Training, model.getStatus());
+        assertEquals(Model.Status.Training, gpu.getModel().getStatus());
     }
 
     @Test
@@ -61,6 +61,21 @@ public class GPUTest {
         gpu.updateTick();
         assertEquals(0, gpu.getProcessedData().size());
         assertEquals(1, data.getProcessed());
+    }
+
+
+    @Test
+    public void finishedTraining(){
+        Student student = new Student("Simba", "Computer Science", "MSc");
+        Data data = new Data(Data.Type.Images, 1000);
+        Model model = new Model("YOLO10", data, student);
+        gpu.setModel(model);
+        DataBatch databatch = gpu.getUnprocessedData().get(0);
+        gpu.updateTick();
+        cluster.putProcessedData(databatch);
+        gpu.updateTick();
+        assertEquals(gpu.getModel().getStatus(), Model.Status.Trained);
+
     }
 
 

@@ -33,8 +33,11 @@ public class Cluster {
 
 	public void addUnprocessedData(List<DataBatch> list){
 
-
 	}
+
+
+
+	//TODO make a function subscribe to cluster
 
 	//add data from big queue to cpu queue
 	public void getUnprocessedData(List<DataBatch> list){
