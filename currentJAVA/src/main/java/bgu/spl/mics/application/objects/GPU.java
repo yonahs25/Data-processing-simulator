@@ -64,9 +64,8 @@ public class GPU {
      * @param model
      * processing model it got from the bus
      * checking if the model was trained or need to be trained and acting accordingly
-     * @pre unprocessedData.size()==0
-     * @pre this.model == null && other.model != null
-     * @post this.model.getStatus() != @pre this.model.getStatus()
+     * @pre  other.model != null
+     * @post this.model.getStatus() != @pre this.model.getStatus() && this.model == other.model
      *
      */
     public void setModel(Model model) {
@@ -93,9 +92,8 @@ public class GPU {
     /**
      * sending list of unprocessed chunk to cluster
      * @inv this.model.getStatus()==Training
-     * @pre unprocessedData.size()>0
-     * // k= number of dataBatches to send
-     * @post unprocessedData.size() == (@pre unprocessedData.size() - k)
+     * @pre none
+     * @post unprocessedData.size() != (@pre unprocessedData.size() )
      */
     private void sendUnprocessed(){
         //need to check how to deal with empty unprocessedData.
@@ -110,7 +108,7 @@ public class GPU {
      * processing data, checking if model is done and sending back to bus
      * @inv this.model.getStatus()==Training
      * @pre none
-     * @post
+     * @post none
      */
     private void processData(){
         if (currTick - startTick >= tickTimer){
@@ -133,7 +131,7 @@ public class GPU {
      * get processed data from cluster to start working on
      * @inv this.model.getStatus()==Training
      * @pre none
-     * @post processedData.size() == @pre processedData.size() + myList.size()
+     * @post processedData.size() != @pre processedData.size()
      */
     private void getDataFromCluster(){
         if(processedData.isEmpty())
@@ -169,8 +167,8 @@ public class GPU {
 
     /**
      * main function, service is updating time for gpu and doing main job here
-     * @pre
-     * @post
+     * @pre none
+     * @post currTick = @pre currTick + 1
      */
     public void updateTick(){
         currTick++;

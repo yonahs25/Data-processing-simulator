@@ -30,7 +30,7 @@ public class Future<T> {
      * <p>
      * @return return the result of type T if it is available, if not wait until it is available.
 	 * @pre none
-	 * @post isDone == true
+	 * @post none
      */
 	public T get() {
 		//if (isDone)
@@ -55,6 +55,8 @@ public class Future<T> {
 	
 	/**
      * @return true if this object has been resolved, false otherwise
+	 * @pre none
+	 * @post none
      */
 	public boolean isDone() {
 		return isDone;

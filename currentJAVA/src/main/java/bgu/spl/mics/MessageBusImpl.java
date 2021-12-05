@@ -2,7 +2,6 @@ package bgu.spl.mics;
 
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 /**
@@ -20,11 +19,6 @@ public class MessageBusImpl implements MessageBus {
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 		// TODO Auto-generated method stub
 
-	}
-
-	private   <T> List<T> getEventSubscribers(Class<? extends Event<T>> type){ //TODO finish check if neede
-
-		return null;
 	}
 
 
