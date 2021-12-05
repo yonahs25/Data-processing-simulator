@@ -5,7 +5,7 @@
     <artifactId>spl221ass2</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -15,7 +15,24 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-      	    <version>4.13.1</version>
+            <version>4.13.1</version>
+            <scope>test</scope>
         </dependency>
-  </dependencies>	
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>bgu.spl</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
