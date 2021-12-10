@@ -125,7 +125,7 @@ public abstract class MicroService implements Runnable {
     /**
      * this method is called once when the event loop starts.
      */
-    protected abstract void initialize();
+    protected abstract void initialize(); //subscribe to event and broadcast etc....
 
     /**
      * Signals the event loop that it must terminate after handling the current
@@ -151,8 +151,10 @@ public abstract class MicroService implements Runnable {
     public final void run() {
         initialize();
         while (!terminated) {
+            // bus.awaitMessage(this); try and catch
             System.out.println("NOT IMPLEMENTED!!!"); //TODO: you should delete this line :)
         }
+        // delete stuff
     }
 
 }
