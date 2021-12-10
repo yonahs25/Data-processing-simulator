@@ -1,5 +1,8 @@
 package bgu.spl.mics;
 
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * The MicroService is an abstract class that any micro-service in the system
  * must extend. The abstract MicroService class is responsible to get and
@@ -20,16 +23,20 @@ package bgu.spl.mics;
  */
 public abstract class MicroService implements Runnable {
 
+    private MessageBusImpl bus;
     private boolean terminated = false;
     private final String name;
+    private ConcurrentHashMap<Class<? extends Message>, Callback> callbackMap = new ConcurrentHashMap();
 
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
-    public MicroService(String name) {
+    public MicroService(String name, MessageBusImpl bus)
+    {
         this.name = name;
+        this.bus = bus;
     }
 
     /**
@@ -54,7 +61,8 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
-        //TODO: implement this.
+        bus.subscribeEvent(type, this);
+        callbackMap.put(type, callback);
     }
 
     /**
@@ -78,7 +86,8 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-        //TODO: implement this.
+        bus.subscribeBroadcast(type, this);
+        callbackMap.put(type, callback);
     }
 
     /**
@@ -94,8 +103,7 @@ public abstract class MicroService implements Runnable {
      * 	       			null in case no micro-service has subscribed to {@code e.getClass()}.
      */
     protected final <T> Future<T> sendEvent(Event<T> e) {
-        //TODO: implement this.
-        return null; //TODO: delete this line :)
+        return bus.sendEvent(e);
     }
 
     /**
@@ -105,7 +113,7 @@ public abstract class MicroService implements Runnable {
      * @param b The broadcast message to send
      */
     protected final void sendBroadcast(Broadcast b) {
-        //TODO: implement this.
+        bus.sendBroadcast(b);
     }
 
     /**

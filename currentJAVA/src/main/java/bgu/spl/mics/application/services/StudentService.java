@@ -1,9 +1,14 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Callback;
+import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.PublishConferenceBroadcast;
 import bgu.spl.mics.application.messages.PublishResultsEvent;
 import bgu.spl.mics.application.messages.TestModelEvent;
 import bgu.spl.mics.application.messages.TrainModelEvent;
+import bgu.spl.mics.application.objects.Student;
+import jdk.nashorn.internal.codegen.CompilerConstants;
 
 /**
  * Student is responsible for sending the {@link TrainModelEvent},
@@ -15,14 +20,31 @@ import bgu.spl.mics.application.messages.TrainModelEvent;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class StudentService extends MicroService {
-    public StudentService(String name) {
-        super("Change_This_Name");
+    private class publishCallback implements Callback<PublishConferenceBroadcast>{
+
+        @Override
+        public void call(PublishConferenceBroadcast c)
+        {
+            // get the vector,
+            System.out.println("hi");
+        }
+    }
+
+
+
+
+
+    private Student student;
+
+    public StudentService(String name, MessageBusImpl bus,Student student) {
+        super("Change_This_Name",bus);
+        this.student = student;
         // TODO Implement this
     }
 
     @Override
     protected void initialize() {
-        // TODO Implement this
+        subscribeBroadcast(PublishConferenceBroadcast.class, new publishCallback());
 
     }
 }

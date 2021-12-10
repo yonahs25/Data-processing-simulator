@@ -1,8 +1,7 @@
 package bgu.spl.mics;
 
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.*;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -11,9 +10,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class MessageBusImpl implements MessageBus {
 
-	private ConcurrentHashMap<MicroService, ConcurrentLinkedQueue<Message>> microServiceQueue = new ConcurrentHashMap();
+	private ConcurrentHashMap<MicroService, ConcurrentLinkedDeque<Message>> microServiceQueue = new ConcurrentHashMap();
 	private ConcurrentHashMap<Class<? extends Broadcast>, LinkedList<MicroService>> BroadcastList = new ConcurrentHashMap(); //TODO change linked list to something better
 	private ConcurrentHashMap<Class<? extends Event>,LinkedList<MicroService>> EventList = new ConcurrentHashMap<>();
+	//private ConcurrentHashMap<Event<>,Future<>> eventToFuture = new ConcurrentHashMap<>(); // check
 
 
 	@Override
@@ -58,8 +58,8 @@ public class MessageBusImpl implements MessageBus {
 		Future<T> future = new Future<T>(); // where to store it?
 		// add to every event field future which will contains his personal future
 		// e.setFuture(future);
-		MicroService m = EventList.get(e.getClass()).remove(); // remove the head
-		microServiceQueue.get(m).add(e); // add e to m queue
+		MicroService m = EventList.get(e.getClass()).remove(); // remove the head TODO check
+		microServiceQueue.get(m).add(e); // add e to m queue TODO check
 		EventList.get(e.getClass()).add(m); // add the removed m to the tail for round robbing pattern
 		// for now the future is empty until the complete method will be called
 		return  future; // for the student now he can loop this future untill it will be resolve
@@ -68,7 +68,7 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void register(MicroService m) {
-		microServiceQueue.putIfAbsent(m, new ConcurrentLinkedQueue<>());
+		microServiceQueue.putIfAbsent(m, new ConcurrentLinkedDeque<>());
 	}
 
 	@Override
@@ -80,38 +80,31 @@ public class MessageBusImpl implements MessageBus {
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 		// TODO Auto-generated method stub
 		//TODO take blocking queue
-		return null;
+		//if (microServiceQueue.get(m).isEmpty())
+		//	throw new InterruptedException();
+
+		return microServiceQueue.get(m).pop();
 	}
 
 
 	public boolean isMicroServiceRegistered(MicroService m){
-		if(microServiceQueue.get(m) != null )
-			return true;
-		return false;
+		return microServiceQueue.get(m) != null;
 	}
 
 	public <T> boolean isMicroServiceInEvent(Class<? extends Event<T>> type , MicroService m){
-		if(EventList.get(type).contains(m))
-			return true;
-		return false;
+		return EventList.get(type).contains(m);
 	}
 
 	public <T> boolean isMicroServiceInBroadcast( Class<? extends Broadcast> type , MicroService m){
-		if(BroadcastList.get(type).contains(m))
-			return true;
-		return false;
+		return BroadcastList.get(type).contains(m);
 	}
 
 	public <T> boolean didMicroServiceReceiveBroadcast(Broadcast type , MicroService m){
-		if(microServiceQueue.get(m).contains(type))
-			return  true;
-		return false;
+		return microServiceQueue.get(m).contains(type);
 	}
 
 	public <T> boolean didMicroServiceReceiveEvent(Event<T> type , MicroService m) {
-		if(microServiceQueue.get(m).contains(type))
-			return  true;
-		return false;
+		return microServiceQueue.get(m).contains(type);
 	}
 
 	public <T> boolean wasEventSent(Event<T> type) {

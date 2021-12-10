@@ -1,6 +1,11 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Broadcast;
+import bgu.spl.mics.Callback;
+import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.objects.CPU;
 
 /**
  * CPU service is responsible for handling the {@link DataPreProcessEvent}.
@@ -9,15 +14,32 @@ import bgu.spl.mics.MicroService;
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
+
+
 public class CPUService extends MicroService {
-    public CPUService(String name) {
-        super("Change_This_Name");
+
+    private CPU cpu;
+    private class tickCallback implements Callback<TickBroadcast>{
+        @Override
+        public void call(TickBroadcast c) {
+            cpu.updateTime();
+        }
+    }
+
+
+
+    public CPUService(String name, MessageBusImpl bus,CPU cpu)
+    {
+
+        super("Change_This_Name",bus);
+        this.cpu = cpu;
         // TODO Implement this
     }
 
     @Override
     protected void initialize() {
         // TODO Implement this
+        subscribeBroadcast(TickBroadcast.class , new tickCallback());
 
     }
 }
