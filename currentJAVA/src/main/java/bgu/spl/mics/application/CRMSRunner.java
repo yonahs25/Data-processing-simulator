@@ -1,52 +1,56 @@
 package bgu.spl.mics.application;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
+import bgu.spl.mics.application.objects.Data;
+import bgu.spl.mics.application.objects.Model;
+import bgu.spl.mics.application.objects.Student;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import com.google.gson.stream.JsonReader;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Stream;
 
 /** This is the Main class of Compute Resources Management System application. You should parse the input file,
  * create the different instances of the objects, and run the system.
  * In the end, you should output a text file.
  */
 public class CRMSRunner {
-    private static String readAllBytesJava7(String filePath)
-    {
-        String content = "";
 
-        try
-        {
-            content = new String ( Files.readAllBytes( Paths.get(filePath) ) );
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        return content;
-    }
     public static void main(String[] args) {
         System.out.println("Hello World!");
+        try {
+            JSONParser jsonparser = new JSONParser();
+            FileReader reader = new FileReader("/home/tovbinv/Desktop/spl2/currentJAVA/example_input.json");
+            Object obj = jsonparser.parse(reader);
+            JSONObject empjsonobg = (JSONObject) obj;
+            JSONArray studentsArray = (JSONArray) empjsonobg.get("Students");
+            for (int i = 0; i < studentsArray.size(); i++) {
+                JSONObject jsstudent = (JSONObject) studentsArray.get(i);
+                String name = (String) jsstudent.get("name");
+                String department = (String) jsstudent.get("department");
+                String status = (String) jsstudent.get("status");
+                JSONArray modelsArray = (JSONArray) jsstudent.get("models");
+                Student student = new Student(name, department, status);
 
 
-        Gson gson = new Gson();
 
-        //String path1 = "../../../../../../example_input.json";
-        String path = "/home/yona/Desktop/spl2/currentJAVA/example_input.json";
-//        System.out.println(readAllBytesJava7(path));
+                for (int j = 0; j < modelsArray.size(); j++) {
+                    JSONObject jsmodel = (JSONObject) modelsArray.get(j);
+                    String modelname = (String) jsmodel.get("name");
+                    Data.Type type = (Data.Type) jsmodel.get("type");
+                    int size = (int) jsmodel.get("size");
+                    Data data = new Data(type, size);
+                    Model model = new Model(modelname, data, student);
+                    student.addModel(model);
 
+                }
 
+            }
+
+        } catch (IOException | ParseException e) {
+
+        }
     }
-
-
 
 }

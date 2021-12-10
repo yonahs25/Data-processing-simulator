@@ -1,10 +1,6 @@
 package bgu.spl.mics;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Vector;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -41,12 +37,15 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public <T> void complete(Event<T> e, T result) {
 		// TODO Auto-generated method stub
+		// Future future = e.getFuture();
+		// future.resolve(result);
 		//resolve of future
 
 	}
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
+		// if it tickBroadcast it need to bypass all the events
 		for (MicroService m : BroadcastList.get(b.getClass())){
 			microServiceQueue.get(m).add(b);
 		}
@@ -56,8 +55,15 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
+		Future<T> future = new Future<T>(); // where to store it?
+		// add to every event field future which will contains his personal future
+		// e.setFuture(future);
+		MicroService m = EventList.get(e.getClass()).remove(); // remove the head
+		microServiceQueue.get(m).add(e); // add e to m queue
+		EventList.get(e.getClass()).add(m); // add the removed m to the tail for round robbing pattern
+		// for now the future is empty until the complete method will be called
+		return  future; // for the student now he can loop this future untill it will be resolve
 
-		return null;
 	}
 
 	@Override
@@ -79,28 +85,51 @@ public class MessageBusImpl implements MessageBus {
 
 
 	public boolean isMicroServiceRegistered(MicroService m){
-		return true; //TODO finish
+		if(microServiceQueue.get(m) != null )
+			return true;
+		return false;
 	}
 
 	public <T> boolean isMicroServiceInEvent(Class<? extends Event<T>> type , MicroService m){
-		return true; //TODO finish
+		if(EventList.get(type).contains(m))
+			return true;
+		return false;
 	}
 
 	public <T> boolean isMicroServiceInBroadcast( Class<? extends Broadcast> type , MicroService m){
-		return true; //TODO finish
+		if(BroadcastList.get(type).contains(m))
+			return true;
+		return false;
 	}
 
 	public <T> boolean didMicroServiceReceiveBroadcast(Broadcast type , MicroService m){
-		return true; //TODO finish
+		if(microServiceQueue.get(m).contains(type))
+			return  true;
+		return false;
 	}
-
-	public <T> boolean wasBroadcastSent(Broadcast type) {return true;} //TODO finish
-
 
 	public <T> boolean didMicroServiceReceiveEvent(Event<T> type , MicroService m) {
-		return true; //TODO finish
+		if(microServiceQueue.get(m).contains(type))
+			return  true;
+		return false;
 	}
 
-	public <T> boolean wasEventSent(Event<T> type) {return true;} //TODO finish
+	public <T> boolean wasEventSent(Event<T> type) {
+		// every microservice that receive event need to be removed from the list and add to the end for the round robbing pattern
+		MicroService m = EventList.get(type.getClass()).getLast();
+		if(microServiceQueue.get(m).contains(type))
+			return true;
+		return false;
+	}
 
+	public <T> boolean wasBroadcastSent(Broadcast type) {
+		boolean ans = true;
+		for(int i = 0; i < BroadcastList.get(type.getClass()).size() && ans ;i++){
+			MicroService m = BroadcastList.get(type.getClass()).get(i);
+			if(!microServiceQueue.get(m).contains(type))
+				ans = false;
+		}
+		return ans;
+
+	}
 }

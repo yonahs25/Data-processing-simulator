@@ -32,17 +32,20 @@ public class Future<T> {
 	 * @pre none
 	 * @post none
      */
-	public synchronized T get() {
-//		synchronized (this) {
-			while (!isDone()){
-				try {
-					wait();
-				} catch (InterruptedException e) {}
-			}
-			return answer;
+	public T get() {
+		synchronized (this) {
+//			while (!isDone()){
+//				try {
+//					wait();
+//				} catch (InterruptedException e) {}
+//			}
+			try {
+				while (answer == null)
+					this.wait();
+			}catch (InterruptedException e){}
 		}
-
-//	}
+		return answer;
+	}
 	
 	/**
      * Resolves the result of this Future object.
@@ -51,8 +54,10 @@ public class Future<T> {
      */
 	public void resolve (T result) {
 		//isDone = true;
-		answer = result;
-		notifyAll();
+		synchronized (this) {
+			answer = result;
+			this.notifyAll();
+		}
 	}
 	
 	/**

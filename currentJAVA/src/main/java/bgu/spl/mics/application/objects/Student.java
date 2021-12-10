@@ -43,4 +43,8 @@ public class Student {
     public Degree getStatus() {
         return status;
     }
+
+    public void addModel(Model model){
+        models.add(model);
+    }
 }
