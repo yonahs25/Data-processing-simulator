@@ -14,12 +14,12 @@ public class Future<T> {
 
 	private boolean isDone;
 	private T answer;
-	Object lock = new Object();
+	//Object lock = new Object();
 	/**
 	 * This should be the the only public constructor in this class.
 	 */
 	public Future() {
-		isDone = false;
+		//isDone = false;
 		answer = null;
 	}
 	
@@ -32,16 +32,17 @@ public class Future<T> {
 	 * @pre none
 	 * @post none
      */
-	public T get() {
-		//if (isDone)
-		//	return answer;
-		//else
-		//	return null;
+	public synchronized T get() {
+//		synchronized (this) {
+			while (!isDone()){
+				try {
+					wait();
+				} catch (InterruptedException e) {}
+			}
+			return answer;
+		}
 
-		while (isDone == false) ;
-		return answer;
-
-	}
+//	}
 	
 	/**
      * Resolves the result of this Future object.
@@ -49,8 +50,9 @@ public class Future<T> {
 	 * @post isDone == true && answer == result
      */
 	public void resolve (T result) {
-		isDone = true;
+		//isDone = true;
 		answer = result;
+		notifyAll();
 	}
 	
 	/**
@@ -59,7 +61,7 @@ public class Future<T> {
 	 * @post none
      */
 	public boolean isDone() {
-		return isDone;
+		return (answer != null);
 	}
 	
 	/**

@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="spl221ass2:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/spl221ass2_jar</output-path>
+    <root id="archive" name="spl221ass2.jar">
+      <element id="module-output" name="spl221ass2" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.4.1.3/jackson-databind-2.4.1.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.4.0/jackson-annotations-2.4.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.9/gson-2.8.9.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.4.1.1/jackson-core-2.4.1.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

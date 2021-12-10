@@ -3,6 +3,10 @@ package bgu.spl.mics;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Vector;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -11,21 +15,27 @@ import java.util.Queue;
  */
 public class MessageBusImpl implements MessageBus {
 
-	private HashMap<MicroService, Queue> microServiceQueue = new HashMap();
-	private HashMap<Class<? extends Broadcast>, LinkedList<MicroService>> BroadcastList = new HashMap();
-	private HashMap<Class<? extends Event>,LinkedList<MicroService>> EventList = new HashMap<>();
+	private ConcurrentHashMap<MicroService, ConcurrentLinkedQueue<Message>> microServiceQueue = new ConcurrentHashMap();
+	private ConcurrentHashMap<Class<? extends Broadcast>, LinkedList<MicroService>> BroadcastList = new ConcurrentHashMap(); //TODO change linked list to something better
+	private ConcurrentHashMap<Class<? extends Event>,LinkedList<MicroService>> EventList = new ConcurrentHashMap<>();
+
 
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		// TODO Auto-generated method stub
+		if (EventList.get(type) == null)
+			EventList.put(type, new LinkedList<MicroService>()); // need to change linked list
+
+		EventList.get(type).add(m);
 
 	}
 
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		// TODO Auto-generated method stub
+		if (BroadcastList.get(type) == null)
+			BroadcastList.put(type, new LinkedList<MicroService>()); // need to change linked list
 
+		EventList.get(type).add(m);
 	}
 
 	@Override
@@ -37,32 +47,33 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
-		// TODO Auto-generated method stub
+		for (MicroService m : BroadcastList.get(b.getClass())){
+			microServiceQueue.get(m).add(b);
+		}
 
 	}
 
 
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public void register(MicroService m) {
-		// TODO Auto-generated method stub
-
+		microServiceQueue.putIfAbsent(m, new ConcurrentLinkedQueue<>());
 	}
 
 	@Override
 	public void unregister(MicroService m) {
-		// TODO Auto-generated method stub
-
+		microServiceQueue.remove(m); //TODO check if
 	}
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 		// TODO Auto-generated method stub
+		//TODO take blocking queue
 		return null;
 	}
 
