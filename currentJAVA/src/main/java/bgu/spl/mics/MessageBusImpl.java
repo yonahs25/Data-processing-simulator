@@ -67,7 +67,7 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void unregister(MicroService m) {
-		microServiceQueue.remove(m); //TODO check if
+		microServiceQueue.remove(m); //TODO check if need to do more
 	}
 
 	@Override
