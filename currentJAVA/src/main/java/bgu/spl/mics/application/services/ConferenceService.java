@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 
 /**
@@ -12,8 +13,8 @@ import bgu.spl.mics.MicroService;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class ConferenceService extends MicroService {
-    public ConferenceService(String name) {
-        super("Change_This_Name");
+    public ConferenceService(String name, MessageBusImpl bus) {
+        super("Change_This_Name",bus);
         // TODO Implement this
     }
 
