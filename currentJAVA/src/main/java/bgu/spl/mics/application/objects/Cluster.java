@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.objects;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -13,9 +14,9 @@ public class Cluster {
 
 	private List<CPU> Cpus;
 	private List<GPU> Gpus;
-	private HashMap<GPU, List<DataBatch>> returningProcessedBatches;
+	private HashMap<GPU, ConcurrentLinkedDeque<DataBatch>> returningProcessedBatches;
 	 //HashMap<CPU, Queue<DataBatch>> waitingUnprocessedBatches;
-	private Queue<DataBatch> waitingUnprocessedBatches;
+	private ConcurrentLinkedDeque<DataBatch> waitingUnprocessedBatches;
 	private Vector<String> modelTrained;
 	private AtomicInteger dataProcessedCpu;
 	private AtomicInteger timeUnitsCpu;
@@ -25,11 +26,22 @@ public class Cluster {
 		Cpus = new ArrayList<>();
 		Gpus = new ArrayList<>();
 		returningProcessedBatches = new HashMap<>();
-		waitingUnprocessedBatches = new LinkedList<>();
-		modelTrained = new Vector<>();
+		waitingUnprocessedBatches = new ConcurrentLinkedDeque<>();
+		modelTrained = new Vector<String>();
 		dataProcessedCpu = new AtomicInteger(0);
 		timeUnitsCpu = new AtomicInteger(0);
 		timeUnitsGpu = new AtomicInteger(0);
+	}
+
+	public void registerGpu(GPU gpu)
+	{
+		Gpus.add(gpu);
+		returningProcessedBatches.put(gpu,new ConcurrentLinkedDeque<>());
+	}
+
+	public void registerCpu(CPU cpu)
+	{
+		Cpus.add(cpu);
 	}
 
 	/**
@@ -42,6 +54,10 @@ public class Cluster {
 
 	public void addUnprocessedData(List<DataBatch> list)
 	{
+		while (!list.isEmpty())
+		{
+			waitingUnprocessedBatches.add(list.remove(0));
+		}
 
 	}
 
@@ -67,18 +83,48 @@ public class Cluster {
 	// cpu calling this function to send processed data to the cluster
 	public void putProcessedData(DataBatch e){
 		//put dataBatch in his right queue
-		List toAddTo = returningProcessedBatches.get(e.getOwner());
-		toAddTo.add(e);
+		GPU gpu = e.getOwner();
+		returningProcessedBatches.get(gpu).add(e);
+
 	}
 
 	// get gpu queue
-	public List<DataBatch> getGpuProcessed(GPU gpu){
+	public Queue<DataBatch> getGpuProcessed(GPU gpu){
 		return returningProcessedBatches.get(gpu);
 	}
 
 
 	//can make a clone to avoid long syncronize
-	public List<DataBatch> getProccesedData(GPU gpu) {
+	public Queue<DataBatch> getProccesedData(GPU gpu) {
 		return returningProcessedBatches.get(gpu);
 	}
+
+	public void addModelTrained(String modelName)
+	{
+		modelTrained.add(modelName);
+	}
+
+	public  void  incrementGpuTimeUsed(int time)
+	{
+		int oldVal;
+		int newVal;
+		do
+		{
+			oldVal = timeUnitsGpu.get();
+			newVal = oldVal + time ;
+		}while (!timeUnitsGpu.compareAndSet(oldVal,newVal));
+	}
+
+	public  void  incrementCpuTimeUsed(int time)
+	{
+		int oldVal;
+		int newVal;
+		do
+		{
+			oldVal = timeUnitsCpu.get();
+			newVal = oldVal + time ;
+		}while (!timeUnitsCpu.compareAndSet(oldVal,newVal));
+	}
+
 }
+

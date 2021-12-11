@@ -4,8 +4,8 @@ import bgu.spl.mics.application.messages.TestModelEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.messages.TrainModelEvent;
 
-import java.util.LinkedList;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -17,7 +17,7 @@ public class MessageBusImpl implements MessageBus {
 	private ConcurrentHashMap<MicroService, ConcurrentLinkedDeque<Message>> microServiceQueue = new ConcurrentHashMap();
 	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedDeque<MicroService>> BroadcastList = new ConcurrentHashMap(); //TODO change linked list to something better
 	private ConcurrentHashMap<Class<? extends Event>,ConcurrentLinkedDeque<MicroService>> EventList = new ConcurrentHashMap<>();
-	//private ConcurrentHashMap<Event<>,Future<>> eventToFuture = new ConcurrentHashMap<>(); // check
+	private ConcurrentHashMap<Event,Future> eventToFuture = new ConcurrentHashMap<>(); // check
 
 
 	@Override
@@ -143,12 +143,16 @@ public class MessageBusImpl implements MessageBus {
 
 	public <T> boolean wasBroadcastSent(Broadcast type) {
 		boolean ans = true;
-		for(int i = 0; i < BroadcastList.get(type.getClass()).size() && ans ;i++){
-			MicroService m = BroadcastList.get(type.getClass()).get(i);
+		for(MicroService m : BroadcastList.get(type.getClass()))
+		{
 			if(!microServiceQueue.get(m).contains(type))
 				ans = false;
 		}
 		return ans;
-
 	}
+
+
+
+
+
 }

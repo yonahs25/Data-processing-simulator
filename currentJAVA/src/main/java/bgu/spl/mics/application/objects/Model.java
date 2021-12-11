@@ -48,4 +48,8 @@ public class Model {
     public void setResults(Results results) {
         this.results = results;
     }
+
+    public String getName() {
+        return name;
+    }
 }

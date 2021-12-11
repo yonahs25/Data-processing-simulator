@@ -20,7 +20,8 @@ public class CPUService extends MicroService {
 
     private class tickCallback implements Callback<TickBroadcast>{
         @Override
-        public void call(TickBroadcast c) {
+        public void call(TickBroadcast c)
+        {
             cpu.updateTime();
         }
     }

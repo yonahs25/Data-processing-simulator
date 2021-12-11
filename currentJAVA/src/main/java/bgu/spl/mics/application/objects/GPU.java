@@ -22,9 +22,9 @@ public class GPU {
     private Queue<DataBatch> processedData; //has a limit
     //private DataBatch workingOn;
     //how many processed data he can have in queue
-    private int limit;
+    private final int limit;
     //time it takes to process data
-    private int tickTimer;
+    private  int tickTimer;
     private int missingData;
 
 
@@ -157,15 +157,18 @@ public class GPU {
      */
     private void processData(){
         if (currTick - startTick >= tickTimer){
-            if (!processedData.isEmpty()){
+            if (!processedData.isEmpty())
+            {
                 DataBatch removed = processedData.remove();
                 removed.getData().increment();
                 startTick = currTick;
+                cluster.incrementGpuTimeUsed(tickTimer);
 
                 //finished training
                 if (removed.getData().getProcessed() == removed.getData().getSize())
                 {
                     model.setStatus(Model.Status.Trained);
+                    cluster.addModelTrained(model.getName());
                 }
 
                 // return model to bus
@@ -181,11 +184,11 @@ public class GPU {
     private void getDataFromCluster(){
         if(processedData.isEmpty())
             startTick = currTick;
-        List<DataBatch> myList = cluster.getGpuProcessed(this);
+        Queue<DataBatch> myList = cluster.getGpuProcessed(this);
         while (processedData.size() != limit && !myList.isEmpty())
         {
             missingData--;
-            processedData.add(myList.remove(0));
+            processedData.add(myList.remove());
         }
     }
 

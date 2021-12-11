@@ -10,6 +10,8 @@ import bgu.spl.mics.application.messages.TrainModelEvent;
 import bgu.spl.mics.application.objects.GPU;
 import bgu.spl.mics.application.objects.Model;
 
+import java.util.concurrent.ConcurrentLinkedDeque;
+
 /**
  * GPU service is responsible for handling the
  * {@link TrainModelEvent} and {@link TestModelEvent},
@@ -27,8 +29,12 @@ public class GPUService extends MicroService {
             gpu.updateTick();
             if(gpu.getModel().getStatus() == Model.Status.Trained)
             {
-
                 complete(getCurrentEvent(),gpu.getModel());
+                currentEvent = null;
+                if(!waitingEvents.isEmpty())
+                {
+                    // need to call back the next message
+                }
             }
         }
     }
@@ -38,8 +44,16 @@ public class GPUService extends MicroService {
         @Override
         public void call(TrainModelEvent c)
         {
-            gpu.setModel(c.getModel());
-            setCurrentEvent(c);
+            if(currentEvent == null)
+            {
+                gpu.setModel(c.getModel());
+                setCurrentEvent(c);
+            }
+            else
+            {
+                waitingEvents.add(c);
+            }
+
 
         }
     }
@@ -49,13 +63,22 @@ public class GPUService extends MicroService {
         @Override
         public void call(TestModelEvent c)
         {
-            gpu.setModel(c.getModel());
-            complete(c, c.getModel());
+            if(currentEvent == null)
+            {
+                gpu.setModel(c.getModel());
+                complete(c, c.getModel());
+            }
+            else
+            {
+                waitingEvents.addFirst(c);
+            }
+
         }
     }
 
     private GPU gpu;
     private Event currentEvent;
+    private ConcurrentLinkedDeque<Event> waitingEvents;
 
     public void setCurrentEvent(Event currentEvent) {
         this.currentEvent = currentEvent;
