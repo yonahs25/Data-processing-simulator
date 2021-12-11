@@ -33,6 +33,6 @@ public class Data {
         return size;
     }
     public void increment(){
-        processed++;
+        processed+=1000;
     }
 }

@@ -25,6 +25,8 @@ public class GPU {
     private int limit;
     //time it takes to process data
     private int tickTimer;
+    private int missingData;
+
 
 
     public GPU(Type type, Cluster cluster) {
@@ -48,6 +50,7 @@ public class GPU {
         model = null;
         currTick = 0;
         startTick = 0;
+        missingData=0;
         //workingOn = null;
     }
 
@@ -98,13 +101,55 @@ public class GPU {
      * sending list of unprocessed chunk to cluster
      */
     private void sendUnprocessed(){
-        //need to check how to deal with empty unprocessedData.
-        List<DataBatch> toSend = new ArrayList<>();
-        for (int i = 0; i < 10; i++){
-            if (!unprocessedData.isEmpty())
-            toSend.add(unprocessedData.remove(0));
+
+        if(type == Type.RTX3090)
+        {
+            if(processedData.size() < 20)
+            {
+                List<DataBatch> toSend = new ArrayList<>();
+                while ( !unprocessedData.isEmpty() && missingData < 16)
+                {
+                        missingData++;
+                        toSend.add(unprocessedData.remove(0));
+                }
+                        cluster.getUnprocessedData(toSend);
+            }
+
         }
-        cluster.getUnprocessedData(toSend);
+        else if(type == Type.RTX2080)
+        {
+            if(processedData.size() < 12)
+            {
+                List<DataBatch> toSend = new ArrayList<>();
+                while ( !unprocessedData.isEmpty() && missingData < 8)
+                {
+                    missingData++;
+                    toSend.add(unprocessedData.remove(0));
+                }
+                cluster.getUnprocessedData(toSend);
+            }
+        }
+        else
+            if(processedData.size() < 6)
+            {
+                List<DataBatch> toSend = new ArrayList<>();
+                while ( !unprocessedData.isEmpty() && missingData < 4)
+                {
+                    missingData++;
+                    toSend.add(unprocessedData.remove(0));
+                }
+                cluster.getUnprocessedData(toSend);
+         }
+
+
+
+//        //need to check how to deal with empty unprocessedData.
+//        List<DataBatch> toSend = new ArrayList<>();
+//        for (int i = 0; i < 10; i++){
+//            if (!unprocessedData.isEmpty())
+//            toSend.add(unprocessedData.remove(0));
+//        }
+//        cluster.getUnprocessedData(toSend);
     }
 
     /**
@@ -118,8 +163,11 @@ public class GPU {
                 startTick = currTick;
 
                 //finished training
-                //if removed.getData().getProcessed == max
-                //model.setStatus(Model.Status.Trained);
+                if (removed.getData().getProcessed() == removed.getData().getSize())
+                {
+                    model.setStatus(Model.Status.Trained);
+                }
+
                 // return model to bus
 
 
@@ -134,7 +182,9 @@ public class GPU {
         if(processedData.isEmpty())
             startTick = currTick;
         List<DataBatch> myList = cluster.getGpuProcessed(this);
-        while (processedData.size() != limit && !myList.isEmpty()){
+        while (processedData.size() != limit && !myList.isEmpty())
+        {
+            missingData--;
             processedData.add(myList.remove(0));
         }
     }
@@ -168,8 +218,8 @@ public class GPU {
         currTick++;
         if (model.getStatus() == Model.Status.Training){
             sendUnprocessed();
-            //getDataFromCluster();
             processData();
+            getDataFromCluster();
         }
 
     }

@@ -20,7 +20,7 @@ public class ConfrenceInformation {
     }
     
     
-    public void gotGoodResult(Model e)
+    public void addGoodResult(Model e)
     {
         goodResults.add(e);
     }

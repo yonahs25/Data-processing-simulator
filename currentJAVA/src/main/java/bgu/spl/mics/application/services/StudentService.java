@@ -10,7 +10,6 @@ import bgu.spl.mics.application.messages.TrainModelEvent;
 import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
 
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -32,9 +31,9 @@ public class StudentService extends MicroService {
         public void call(PublishConferenceBroadcast c)
         {
             Vector<Model> goodResults = c.getGoodResults();
-            List<Model> models = student.getModels();
+            //List<Model> models = student.getModels();
             for(int i = 0 ; i< goodResults.size(); i++){
-                if(models.contains(goodResults.get(i)))
+                if(goodResults.get(i).getStudent() == student)
                     student.setPublications();
                 else
                     student.setPapersRead();

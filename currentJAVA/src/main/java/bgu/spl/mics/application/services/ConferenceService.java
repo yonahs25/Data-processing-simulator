@@ -24,7 +24,7 @@ public class ConferenceService extends MicroService {
     private class publishResultsCallback implements Callback<PublishResultsEvent> {
         @Override
         public void call(PublishResultsEvent c) {
-            confrence.gotGoodResult(c.getModel());
+            confrence.addGoodResult(c.getModel());
         }
     }
 

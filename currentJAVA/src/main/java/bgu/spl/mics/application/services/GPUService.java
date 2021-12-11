@@ -1,17 +1,18 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Callback;
+import bgu.spl.mics.Event;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.TestModelEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.messages.TrainModelEvent;
 import bgu.spl.mics.application.objects.GPU;
+import bgu.spl.mics.application.objects.Model;
 
 /**
  * GPU service is responsible for handling the
  * {@link TrainModelEvent} and {@link TestModelEvent},
- * in addition to sending the {@link DataPreProcessEvent}.
  * This class may not hold references for objects which it is not responsible for.
  *
  * You can add private fields and public methods to this class.
@@ -24,6 +25,11 @@ public class GPUService extends MicroService {
         public void call(TickBroadcast c)
         {
             gpu.updateTick();
+            if(gpu.getModel().getStatus() == Model.Status.Trained)
+            {
+
+                complete(getCurrentEvent(),gpu.getModel());
+            }
         }
     }
 
@@ -33,6 +39,8 @@ public class GPUService extends MicroService {
         public void call(TrainModelEvent c)
         {
             gpu.setModel(c.getModel());
+            setCurrentEvent(c);
+
         }
     }
 
@@ -47,6 +55,15 @@ public class GPUService extends MicroService {
     }
 
     private GPU gpu;
+    private Event currentEvent;
+
+    public void setCurrentEvent(Event currentEvent) {
+        this.currentEvent = currentEvent;
+    }
+
+    public Event getCurrentEvent() {
+        return currentEvent;
+    }
 
     public GPUService(String name, MessageBusImpl bus, GPU gpu)
     {

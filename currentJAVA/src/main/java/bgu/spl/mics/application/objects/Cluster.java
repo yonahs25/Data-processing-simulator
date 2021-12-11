@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.objects;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Passive object representing the cluster.
@@ -10,17 +11,25 @@ import java.util.*;
  */
 public class Cluster {
 
-	List<CPU> Cpus;
-	List<GPU> Gpus;
-	HashMap<GPU, List<DataBatch>> returningProcessedBatches;
-	//HashMap<CPU, Queue<DataBatch>> waitingUnprocessedBatches;
-	Queue<DataBatch> waitingUnprocessedBatches;
+	private List<CPU> Cpus;
+	private List<GPU> Gpus;
+	private HashMap<GPU, List<DataBatch>> returningProcessedBatches;
+	 //HashMap<CPU, Queue<DataBatch>> waitingUnprocessedBatches;
+	private Queue<DataBatch> waitingUnprocessedBatches;
+	private Vector<String> modelTrained;
+	private AtomicInteger dataProcessedCpu;
+	private AtomicInteger timeUnitsCpu;
+	private AtomicInteger timeUnitsGpu;
 
 	public Cluster() {
 		Cpus = new ArrayList<>();
 		Gpus = new ArrayList<>();
 		returningProcessedBatches = new HashMap<>();
 		waitingUnprocessedBatches = new LinkedList<>();
+		modelTrained = new Vector<>();
+		dataProcessedCpu = new AtomicInteger(0);
+		timeUnitsCpu = new AtomicInteger(0);
+		timeUnitsGpu = new AtomicInteger(0);
 	}
 
 	/**
@@ -31,7 +40,8 @@ public class Cluster {
 		return null;
 	}
 
-	public void addUnprocessedData(List<DataBatch> list){
+	public void addUnprocessedData(List<DataBatch> list)
+	{
 
 	}
 
