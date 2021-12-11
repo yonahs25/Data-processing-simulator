@@ -12,7 +12,8 @@ public class ConfrenceInformation {
     private int date;
     private Vector<Model> goodResults;
 
-    public ConfrenceInformation(String name, int date) {
+    public ConfrenceInformation(String name, int date)
+    {
         this.name = name;
         this.date = date;
         goodResults = new Vector<>();
@@ -22,5 +23,15 @@ public class ConfrenceInformation {
     public void gotGoodResult(Model e)
     {
         goodResults.add(e);
+    }
+
+    public Vector<Model> getGoodResults()
+    {
+        return goodResults;
+    }
+
+    public int getDate()
+    {
+        return date;
     }
 }

@@ -47,4 +47,16 @@ public class Student {
     public void addModel(Model model){
         models.add(model);
     }
+
+    public List<Model> getModels() {
+        return models;
+    }
+
+    public void setPublications() {
+        publications++;
+    }
+
+    public void setPapersRead() {
+        papersRead++;
+    }
 }

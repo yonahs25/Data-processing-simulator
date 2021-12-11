@@ -7,8 +7,11 @@ import bgu.spl.mics.application.messages.PublishConferenceBroadcast;
 import bgu.spl.mics.application.messages.PublishResultsEvent;
 import bgu.spl.mics.application.messages.TestModelEvent;
 import bgu.spl.mics.application.messages.TrainModelEvent;
+import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
-import jdk.nashorn.internal.codegen.CompilerConstants;
+
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Student is responsible for sending the {@link TrainModelEvent},
@@ -20,24 +23,27 @@ import jdk.nashorn.internal.codegen.CompilerConstants;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class StudentService extends MicroService {
+
+    private Student student;
+
     private class publishCallback implements Callback<PublishConferenceBroadcast>{
 
         @Override
         public void call(PublishConferenceBroadcast c)
         {
-            // get the vector,
-            System.out.println("hi");
+            Vector<Model> goodResults = c.getGoodResults();
+            List<Model> models = student.getModels();
+            for(int i = 0 ; i< goodResults.size(); i++){
+                if(models.contains(goodResults.get(i)))
+                    student.setPublications();
+                else
+                    student.setPapersRead();
+            }
         }
     }
 
-
-
-
-
-    private Student student;
-
     public StudentService(String name, MessageBusImpl bus,Student student) {
-        super("Change_This_Name",bus);
+        super(name,bus);
         this.student = student;
         // TODO Implement this
     }
@@ -45,6 +51,9 @@ public class StudentService extends MicroService {
     @Override
     protected void initialize() {
         subscribeBroadcast(PublishConferenceBroadcast.class, new publishCallback());
+        // TODO Implement this
 
     }
+
+
 }

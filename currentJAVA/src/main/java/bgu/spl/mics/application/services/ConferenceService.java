@@ -1,7 +1,14 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.Callback;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.PublishConferenceBroadcast;
+import bgu.spl.mics.application.messages.PublishResultsEvent;
+import bgu.spl.mics.application.objects.ConfrenceInformation;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Conference service is in charge of
@@ -13,14 +20,33 @@ import bgu.spl.mics.MicroService;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class ConferenceService extends MicroService {
-    public ConferenceService(String name, MessageBusImpl bus) {
-        super("Change_This_Name",bus);
-        // TODO Implement this
+
+    private class publishResultsCallback implements Callback<PublishResultsEvent> {
+        @Override
+        public void call(PublishResultsEvent c) {
+            confrence.gotGoodResult(c.getModel());
+        }
+    }
+
+    private ConfrenceInformation confrence ;
+
+    public ConferenceService(String name,ConfrenceInformation confrence, MessageBusImpl bus) {
+        super(name,bus);
+        this.confrence = confrence;
+
     }
 
     @Override
     protected void initialize() {
-        // TODO Implement this
+        subscribeEvent(PublishResultsEvent.class , new ConferenceService.publishResultsCallback());
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sendBroadcast(new PublishConferenceBroadcast(confrence.getGoodResults()));
+                // need to unregister via the messageBus
+            }
+        } ,confrence.getDate());
 
     }
 }

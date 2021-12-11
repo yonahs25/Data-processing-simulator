@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Broadcast;
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
@@ -19,6 +18,7 @@ import bgu.spl.mics.application.objects.CPU;
 public class CPUService extends MicroService {
 
     private CPU cpu;
+
     private class tickCallback implements Callback<TickBroadcast>{
         @Override
         public void call(TickBroadcast c) {
@@ -31,7 +31,7 @@ public class CPUService extends MicroService {
     public CPUService(String name, MessageBusImpl bus,CPU cpu)
     {
 
-        super("Change_This_Name",bus);
+        super(name,bus);
         this.cpu = cpu;
         // TODO Implement this
     }
