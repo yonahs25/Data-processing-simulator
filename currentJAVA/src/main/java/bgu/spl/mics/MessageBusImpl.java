@@ -40,10 +40,8 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public <T> void complete(Event<T> e, T result) {
-		// TODO Auto-generated method stub
-		// Future future = e.getFuture();
-		// future.resolve(result);
-		//resolve of future
+		Future future = eventToFuture.get(e);
+		future.resolve(result);
 
 	}
 
@@ -82,6 +80,7 @@ public class MessageBusImpl implements MessageBus {
 		}
 
 		Future<T> future = new Future<T>(); // where to store it?
+		eventToFuture.put(e,future);
 //		// add to every event field future which will contains his personal future
 //		// e.setFuture(future);
 //		//MicroService m = EventList.get(e.getClass()).remove(); // remove the head TODO check
@@ -108,7 +107,6 @@ public class MessageBusImpl implements MessageBus {
 		//TODO take blocking queue
 		//if (microServiceQueue.get(m).isEmpty())
 		//	throw new InterruptedException();
-
 		return microServiceQueue.get(m).pop();
 	}
 

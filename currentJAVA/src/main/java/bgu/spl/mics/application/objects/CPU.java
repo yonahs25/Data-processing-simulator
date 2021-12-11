@@ -13,8 +13,11 @@ public class CPU {
     private int cores;
     private Cluster cluster;
     private int currTick;
-    Queue<DataBatch> waitingOnProcess;
-    int limit; // how much the have in queue
+    private Queue<DataBatch> waitingOnProcess;
+    private int limit; // how much the have in queue
+    private int workTime;
+    private int startTick;
+    private int batchesProcessed;
 
 
     public CPU(int cores, Cluster cluster) {
@@ -22,7 +25,11 @@ public class CPU {
         this.cluster = cluster;
         currTick = 0;
         waitingOnProcess = new LinkedList<>();
-        int limit = cores/4;
+        limit = cores/4;
+        workTime = 0;
+        startTick = 0;
+        batchesProcessed = 0;
+
     }
 
 
@@ -31,19 +38,48 @@ public class CPU {
      * @post waitingOnProcess.size() != @pre waitingOnProcess.size()
      */
 
-    private void getProcessed(){
-
+    private void getUnprocessedData()
+    {
         Queue<DataBatch> toTakeFrom = cluster.getWaitingUnprocessedBatches();
-        while (!toTakeFrom.isEmpty() && waitingOnProcess.size() < limit){
+        while (!toTakeFrom.isEmpty() && waitingOnProcess.size() < limit)
+        {
+            if(waitingOnProcess.isEmpty())
+            {
+                startTick = currTick;
+            }
             waitingOnProcess.add((toTakeFrom.remove()));
         }
-
-
-
-        DataBatch curr = waitingOnProcess.peek(); //TODO write check if this data has been processed
-        //if dataBatch has been processed call cluster.putProcessedData
-
     }
+
+    private void sendProcessedData()
+    {
+        if(!waitingOnProcess.isEmpty())
+        {
+            int timeToProcess = (32/cores);
+            switch (waitingOnProcess.peek().getData().getType())
+            {
+                case Images:
+                    timeToProcess*=4;
+                    break;
+                case Text:
+                    timeToProcess*=2;
+                    break;
+                default:
+                    break;
+            }
+            if (currTick-startTick >= timeToProcess)
+            {
+                cluster.putProcessedData(waitingOnProcess.remove());
+                workTime+=timeToProcess;
+                batchesProcessed++;
+                cluster.incrementCpuProcessedData(1);
+                cluster.incrementCpuTimeUsed(timeToProcess);
+                //TODO
+            }
+        }
+    }
+
+
 
     /**
      * @pre none
@@ -53,7 +89,8 @@ public class CPU {
     public void updateTime(){
         currTick++;
         //calling other functions
-        getProcessed();
+        getUnprocessedData();
+        sendProcessedData();
 
     }
 
@@ -63,7 +100,7 @@ public class CPU {
      * @return if cpu is processing data
      */
     public boolean isProcessing (){
-        return true; //TODO
+        return !waitingOnProcess.isEmpty();
     }
 
 }

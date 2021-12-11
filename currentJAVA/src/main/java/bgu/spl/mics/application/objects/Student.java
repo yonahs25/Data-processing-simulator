@@ -20,7 +20,7 @@ public class Student {
     private int publications;
     private int papersRead;
     private List<Model> models;
-    int currModel;
+    private int currModel;
 
 
     public Student(String name, String department, String status) {

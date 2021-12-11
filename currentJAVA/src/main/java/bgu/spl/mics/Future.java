@@ -83,11 +83,11 @@ public class Future<T> {
 	 * @post none
      */
 	public T get(long timeout, TimeUnit unit) {
-		if(isDone){
+		if(isDone()){
 			return answer;
 		}
 		try{unit.sleep(timeout);}catch(Exception e){}
-		if(isDone)
+		if(isDone())
 			return  answer;
 		else
 			return null;

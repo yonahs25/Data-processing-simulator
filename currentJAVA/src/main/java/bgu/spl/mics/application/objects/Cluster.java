@@ -47,12 +47,14 @@ public class Cluster {
 	/**
      * Retrieves the single instance of this class.
      */
-	public static Cluster getInstance() {
+	public static Cluster getInstance()
+	{
 		//TODO: Implement this
 		return null;
 	}
 
-	public void addUnprocessedData(List<DataBatch> list)
+	// the gpu call this function to send unprocessed data to the cluster
+	public void sendUnprocessedData(List<DataBatch> list)
 	{
 		while (!list.isEmpty())
 		{
@@ -61,27 +63,15 @@ public class Cluster {
 
 	}
 
-
-
-	//TODO make a function subscribe to cluster
-
-	//add data from big queue to cpu queue
-	public void getUnprocessedData(List<DataBatch> list){
-		//TODO added each dataBatch from list to queues
-
-		//wrong need to delete
-		for (DataBatch e : list){
-			waitingUnprocessedBatches.add(e);
-		}
-	}
-	// ????????????????????
-	public Queue<DataBatch> getWaitingUnprocessedBatches() {
+	public Queue<DataBatch> getWaitingUnprocessedBatches()
+	{
 		return waitingUnprocessedBatches;
 	}
 
 
 	// cpu calling this function to send processed data to the cluster
-	public void putProcessedData(DataBatch e){
+	public void putProcessedData(DataBatch e)
+	{
 		//put dataBatch in his right queue
 		GPU gpu = e.getOwner();
 		returningProcessedBatches.get(gpu).add(e);
@@ -125,6 +115,19 @@ public class Cluster {
 			newVal = oldVal + time ;
 		}while (!timeUnitsCpu.compareAndSet(oldVal,newVal));
 	}
+	public  void  incrementCpuProcessedData(int time)
+	{
+		int oldVal;
+		int newVal;
+		do
+		{
+			oldVal = dataProcessedCpu.get();
+			newVal = oldVal + time ;
+		}while (!dataProcessedCpu.compareAndSet(oldVal,newVal));
+	}
+
+
+
 
 }
 

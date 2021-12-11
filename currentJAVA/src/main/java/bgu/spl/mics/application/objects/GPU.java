@@ -26,6 +26,7 @@ public class GPU {
     //time it takes to process data
     private  int tickTimer;
     private int missingData;
+    private int workTime;
 
 
 
@@ -51,6 +52,7 @@ public class GPU {
         currTick = 0;
         startTick = 0;
         missingData=0;
+        workTime = 0;
         //workingOn = null;
     }
 
@@ -112,7 +114,7 @@ public class GPU {
                         missingData++;
                         toSend.add(unprocessedData.remove(0));
                 }
-                        cluster.getUnprocessedData(toSend);
+                        cluster.sendUnprocessedData(toSend);
             }
 
         }
@@ -126,7 +128,7 @@ public class GPU {
                     missingData++;
                     toSend.add(unprocessedData.remove(0));
                 }
-                cluster.getUnprocessedData(toSend);
+                cluster.sendUnprocessedData(toSend);
             }
         }
         else
@@ -138,7 +140,7 @@ public class GPU {
                     missingData++;
                     toSend.add(unprocessedData.remove(0));
                 }
-                cluster.getUnprocessedData(toSend);
+                cluster.sendUnprocessedData(toSend);
          }
 
 
@@ -163,6 +165,7 @@ public class GPU {
                 removed.getData().increment();
                 startTick = currTick;
                 cluster.incrementGpuTimeUsed(tickTimer);
+                workTime+=tickTimer;
 
                 //finished training
                 if (removed.getData().getProcessed() == removed.getData().getSize())

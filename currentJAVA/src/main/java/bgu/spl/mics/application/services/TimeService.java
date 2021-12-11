@@ -38,13 +38,15 @@ public class TimeService extends MicroService{
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-//				sendBroadcast(new TickBroadcast());
+				sendBroadcast(new TickBroadcast());
 				System.out.println("hiii");
 				duration = duration-speed;
 				if(duration == 0)
 					timer.cancel();
+				// need to terminate
 			}
-		} ,speed);
+		} ,5000,speed);
+
 
 
 	}

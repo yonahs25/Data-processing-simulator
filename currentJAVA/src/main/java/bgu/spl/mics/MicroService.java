@@ -1,6 +1,5 @@
 package bgu.spl.mics;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -23,20 +22,25 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class MicroService implements Runnable {
 
-    private MessageBusImpl bus;
-    private boolean terminated = false;
-    private final String name;
-    private ConcurrentHashMap<Class<? extends Message>, Callback> callbackMap = new ConcurrentHashMap();
+    protected MessageBusImpl bus;
+    protected boolean terminated = false;
+    protected final String name;
+    protected ConcurrentHashMap<Class<? extends Message>, Callback> callbackMap = new ConcurrentHashMap();
 
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
+    // new constructor
     public MicroService(String name, MessageBusImpl bus)
     {
         this.name = name;
         this.bus = bus;
+    }
+    public MicroService(String name)
+    {
+        this.name = name;
     }
 
     /**
@@ -127,7 +131,7 @@ public abstract class MicroService implements Runnable {
      *               {@code e}.
      */
     protected final <T> void complete(Event<T> e, T result) {
-        //TODO: implement this.
+        bus.complete(e,result);
     }
 
     /**
@@ -159,9 +163,13 @@ public abstract class MicroService implements Runnable {
     public final void run() {
         initialize();
         while (!terminated) {
-            // bus.awaitMessage(this); try and catch
+            try {
+                Message myMessage =  bus.awaitMessage(this);
+                callbackMap.get(myMessage).call(this);
+            } catch (InterruptedException e) {}
             System.out.println("NOT IMPLEMENTED!!!"); //TODO: you should delete this line :)
         }
+        bus.unregister(this);
         // delete stuff
     }
 

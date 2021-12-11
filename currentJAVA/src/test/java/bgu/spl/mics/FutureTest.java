@@ -52,7 +52,7 @@ public class FutureTest {
         assertNull(future.get(1,TimeUnit.SECONDS));
         String ans = "aaa";
         future.resolve("aaaa");
-        assertEquals(future.get(1,TimeUnit.SECONDS), "aaaa" );
+        assertEquals("aaaa", future.get(1,TimeUnit.SECONDS));
     }
 }
 

@@ -3,8 +3,10 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.TerminateCallback;
 import bgu.spl.mics.application.messages.PublishConferenceBroadcast;
 import bgu.spl.mics.application.messages.PublishResultsEvent;
+import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.objects.ConfrenceInformation;
 
 import java.util.Timer;
@@ -28,6 +30,8 @@ public class ConferenceService extends MicroService {
         }
     }
 
+
+
     private ConfrenceInformation confrence ;
 
     public ConferenceService(String name,ConfrenceInformation confrence, MessageBusImpl bus) {
@@ -39,6 +43,7 @@ public class ConferenceService extends MicroService {
     @Override
     protected void initialize() {
         subscribeEvent(PublishResultsEvent.class , new ConferenceService.publishResultsCallback());
+        subscribeBroadcast(TerminateBroadcast.class,new TerminateCallback(this));
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override

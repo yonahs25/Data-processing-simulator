@@ -25,7 +25,7 @@ public class CPUTest {
         Data data = new Data(Data.Type.Images, 5);
         List<DataBatch> list = new LinkedList<>();
         list.add(new DataBatch(data,0, gpu));
-        cluster.getUnprocessedData(list);
+        cluster.sendUnprocessedData(list);
         cpu.updateTime();
         assertTrue(cpu.isProcessing());
     }
@@ -36,7 +36,7 @@ public class CPUTest {
         Data data = new Data(Data.Type.Images, 5);
         List<DataBatch> list = new LinkedList<>();
         list.add(new DataBatch(data,0, gpu));
-        cluster.getUnprocessedData(list);
+        cluster.sendUnprocessedData(list);
         cpu.updateTime();
         cpu.updateTime();
         cpu.updateTime();
