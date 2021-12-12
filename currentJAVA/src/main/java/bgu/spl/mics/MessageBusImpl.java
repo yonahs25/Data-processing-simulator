@@ -3,8 +3,10 @@ package bgu.spl.mics;
 import bgu.spl.mics.application.messages.TestModelEvent;
 import bgu.spl.mics.application.messages.TrainModelEvent;
 
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -13,7 +15,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  */
 public class MessageBusImpl implements MessageBus {
 
-	private ConcurrentHashMap<MicroService, ConcurrentLinkedDeque<Message>> microServiceQueue = new ConcurrentHashMap();
+	private ConcurrentHashMap<MicroService, BlockingDeque<Message>> microServiceQueue = new ConcurrentHashMap();
 	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedDeque<MicroService>> BroadcastList = new ConcurrentHashMap(); //TODO change linked list to something better
 	private ConcurrentHashMap<Class<? extends Event>,ConcurrentLinkedDeque<MicroService>> EventList = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<Event,Future> eventToFuture = new ConcurrentHashMap<>(); // check
@@ -45,16 +47,9 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
-		// if it tickBroadcast it need to bypass all the events
-		for (MicroService m : BroadcastList.get(b.getClass())){
-			//if(b.getClass() == TickBroadcast.class)
-			//	microServiceQueue.get(m).addFirst(b);
-			if(b.getClass() == TerminateCallback.class)
-				microServiceQueue.get(m).addFirst(b); // TODO dont add tick to first, butt need to add terminate to first
-			else
-				microServiceQueue.get(m).add(b);
+		for (MicroService m : BroadcastList.get(b.getClass())) {
+			microServiceQueue.get(m).add(b);
 		}
-
 	}
 
 
@@ -93,7 +88,7 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void register(MicroService m) {
-		microServiceQueue.putIfAbsent(m, new ConcurrentLinkedDeque<>());
+		microServiceQueue.putIfAbsent(m, new LinkedBlockingDeque<>());
 	}
 
 	@Override
@@ -103,11 +98,8 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
-		// TODO Auto-generated method stub
-		//TODO take blocking queue
-		//if (microServiceQueue.get(m).isEmpty())
-		//	throw new InterruptedException();
-		return microServiceQueue.get(m).pop();
+
+		return microServiceQueue.get(m).remove();
 	}
 
 

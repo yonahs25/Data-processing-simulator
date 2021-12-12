@@ -163,12 +163,18 @@ public abstract class MicroService implements Runnable {
     public final void run() {
         initialize();
         while (!terminated) {
-            try {
-                Message myMessage =  bus.awaitMessage(this);
-                callbackMap.get(myMessage).call(this);
-            } catch (InterruptedException e) {}
+            Message myMessage=null;
+
+            while(myMessage == null) {
+                try {
+                    myMessage = bus.awaitMessage(this);
+                } catch (InterruptedException e) {
+                }
+            }
+            callbackMap.get(myMessage).call(this);
             System.out.println("NOT IMPLEMENTED!!!"); //TODO: you should delete this line :)
         }
+
         bus.unregister(this);
         // delete stuff
     }

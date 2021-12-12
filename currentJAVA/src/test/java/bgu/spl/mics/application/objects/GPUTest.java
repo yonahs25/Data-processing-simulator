@@ -1,10 +1,15 @@
 package bgu.spl.mics.application.objects;
 
+import bgu.spl.mics.MessageBusImpl;
+import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.services.GPUService;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class GPUTest {
 
@@ -52,20 +57,24 @@ public class GPUTest {
 
     @Test
     public void getProcessed(){
+        Student student = new Student("Simba", "Computer Science", "MSc");
         cluster.registerGpu(gpu);
         Data data = new Data(Data.Type.Images, 200000);
         DataBatch databatch = new DataBatch(data, 0, gpu);
+        Model model = new Model("YOLO10", data, student);
+        gpu.setModel(model);
         cluster.putProcessedData(databatch);
         gpu.updateTick();
         assertEquals(1, gpu.getProcessedData().size());
         gpu.updateTick();
         assertEquals(0, gpu.getProcessedData().size());
-        assertEquals(1, data.getProcessed());
+        assertEquals(1000, data.getProcessed());
     }
 
 
     @Test
     public void finishedTraining(){
+        cluster.registerGpu(gpu);
         Student student = new Student("Simba", "Computer Science", "MSc");
         Data data = new Data(Data.Type.Images, 1000);
         Model model = new Model("YOLO10", data, student);
@@ -74,9 +83,36 @@ public class GPUTest {
         gpu.updateTick();
         cluster.putProcessedData(databatch);
         gpu.updateTick();
+        gpu.updateTick();
         assertEquals(gpu.getModel().getStatus(), Model.Status.Trained);
 
     }
 
 
+
+    @Test
+    public void reactToEventTest(){
+        MessageBusImpl bus = new MessageBusImpl();
+        Student student = new Student("Simba", "Computer Science", "MSc");
+        Data data = new Data(Data.Type.Images, 1000);
+        Model model = new Model("YOLO10", data, student);
+        MicroService gpuService = new GPUService("hi", bus, gpu);
+        Thread t1 = new Thread(gpuService);
+        t1.start();
+
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {}
+
+
+        System.out.println("hiiii");
+
+
+    //    try {
+    //        bus.awaitMessage(gpuService);
+    //    } catch (InterruptedException e) {}
+        assertEquals(model, gpu.getModel());
+
+    }
 }
