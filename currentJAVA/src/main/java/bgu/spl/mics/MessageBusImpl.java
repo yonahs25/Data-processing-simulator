@@ -3,7 +3,6 @@ package bgu.spl.mics;
 import bgu.spl.mics.application.messages.TestModelEvent;
 import bgu.spl.mics.application.messages.TrainModelEvent;
 
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -15,14 +14,15 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 public class MessageBusImpl implements MessageBus {
 
-	private ConcurrentHashMap<MicroService, BlockingDeque<Message>> microServiceQueue = new ConcurrentHashMap();
-	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedDeque<MicroService>> BroadcastList = new ConcurrentHashMap(); //TODO change linked list to something better
+	private ConcurrentHashMap<MicroService, LinkedBlockingDeque<Message>> microServiceQueue = new ConcurrentHashMap();
+	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedDeque<MicroService>> BroadcastList = new ConcurrentHashMap();
 	private ConcurrentHashMap<Class<? extends Event>,ConcurrentLinkedDeque<MicroService>> EventList = new ConcurrentHashMap<>();
-	private ConcurrentHashMap<Event,Future> eventToFuture = new ConcurrentHashMap<>(); // check
+	private ConcurrentHashMap<Event,Future> eventToFuture = new ConcurrentHashMap<>();
 
 
 	@Override
-	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
+	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m)
+	{
 		if (EventList.get(type) == null)
 			EventList.put(type, new ConcurrentLinkedDeque<MicroService>()); // need to change linked list
 
@@ -32,21 +32,24 @@ public class MessageBusImpl implements MessageBus {
 
 
 	@Override
-	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
+	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m)
+	{
 		if (BroadcastList.get(type) == null)
 			BroadcastList.put(type, new ConcurrentLinkedDeque<MicroService>()); // need to change linked list
 		BroadcastList.get(type).add(m);
 	}
 
 	@Override
-	public <T> void complete(Event<T> e, T result) {
+	public <T> void complete(Event<T> e, T result)
+	{
 		Future future = eventToFuture.get(e);
 		future.resolve(result);
 
 	}
 
 	@Override
-	public void sendBroadcast(Broadcast b) {
+	public void sendBroadcast(Broadcast b)
+	{
 		for (MicroService m : BroadcastList.get(b.getClass())) {
 			microServiceQueue.get(m).add(b);
 		}
@@ -54,7 +57,8 @@ public class MessageBusImpl implements MessageBus {
 
 
 	@Override
-	public <T> Future<T> sendEvent(Event<T> e) {
+	public <T> Future<T> sendEvent(Event<T> e)
+	{
 
 		if(e.getClass() == TrainModelEvent.class)
 		{
@@ -87,51 +91,59 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	@Override
-	public void register(MicroService m) {
+	public void register(MicroService m)
+	{
 		microServiceQueue.putIfAbsent(m, new LinkedBlockingDeque<>());
 	}
 
 	@Override
-	public void unregister(MicroService m) {
+	public void unregister(MicroService m)
+	{
 		microServiceQueue.remove(m); //TODO check if need to do more
 	}
 
 	@Override
-	public Message awaitMessage(MicroService m) throws InterruptedException {
-
-		return microServiceQueue.get(m).remove();
+	public Message awaitMessage(MicroService m) throws InterruptedException
+	{
+		return microServiceQueue.get(m).take();
 	}
 
 
-	public boolean isMicroServiceRegistered(MicroService m){
+	public boolean isMicroServiceRegistered(MicroService m)
+	{
 		return microServiceQueue.get(m) != null;
 	}
 
-	public <T> boolean isMicroServiceInEvent(Class<? extends Event<T>> type , MicroService m){
+	public <T> boolean isMicroServiceInEvent(Class<? extends Event<T>> type , MicroService m)
+	{
 		return EventList.get(type).contains(m);
 	}
 
-	public <T> boolean isMicroServiceInBroadcast( Class<? extends Broadcast> type , MicroService m){
+	public <T> boolean isMicroServiceInBroadcast( Class<? extends Broadcast> type , MicroService m)
+	{
 		return BroadcastList.get(type).contains(m);
 	}
 
-	public <T> boolean didMicroServiceReceiveBroadcast(Broadcast type , MicroService m){
+	public <T> boolean didMicroServiceReceiveBroadcast(Broadcast type , MicroService m)
+	{
 		return microServiceQueue.get(m).contains(type);
 	}
 
-	public <T> boolean didMicroServiceReceiveEvent(Event<T> type , MicroService m) {
+	public <T> boolean didMicroServiceReceiveEvent(Event<T> type , MicroService m)
+	{
 		return microServiceQueue.get(m).contains(type);
 	}
 
-	public <T> boolean wasEventSent(Event<T> type) {
-		// every microservice that receive event need to be removed from the list and add to the end for the round robbing pattern
+	public <T> boolean wasEventSent(Event<T> type)
+	{
 		MicroService m = EventList.get(type.getClass()).getLast();
 		if(microServiceQueue.get(m).contains(type))
 			return true;
 		return false;
 	}
 
-	public <T> boolean wasBroadcastSent(Broadcast type) {
+	public <T> boolean wasBroadcastSent(Broadcast type)
+	{
 		boolean ans = true;
 		for(MicroService m : BroadcastList.get(type.getClass()))
 		{

@@ -4,13 +4,10 @@ import bgu.spl.mics.Callback;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.TerminateCallback;
-import bgu.spl.mics.application.messages.PublishConferenceBroadcast;
 import bgu.spl.mics.application.messages.PublishResultsEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.objects.ConfrenceInformation;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Conference service is in charge of
@@ -30,28 +27,39 @@ public class ConferenceService extends MicroService {
         }
     }
 
+    private class tickCallback implements Callback<TickBroadcast>{
+
+        @Override
+        public void call(TickBroadcast c)
+        {
+
+        }
+    }
+
 
 
     private ConfrenceInformation confrence ;
 
-    public ConferenceService(String name,ConfrenceInformation confrence, MessageBusImpl bus) {
+    public ConferenceService(String name,ConfrenceInformation confrence, MessageBusImpl bus)
+    {
         super(name,bus);
         this.confrence = confrence;
-
     }
 
     @Override
     protected void initialize() {
+        subscribeBroadcast(TickBroadcast.class, new tickCallback());
         subscribeEvent(PublishResultsEvent.class , new ConferenceService.publishResultsCallback());
         subscribeBroadcast(TerminateBroadcast.class,new TerminateCallback(this));
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendBroadcast(new PublishConferenceBroadcast(confrence.getGoodResults()));
-                // need to unregister via the messageBus
-            }
-        } ,confrence.getDate());
+        //Timer timer = new Timer();
+        //timer.schedule(new TimerTask() {
+        //    @Override
+        //    public void run() {
+        //        sendBroadcast(new PublishConferenceBroadcast(confrence.getGoodResults()));
+        //        // need to unregister via the messageBus
+        //    }
+        //} ,confrence.getDate());
+
 
     }
 }

@@ -8,6 +8,7 @@ import java.util.Vector;
  */
 public class ConfrenceInformation {
 
+    private int currTime;
     private String name;
     private int date;
     private Vector<Model> goodResults;
@@ -17,6 +18,7 @@ public class ConfrenceInformation {
         this.name = name;
         this.date = date;
         goodResults = new Vector<>();
+        currTime = 0;
     }
     
     

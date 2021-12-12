@@ -2,6 +2,7 @@ package bgu.spl.mics.application.objects;
 
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.TrainModelEvent;
 import bgu.spl.mics.application.services.GPUService;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,20 +99,17 @@ public class GPUTest {
         Model model = new Model("YOLO10", data, student);
         MicroService gpuService = new GPUService("hi", bus, gpu);
         Thread t1 = new Thread(gpuService);
+        bus.register(gpuService);
         t1.start();
 
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {}
 
+        bus.sendEvent(new TrainModelEvent(model));
 
-        System.out.println("hiiii");
 
-
-    //    try {
-    //        bus.awaitMessage(gpuService);
-    //    } catch (InterruptedException e) {}
         assertEquals(model, gpu.getModel());
 
     }

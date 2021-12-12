@@ -21,6 +21,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class GPUService extends MicroService {
 
     private class tickCallback implements Callback<TickBroadcast> {
+        public tickCallback() {}
+
         @Override
         public void call(TickBroadcast c)
         {
@@ -38,6 +40,8 @@ public class GPUService extends MicroService {
     }
 
     private class trainCallback implements Callback<TrainModelEvent>{
+
+        public trainCallback() {}
 
         @Override
         public void call(TrainModelEvent c)
