@@ -1,7 +1,6 @@
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.messages.TestModelEvent;
-import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.messages.TrainModelEvent;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,8 +33,7 @@ public class MessageBusImpl implements MessageBus {
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
 		if (BroadcastList.get(type) == null)
 			BroadcastList.put(type, new ConcurrentLinkedDeque<MicroService>()); // need to change linked list
-
-		EventList.get(type).add(m);
+		BroadcastList.get(type).add(m);
 	}
 
 	@Override
@@ -49,8 +47,10 @@ public class MessageBusImpl implements MessageBus {
 	public void sendBroadcast(Broadcast b) {
 		// if it tickBroadcast it need to bypass all the events
 		for (MicroService m : BroadcastList.get(b.getClass())){
-			if(b.getClass() == TickBroadcast.class)
-				microServiceQueue.get(m).addFirst(b);
+			//if(b.getClass() == TickBroadcast.class)
+			//	microServiceQueue.get(m).addFirst(b);
+			if(b.getClass() == TerminateCallback.class)
+				microServiceQueue.get(m).addFirst(b); // TODO dont add tick to first, butt need to add terminate to first
 			else
 				microServiceQueue.get(m).add(b);
 		}
@@ -70,7 +70,7 @@ public class MessageBusImpl implements MessageBus {
 		else if(e.getClass() == TestModelEvent.class)
 		{
 			MicroService m = EventList.get(e.getClass()).remove();
-			microServiceQueue.get(m).addFirst(e);
+			microServiceQueue.get(m).add(e);
 			EventList.get(e.getClass()).add(m);
 		}
 		else

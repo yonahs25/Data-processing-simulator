@@ -21,6 +21,7 @@ public class CPUTest {
 
     @Test
     public void testGetChunk() {
+        cluster.registerCpu(cpu);
         GPU gpu = new GPU(GPU.Type.RTX2080, cluster);
         Data data = new Data(Data.Type.Images, 5);
         List<DataBatch> list = new LinkedList<>();
@@ -32,7 +33,9 @@ public class CPUTest {
 
     @Test
     public void testSendBack(){
+        cluster.registerCpu(cpu);
         GPU gpu = new GPU(GPU.Type.RTX2080, cluster);
+        cluster.registerGpu(gpu);
         Data data = new Data(Data.Type.Images, 5);
         List<DataBatch> list = new LinkedList<>();
         list.add(new DataBatch(data,0, gpu));

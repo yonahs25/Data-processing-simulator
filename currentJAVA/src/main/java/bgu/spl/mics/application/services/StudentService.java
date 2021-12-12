@@ -1,9 +1,6 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.Callback;
-import bgu.spl.mics.MessageBusImpl;
-import bgu.spl.mics.MicroService;
-import bgu.spl.mics.TerminateCallback;
+import bgu.spl.mics.*;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
@@ -22,6 +19,36 @@ import java.util.Vector;
 public class StudentService extends MicroService {
 
     private Student student;
+    private Future<Model> future;
+    private int currentModel;
+
+    private class tickCallback implements Callback<TickBroadcast> {
+
+        @Override
+        public void call(TickBroadcast c) {
+            if (future == null)
+            {
+                future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+                currentModel++;
+            }
+            else {
+                if (future.isDone()){
+                    Model checking = future.get();
+                    future = sendEvent(new TestModelEvent(future.get()));
+                    Model testResult = (Model) future.get();
+                    if (testResult.getResults() == Model.Results.Good){
+//                        future = sendEvent(new PublishResultsEvent(testResult));
+                        sendEvent(new PublishResultsEvent(testResult)).get(); //need to delete get?
+                    }
+                    if (currentModel < student.getModels().size()) {
+                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+                        currentModel++;
+                    }
+                }
+            }
+        }
+    }
+
 
     private class publishCallback implements Callback<PublishConferenceBroadcast>{
 
@@ -42,6 +69,8 @@ public class StudentService extends MicroService {
     public StudentService(String name, MessageBusImpl bus,Student student) {
         super(name,bus);
         this.student = student;
+        future = null;
+        currentModel = 0;
         // TODO Implement this
     }
 
@@ -49,6 +78,7 @@ public class StudentService extends MicroService {
     protected void initialize() {
         subscribeBroadcast(PublishConferenceBroadcast.class, new publishCallback());
         subscribeBroadcast(TerminateBroadcast.class,new TerminateCallback(this));
+        subscribeBroadcast(TickBroadcast.class, new tickCallback());
         // TODO Implement this
 
     }

@@ -37,12 +37,11 @@ public class GPUTest {
         gpu.setModel(model);
         assertEquals(model.getStatus(), Model.Status.Tested);
         assertNotEquals(model.getResults(), Model.Results.none);
-
-
     }
 
     @Test
     public void sendUnprocessed() {
+        cluster.registerGpu(gpu);
         Student student = new Student("Simba", "Computer Science", "MSc");
         Data data = new Data(Data.Type.Images, 200000);
         Model model = new Model("YOLO10", data, student);
@@ -53,6 +52,7 @@ public class GPUTest {
 
     @Test
     public void getProcessed(){
+        cluster.registerGpu(gpu);
         Data data = new Data(Data.Type.Images, 200000);
         DataBatch databatch = new DataBatch(data, 0, gpu);
         cluster.putProcessedData(databatch);

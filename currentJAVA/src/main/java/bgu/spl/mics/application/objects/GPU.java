@@ -188,6 +188,7 @@ public class GPU {
         if(processedData.isEmpty())
             startTick = currTick;
         Queue<DataBatch> myList = cluster.getGpuProcessed(this);
+
         while (processedData.size() != limit && !myList.isEmpty())
         {
             missingData--;

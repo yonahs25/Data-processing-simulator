@@ -7,6 +7,10 @@ public class TestModelEvent implements Event<Model> {
 
     private Model model;
 
+    public TestModelEvent(Model model) {
+        this.model = model;
+    }
+
     public Model getModel() {
         return model;
     }

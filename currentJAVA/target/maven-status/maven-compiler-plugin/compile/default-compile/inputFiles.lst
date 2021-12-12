@@ -3,6 +3,7 @@
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/application/objects/ConfrenceInformation.java
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/example/messages/ExampleEvent.java
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/application/messages/TestModelEvent.java
+/home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/TerminateCallback.java
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/Future.java
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/example/services/ExampleEventHandlerService.java
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/Callback.java
@@ -18,6 +19,7 @@
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/Event.java
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/Message.java
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/application/objects/CPU.java
+/home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/application/messages/TerminateBroadcast.java
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/Broadcast.java
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/application/services/GPUService.java
 /home/yona/Desktop/spl2/currentJAVA/src/main/java/bgu/spl/mics/MessageBusImpl.java
