@@ -102,7 +102,6 @@ public class GPUTest {
         bus.register(gpuService);
         t1.start();
 
-
         try {
             Thread.sleep(1500);
         } catch (InterruptedException e) {}
