@@ -33,7 +33,8 @@ public class GPUService extends MicroService {
                 currentEvent = null;
                 if(!waitingEvents.isEmpty())
                 {
-                    // need to call back the next message
+                    Message myMessage = waitingEvents.remove();
+                    callbackMap.get(myMessage.getClass()).call(myMessage);
                 }
             }
         }
@@ -94,6 +95,8 @@ public class GPUService extends MicroService {
     {
         super(name,bus);
         this.gpu = gpu;
+        currentEvent = null;
+        waitingEvents = new ConcurrentLinkedDeque<>();
     }
 
     @Override

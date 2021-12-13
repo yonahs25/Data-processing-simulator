@@ -19,6 +19,7 @@ bgu/spl/mics/application/objects/GPU$Type.class
 bgu/spl/mics/Callback.class
 bgu/spl/mics/application/services/CPUService$tickCallback.class
 bgu/spl/mics/example/services/ExampleEventHandlerService.class
+bgu/spl/mics/application/services/ConferenceService$tickCallback.class
 bgu/spl/mics/application/objects/CPU.class
 bgu/spl/mics/application/services/CPUService$1.class
 bgu/spl/mics/application/objects/Student$Degree.class

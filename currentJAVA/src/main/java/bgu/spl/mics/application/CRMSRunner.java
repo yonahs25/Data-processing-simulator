@@ -1,6 +1,9 @@
 package bgu.spl.mics.application;
 
+import bgu.spl.mics.MessageBusImpl;
+import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.objects.*;
+import bgu.spl.mics.application.services.StudentService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,7 +21,9 @@ import java.util.List;
 public class CRMSRunner {
 
     public static void main(String[] args) throws IOException, ParseException {
+        MessageBusImpl bus = new MessageBusImpl();
         Cluster cluster = new Cluster();
+        List<MicroService> aboutToRun = new ArrayList<>();
         List<Student> students = new ArrayList<>();
         List<GPU> gpus = new ArrayList<>();
         List<CPU> cpus = new ArrayList<>();
@@ -67,8 +72,8 @@ public class CRMSRunner {
                         student.addModel(model);
                         break;
                 }
-
             }
+            aboutToRun.add(new StudentService(student.getName(),bus,student));
             students.add(student);
         }
 
@@ -82,6 +87,7 @@ public class CRMSRunner {
                     gpu = new GPU(GPU.Type.RTX3090,cluster);
                     gpus.add(gpu);
                     cluster.registerGpu(gpu);
+//                    aboutToRun.add(new GPUService("gpu"+i,))
                     break;
                 case("RTX2080"):
                     gpu = new GPU(GPU.Type.RTX2080,cluster);

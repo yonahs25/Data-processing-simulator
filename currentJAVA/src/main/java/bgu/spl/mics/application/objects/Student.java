@@ -39,6 +39,25 @@ public class Student {
         papersRead = 0;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public int getPublications() {
+        return publications;
+    }
+
+    public int getPapersRead() {
+        return papersRead;
+    }
+
+    public int getCurrModel() {
+        return currModel;
+    }
 
     public Degree getStatus() {
         return status;

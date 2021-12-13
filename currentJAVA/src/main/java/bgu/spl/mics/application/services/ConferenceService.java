@@ -48,6 +48,7 @@ public class ConferenceService extends MicroService {
 
     @Override
     protected void initialize() {
+
         subscribeBroadcast(TickBroadcast.class, new tickCallback());
         subscribeEvent(PublishResultsEvent.class , new ConferenceService.publishResultsCallback());
         subscribeBroadcast(TerminateBroadcast.class,new TerminateCallback(this));

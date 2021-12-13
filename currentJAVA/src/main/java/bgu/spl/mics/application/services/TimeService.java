@@ -18,10 +18,10 @@ import java.util.TimerTask;
  */
 public class TimeService extends MicroService{
 
-	private final int speed;
-	private int duration;
+	private final long speed;
+	private long duration;
 
-	public TimeService( MessageBusImpl bus, int speed, int duration) {
+	public TimeService( MessageBusImpl bus, long speed, long duration) {
 		super("xyz", bus);
 		this.speed = speed;
 		this.duration = duration;
