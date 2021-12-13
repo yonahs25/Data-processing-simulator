@@ -29,10 +29,7 @@ public class TimeService extends MicroService{
 		this.duration = duration;
 	}
 
-//	public TimeService(MessageBusImpl bus) {
-//		super("xyz",bus);
-//		// TODO Implement this
-//	}
+
 
 	@Override
 	protected void initialize() {

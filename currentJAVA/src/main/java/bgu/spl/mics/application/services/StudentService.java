@@ -6,6 +6,7 @@ import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
 
 import java.util.Vector;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * Student is responsible for sending the {@link TrainModelEvent},
@@ -20,37 +21,59 @@ public class StudentService extends MicroService {
 
     private Student student;
     private Future<Model> future;
+    private ConcurrentLinkedDeque<Future<Model>> futureList;
     private int currentModel;
 
     private class tickCallback implements Callback<TickBroadcast> {
 
         @Override
         public void call(TickBroadcast c) {
-            while (future==null){
+//            while (future==null){
+//                try {
+//                    future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+//                } catch (Exception e){}
+//            }
+//            if (currentModel==0)
+//                currentModel++;
+//            if (future != null) {
+//                if (future.isDone()){
+//                    future = sendEvent(new TestModelEvent(future.get()));
+//                    Model testResult = future.get();
+//                    if (testResult.getResults() == Model.Results.Good){
+////                        future = sendEvent(new PublishResultsEvent(testResult));
+//                        sendEvent(new PublishResultsEvent(testResult)).get(); //need to delete get?
+//                    }
+//                    if (currentModel < student.getModels().size()) {
+//                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+//                        currentModel++;
+//                    }
+//                }
+//            }
+
+            while (futureList.isEmpty() && currentModel == 0){
                 try {
-                    future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+                    futureList.add(sendEvent(new TrainModelEvent(student.getModels().get(currentModel))));
                 } catch (Exception e){}
             }
             if (currentModel==0)
                 currentModel++;
-            //if (future == null)
-            //{
-            //    future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
-            //    currentModel++;
-            //}
-            if (future != null) {
-                if (future.isDone()){
-                    future = sendEvent(new TestModelEvent(future.get()));
-                    Model testResult = (Model) future.get();
-                    if (testResult.getResults() == Model.Results.Good){
+            for (Future<Model> f : futureList){
+                if (f.isDone()){
+                    futureList.remove(f);
+                    Model done = f.get();
+                    if(done.getStatus() == Model.Status.Trained){
+                        futureList.add(sendEvent(new TestModelEvent(done)));
+                    } else if (done.getStatus() == Model.Status.Tested){
+                        if (done.getResults() == Model.Results.Good){
 //                        future = sendEvent(new PublishResultsEvent(testResult));
-                        sendEvent(new PublishResultsEvent(testResult)).get(); //need to delete get?
-                    }
-                    if (currentModel < student.getModels().size()) {
-                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
-                        currentModel++;
+                            sendEvent(new PublishResultsEvent(done)); //need to delete get?
+                        }
                     }
                 }
+            }
+            if (currentModel < student.getModels().size()) {
+                future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+                currentModel++;
             }
         }
     }
@@ -75,6 +98,7 @@ public class StudentService extends MicroService {
         this.student = student;
         future = null;
         currentModel = 0;
+        futureList = new ConcurrentLinkedDeque<>();
         // TODO Implement this
     }
 

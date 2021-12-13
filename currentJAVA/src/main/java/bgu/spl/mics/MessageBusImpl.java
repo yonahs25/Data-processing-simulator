@@ -6,6 +6,7 @@ import bgu.spl.mics.application.messages.TrainModelEvent;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -18,6 +19,7 @@ public class MessageBusImpl implements MessageBus {
 	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedDeque<MicroService>> BroadcastList = new ConcurrentHashMap();
 	private ConcurrentHashMap<Class<? extends Event>,ConcurrentLinkedDeque<MicroService>> EventList = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<Event,Future> eventToFuture = new ConcurrentHashMap<>();
+	private AtomicInteger currentGpuToSend = new AtomicInteger(0);
 	private static class singeltonHolder
 	{
 		private static MessageBusImpl instance = new MessageBusImpl();
@@ -50,8 +52,13 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public <T> void complete(Event<T> e, T result)
 	{
-		Future future = eventToFuture.get(e);
-		future.resolve(result);
+		try {
+			Future future = eventToFuture.get(e);
+			future.resolve(result);
+		} catch (Exception g){
+			System.out.println(e.getClass());
+		}
+
 
 	}
 
@@ -66,9 +73,19 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 
+	private void incrementGpuSpot(){
+		int oldVal;
+		int newVal;
+		do {
+			oldVal = currentGpuToSend.get();
+			newVal = (oldVal + 1) % (EventList.get(TrainModelEvent.class).size());
+		} while (!currentGpuToSend.compareAndSet(oldVal,newVal));
+	}
+
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e)
 	{
+
 
 		if(e.getClass() == TrainModelEvent.class)
 		{

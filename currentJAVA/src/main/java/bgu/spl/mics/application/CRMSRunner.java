@@ -134,11 +134,9 @@ public class CRMSRunner {
         for (Thread t: aboutToRun){
             t.start();
         }
-        for (Thread t: aboutToRun){
-            try {
-                t.join();
-            } catch (InterruptedException e) {}
-        }
+
+
+
 
 
 

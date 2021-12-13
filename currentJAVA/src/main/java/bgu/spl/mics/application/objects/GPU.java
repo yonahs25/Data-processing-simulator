@@ -174,6 +174,7 @@ public class GPU {
                 if (removed.getData().getProcessed() == removed.getData().getSize())
                 {
                     model.setStatus(Model.Status.Trained);
+                    System.out.println("done");
                     cluster.addModelTrained(model.getName());
                 }
 
