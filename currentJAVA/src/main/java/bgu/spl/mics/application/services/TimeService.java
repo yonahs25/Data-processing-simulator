@@ -2,6 +2,8 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.TerminateCallback;
+import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
 
 import java.util.Timer;
@@ -34,21 +36,20 @@ public class TimeService extends MicroService{
 
 	@Override
 	protected void initialize() {
+		subscribeBroadcast(TerminateBroadcast.class, new TerminateCallback(this));
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				sendBroadcast(new TickBroadcast());
-				System.out.println("hiii");
 				duration = duration-speed;
-				if(duration == 0)
+				if(duration == 0) {
 					timer.cancel();
+					sendBroadcast(new TerminateBroadcast());
+				}else
+					sendBroadcast(new TickBroadcast());
 				// need to terminate
 			}
 		} ,5000,speed);
-
-
-
 	}
 
 

@@ -26,14 +26,20 @@ public class StudentService extends MicroService {
 
         @Override
         public void call(TickBroadcast c) {
-            if (future == null)
-            {
-                future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
-                currentModel++;
+            while (future==null){
+                try {
+                    future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+                } catch (Exception e){}
             }
-            else {
+            if (currentModel==0)
+                currentModel++;
+            //if (future == null)
+            //{
+            //    future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+            //    currentModel++;
+            //}
+            if (future != null) {
                 if (future.isDone()){
-                    Model checking = future.get();
                     future = sendEvent(new TestModelEvent(future.get()));
                     Model testResult = (Model) future.get();
                     if (testResult.getResults() == Model.Results.Good){
@@ -48,8 +54,6 @@ public class StudentService extends MicroService {
             }
         }
     }
-
-
     private class publishCallback implements Callback<PublishConferenceBroadcast>{
 
         @Override
@@ -72,6 +76,15 @@ public class StudentService extends MicroService {
         future = null;
         currentModel = 0;
         // TODO Implement this
+    }
+
+
+    public int getCurrentModel() {
+        return currentModel;
+    }
+
+    public Future<Model> getFuture() {
+        return future;
     }
 
     @Override

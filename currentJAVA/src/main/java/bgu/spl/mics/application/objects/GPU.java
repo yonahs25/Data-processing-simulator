@@ -27,6 +27,7 @@ public class GPU {
     private  int tickTimer;
     private int missingData;
     private int workTime;
+    private int batchesProcessed;
 
 
 
@@ -154,6 +155,7 @@ public class GPU {
 //        cluster.getUnprocessedData(toSend);
     }
 
+
     /**
      * processing data, checking if model is done and sending back to bus
      */
@@ -166,6 +168,7 @@ public class GPU {
                 startTick = currTick;
                 cluster.incrementGpuTimeUsed(tickTimer);
                 workTime+=tickTimer;
+                batchesProcessed ++;
 
                 //finished training
                 if (removed.getData().getProcessed() == removed.getData().getSize())
@@ -223,7 +226,7 @@ public class GPU {
      */
     public void updateTick(){
         currTick++;
-        if (model.getStatus() == Model.Status.Training){
+        if (model != null && model.getStatus() == Model.Status.Training){
             sendUnprocessed();
             processData();
             getDataFromCluster();
@@ -231,4 +234,7 @@ public class GPU {
 
     }
 
+    public int getWorkTime() {
+        return workTime;
+    }
 }

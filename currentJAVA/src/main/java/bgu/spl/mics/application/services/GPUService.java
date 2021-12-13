@@ -27,7 +27,7 @@ public class GPUService extends MicroService {
         public void call(TickBroadcast c)
         {
             gpu.updateTick();
-            if(gpu.getModel().getStatus() == Model.Status.Trained)
+            if(gpu.getModel() != null &&gpu.getModel().getStatus() == Model.Status.Trained)
             {
                 complete(getCurrentEvent(),gpu.getModel());
                 currentEvent = null;
@@ -97,6 +97,10 @@ public class GPUService extends MicroService {
         this.gpu = gpu;
         currentEvent = null;
         waitingEvents = new ConcurrentLinkedDeque<>();
+    }
+
+    public int getWaitingEventsSize() {
+        return waitingEvents.size();
     }
 
     @Override

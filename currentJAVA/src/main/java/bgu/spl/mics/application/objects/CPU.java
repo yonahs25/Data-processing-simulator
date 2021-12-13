@@ -1,7 +1,7 @@
 package bgu.spl.mics.application.objects;
 
-import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Passive object representing a single CPU.
@@ -24,7 +24,7 @@ public class CPU {
         this.cores = cores;
         this.cluster = cluster;
         currTick = 0;
-        waitingOnProcess = new LinkedList<>();
+        waitingOnProcess = new LinkedBlockingDeque<>();
         limit = cores/4;
         workTime = 0;
         startTick = 0;
@@ -40,14 +40,16 @@ public class CPU {
 
     private void getUnprocessedData()
     {
-        Queue<DataBatch> toTakeFrom = cluster.getWaitingUnprocessedBatches();
-        while (!toTakeFrom.isEmpty() && waitingOnProcess.size() < limit)
-        {
-            if(waitingOnProcess.isEmpty())
-            {
-                startTick = currTick;
+        LinkedBlockingDeque<DataBatch> toTakeFrom = cluster.getWaitingUnprocessedBatches();
+        synchronized(toTakeFrom) {
+            while (!toTakeFrom.isEmpty() && waitingOnProcess.size() < limit) {
+                if (waitingOnProcess.isEmpty()) {
+                    startTick = currTick;
+                }
+                try {
+                    waitingOnProcess.add((toTakeFrom.take()));
+                } catch (InterruptedException e) {}
             }
-            waitingOnProcess.add((toTakeFrom.remove()));
         }
     }
 

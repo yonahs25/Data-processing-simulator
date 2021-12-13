@@ -4,6 +4,7 @@ import bgu.spl.mics.Callback;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.TerminateCallback;
+import bgu.spl.mics.application.messages.PublishConferenceBroadcast;
 import bgu.spl.mics.application.messages.PublishResultsEvent;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
@@ -32,6 +33,12 @@ public class ConferenceService extends MicroService {
         @Override
         public void call(TickBroadcast c)
         {
+            currTick++;
+            if (currTick == confrence.getDate()) {
+                sendBroadcast(new PublishConferenceBroadcast(confrence.getGoodResults()));
+                terminate();
+            }
+
 
         }
     }
@@ -39,11 +46,13 @@ public class ConferenceService extends MicroService {
 
 
     private ConfrenceInformation confrence ;
+    private long currTick;
 
     public ConferenceService(String name,ConfrenceInformation confrence, MessageBusImpl bus)
     {
         super(name,bus);
         this.confrence = confrence;
+        currTick=0;
     }
 
     @Override

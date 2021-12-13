@@ -1,9 +1,8 @@
 package bgu.spl.mics.application;
 
 import bgu.spl.mics.MessageBusImpl;
-import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.objects.*;
-import bgu.spl.mics.application.services.StudentService;
+import bgu.spl.mics.application.services.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,9 +20,9 @@ import java.util.List;
 public class CRMSRunner {
 
     public static void main(String[] args) throws IOException, ParseException {
-        MessageBusImpl bus = new MessageBusImpl();
+        MessageBusImpl bus = MessageBusImpl.getInstance();
         Cluster cluster = new Cluster();
-        List<MicroService> aboutToRun = new ArrayList<>();
+        List<Thread> aboutToRun = new ArrayList<>();
         List<Student> students = new ArrayList<>();
         List<GPU> gpus = new ArrayList<>();
         List<CPU> cpus = new ArrayList<>();
@@ -33,7 +32,7 @@ public class CRMSRunner {
 
 
         JSONParser jsonparser = new JSONParser();
-        FileReader reader = new FileReader("example_input.json");
+        FileReader reader = new FileReader(".//.//.//.//.//.//.//example_input.json");
         Object obj = jsonparser.parse(reader);
         JSONObject empjsonobg = (JSONObject) obj;
         JSONArray studentsArray = (JSONArray) empjsonobg.get("Students");
@@ -73,7 +72,7 @@ public class CRMSRunner {
                         break;
                 }
             }
-            aboutToRun.add(new StudentService(student.getName(),bus,student));
+            aboutToRun.add( new Thread(new StudentService(student.getName(),bus,student)));
             students.add(student);
         }
 
@@ -87,17 +86,19 @@ public class CRMSRunner {
                     gpu = new GPU(GPU.Type.RTX3090,cluster);
                     gpus.add(gpu);
                     cluster.registerGpu(gpu);
-//                    aboutToRun.add(new GPUService("gpu"+i,))
+                    aboutToRun.add(new Thread(new GPUService("gpu"+i,bus,gpu)));
                     break;
                 case("RTX2080"):
                     gpu = new GPU(GPU.Type.RTX2080,cluster);
                     gpus.add(gpu);
                     cluster.registerGpu(gpu);
+                    aboutToRun.add(new Thread(new GPUService("gpu"+i,bus,gpu)));
                     break;
                 case("GTX1080"):
                     gpu = new GPU(GPU.Type.GTX1080,cluster);
                     gpus.add(gpu);
                     cluster.registerGpu(gpu);
+                    aboutToRun.add(new Thread(new GPUService("gpu"+i,bus,gpu)));
                     break;
 
             }
@@ -110,9 +111,11 @@ public class CRMSRunner {
             CPU cpu = new CPU((int) cores,cluster);
             cpus.add(cpu);
             cluster.registerCpu(cpu);
+            aboutToRun.add(new Thread(new CPUService("cpu"+i,bus,cpu)));
         }
 
         // -------------------------------------- Confrense ------------------------
+
         JSONArray confrenceArray = (JSONArray) empjsonobg.get("Conferences");
         for (int i = 0; i < confrenceArray.size(); i++){
             JSONObject jsConfrence = (JSONObject) confrenceArray.get(i);
@@ -120,9 +123,20 @@ public class CRMSRunner {
             long date = (long) jsConfrence.get("date");
             ConfrenceInformation confrence = new ConfrenceInformation(name,(int)date);
             confrences.add(confrence);
+            aboutToRun.add(new Thread(new ConferenceService("conference"+i,confrence,bus)));
         }
         tickTime = (long)empjsonobg.get("TickTime");
         duration = (long)empjsonobg.get("Duration");
+        aboutToRun.add(new Thread(new TimeService(bus,tickTime,duration)));
+
+
+
+        for (Thread t: aboutToRun){
+            t.start();
+        }
+
+
+
 
 //            for (int i = 0; i < students.size(); i++){
 //                System.out.println(students.get(i).getName());
@@ -143,6 +157,8 @@ public class CRMSRunner {
 //            for (ConfrenceInformation confrence : confrences){
 //                System.out.println(confrence.getDate());
 //            }
+
+
 
 
     }

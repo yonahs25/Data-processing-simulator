@@ -18,6 +18,14 @@ public class MessageBusImpl implements MessageBus {
 	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedDeque<MicroService>> BroadcastList = new ConcurrentHashMap();
 	private ConcurrentHashMap<Class<? extends Event>,ConcurrentLinkedDeque<MicroService>> EventList = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<Event,Future> eventToFuture = new ConcurrentHashMap<>();
+	private static class singeltonHolder
+	{
+		private static MessageBusImpl instance = new MessageBusImpl();
+	}
+	public static MessageBusImpl getInstance()
+	{
+		return singeltonHolder.instance;
+	}
 
 
 	@Override
@@ -51,7 +59,9 @@ public class MessageBusImpl implements MessageBus {
 	public void sendBroadcast(Broadcast b)
 	{
 		for (MicroService m : BroadcastList.get(b.getClass())) {
-			microServiceQueue.get(m).add(b);
+			LinkedBlockingDeque me = microServiceQueue.get(m);
+			if (me!=null)
+				me.add(b);
 		}
 	}
 
@@ -79,7 +89,9 @@ public class MessageBusImpl implements MessageBus {
 		}
 
 		Future<T> future = new Future<T>(); // where to store it?
-		eventToFuture.put(e,future);
+		synchronized (eventToFuture) {
+			eventToFuture.put(e, future);
+		}
 //		// add to every event field future which will contains his personal future
 //		// e.setFuture(future);
 //		//MicroService m = EventList.get(e.getClass()).remove(); // remove the head TODO check

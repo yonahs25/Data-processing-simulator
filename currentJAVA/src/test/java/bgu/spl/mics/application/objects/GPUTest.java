@@ -9,8 +9,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 public class GPUTest {
 
@@ -110,6 +109,50 @@ public class GPUTest {
 
 
         assertEquals(model, gpu.getModel());
+
+    }
+
+    @Test
+    public void secondQueueTest(){
+        MessageBusImpl bus = new MessageBusImpl();
+        Student student = new Student("Simba", "Computer Science", "MSc");
+        Data data = new Data(Data.Type.Images, 1000);
+        Model model = new Model("YOLO10", data, student);
+        GPUService gpuService = new GPUService("hi", bus, gpu);
+
+
+        Thread t1 = new Thread(gpuService);
+        t1.start();
+
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {}
+
+        bus.sendEvent(new TrainModelEvent(model));
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {}
+
+        Data data2 = new Data(Data.Type.Images, 200000);
+        Model model2 = new Model("1", data2, student);
+        bus.sendEvent(new TrainModelEvent(model2));
+
+
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {}
+
+
+        assertEquals(1, gpuService.getWaitingEventsSize());
+
+
+
+
+
+        //assertEquals(list.size(), 200000/1000);
+        //assertEquals(Model.Status.Training, gpu.getModel().getStatus());
+
+
 
     }
 }

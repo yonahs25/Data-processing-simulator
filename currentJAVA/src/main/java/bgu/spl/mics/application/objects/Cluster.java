@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.objects;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -16,7 +17,7 @@ public class Cluster {
 	private List<GPU> Gpus;
 	private HashMap<GPU, ConcurrentLinkedDeque<DataBatch>> returningProcessedBatches;
 	 //HashMap<CPU, Queue<DataBatch>> waitingUnprocessedBatches;
-	private ConcurrentLinkedDeque<DataBatch> waitingUnprocessedBatches;
+	private LinkedBlockingDeque<DataBatch> waitingUnprocessedBatches;
 	private Vector<String> modelTrained;
 	private AtomicInteger dataProcessedCpu;
 	private AtomicInteger timeUnitsCpu;
@@ -26,7 +27,7 @@ public class Cluster {
 		Cpus = new ArrayList<>();
 		Gpus = new ArrayList<>();
 		returningProcessedBatches = new HashMap<>();
-		waitingUnprocessedBatches = new ConcurrentLinkedDeque<>();
+		waitingUnprocessedBatches = new LinkedBlockingDeque<>();
 		modelTrained = new Vector<String>();
 		dataProcessedCpu = new AtomicInteger(0);
 		timeUnitsCpu = new AtomicInteger(0);
@@ -63,7 +64,7 @@ public class Cluster {
 
 	}
 
-	public Queue<DataBatch> getWaitingUnprocessedBatches()
+	public LinkedBlockingDeque<DataBatch> getWaitingUnprocessedBatches()
 	{
 		return waitingUnprocessedBatches;
 	}
@@ -80,12 +81,6 @@ public class Cluster {
 
 	// get gpu queue
 	public Queue<DataBatch> getGpuProcessed(GPU gpu){
-		return returningProcessedBatches.get(gpu);
-	}
-
-
-	//can make a clone to avoid long syncronize
-	public Queue<DataBatch> getProccesedData(GPU gpu) {
 		return returningProcessedBatches.get(gpu);
 	}
 
@@ -127,7 +122,12 @@ public class Cluster {
 	}
 
 
+	public List<CPU> getCpus() {
+		return Cpus;
+	}
 
-
+	public List<GPU> getGpus() {
+		return Gpus;
+	}
 }
 
