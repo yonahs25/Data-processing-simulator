@@ -25,7 +25,7 @@ public class StudentTest {
         data = new Data(Data.Type.Images, 1000);
         model = new Model("YOLO10", data, student);
         student.addModel(model);
-        studentService = new StudentService("Simba", bus, student);
+        studentService = new StudentService("Simba", student);
     }
 
 
@@ -33,7 +33,7 @@ public class StudentTest {
     public void sendingTrainEvent() {
         Cluster cluster=new Cluster();
         GPU gpu = new GPU(GPU.Type.RTX3090 , cluster);
-        GPUService gpuService = new GPUService("me", bus,gpu);
+        GPUService gpuService = new GPUService("me", gpu);
         Thread t1 = new Thread(studentService);
         Thread t2 = new Thread(gpuService);
         t1.start();

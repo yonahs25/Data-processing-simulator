@@ -85,7 +85,7 @@ public class CRMSRunner {
                         break;
                 }
             }
-            aboutToRun.add( new Thread(new StudentService(student.getName(),bus,student)));
+            aboutToRun.add( new Thread(new StudentService(student.getName(),student)));
             students.add(student);
         }
 
@@ -99,19 +99,19 @@ public class CRMSRunner {
                     gpu = new GPU(GPU.Type.RTX3090,cluster);
                     gpus.add(gpu);
                     cluster.registerGpu(gpu);
-                    aboutToRun.add(new Thread(new GPUService("gpu"+i,bus,gpu)));
+                    aboutToRun.add(new Thread(new GPUService("gpu"+i,gpu)));
                     break;
                 case("RTX2080"):
                     gpu = new GPU(GPU.Type.RTX2080,cluster);
                     gpus.add(gpu);
                     cluster.registerGpu(gpu);
-                    aboutToRun.add(new Thread(new GPUService("gpu"+i,bus,gpu)));
+                    aboutToRun.add(new Thread(new GPUService("gpu"+i,gpu)));
                     break;
                 case("GTX1080"):
                     gpu = new GPU(GPU.Type.GTX1080,cluster);
                     gpus.add(gpu);
                     cluster.registerGpu(gpu);
-                    aboutToRun.add(new Thread(new GPUService("gpu"+i,bus,gpu)));
+                    aboutToRun.add(new Thread(new GPUService("gpu"+i,gpu)));
                     break;
 
             }
@@ -124,7 +124,7 @@ public class CRMSRunner {
             CPU cpu = new CPU((int) cores,cluster);
             cpus.add(cpu);
             cluster.registerCpu(cpu);
-            aboutToRun.add(new Thread(new CPUService("cpu"+i,bus,cpu)));
+            aboutToRun.add(new Thread(new CPUService("cpu"+i,cpu)));
         }
 
         // -------------------------------------- Confrense ------------------------
@@ -136,11 +136,11 @@ public class CRMSRunner {
             long date = (long) jsConfrence.get("date");
             ConfrenceInformation confrence = new ConfrenceInformation(name,(int)date);
             confrences.add(confrence);
-            aboutToRun.add(new Thread(new ConferenceService("conference"+i,confrence,bus)));
+            aboutToRun.add(new Thread(new ConferenceService("conference"+i,confrence)));
         }
         tickTime = (long)empjsonobg.get("TickTime");
         duration = (long)empjsonobg.get("Duration");
-        aboutToRun.add(new Thread(new TimeService(bus,tickTime,duration)));
+        aboutToRun.add(new Thread(new TimeService(tickTime,duration)));
 
 
 
@@ -152,10 +152,6 @@ public class CRMSRunner {
                 t.join();
             } catch (InterruptedException e) {}
         }
-
-        System.out.println("here");
-
-
 
         Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         Writer writer = Files.newBufferedWriter(Paths.get(".//.//.//.//.//.//.//output.json"));

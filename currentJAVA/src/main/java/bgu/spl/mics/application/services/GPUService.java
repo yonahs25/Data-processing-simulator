@@ -34,6 +34,7 @@ public class GPUService extends MicroService {
                 currentEvent = null;
                 if(!waitingEvents.isEmpty())
                 {
+                    //System.out.println("pulled " + name);
                     Message myMessage = waitingEvents.remove();
                     callbackMap.get(myMessage.getClass()).call(myMessage);
                 }
@@ -49,13 +50,16 @@ public class GPUService extends MicroService {
 
             if(currentEvent == null)
             {
-                System.out.println(name + " training " + c.getModel().getName());
                 gpu.setModel(c.getModel());
                 setCurrentEvent(c);
+                //System.out.println(name + "started working on " + c.getModel().getName() );
             }
             else
             {
+
                 waitingEvents.add(c);
+               //System.out.println("added " + c.getModel().getName() + " to queue of" + name +
+               //    " amount in queue:" + waitingEvents.size());
             }
 
 
@@ -69,7 +73,6 @@ public class GPUService extends MicroService {
         {
             if(currentEvent == null)
             {
-                System.out.println("testing " + c.getModel().getName());
                 gpu.setModel(c.getModel());
                 complete(c, c.getModel());
             }
@@ -93,9 +96,9 @@ public class GPUService extends MicroService {
         return currentEvent;
     }
 
-    public GPUService(String name, MessageBusImpl bus, GPU gpu)
+    public GPUService(String name, GPU gpu)
     {
-        super(name,bus);
+        super(name);
         this.gpu = gpu;
         currentEvent = null;
         waitingEvents = new ConcurrentLinkedDeque<>();

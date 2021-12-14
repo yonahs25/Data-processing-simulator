@@ -4,17 +4,17 @@
       "name": "Simba",
       "department": "Computer Science",
       "status": "MSc",
-      "publications": 0,
-      "papersRead": 3,
+      "publications": 1,
+      "papersRead": 2,
       "trainedModels": [
         {
           "name": "YOLO10",
           "data": {
             "type": "Images",
-            "size": 200000
+            "size": 1000
           },
-          "status": "Trained",
-          "results": "none"
+          "status": "Tested",
+          "results": "Good"
         }
       ]
     },
@@ -22,34 +22,35 @@
       "name": "Zazu",
       "department": "EE",
       "status": "PhD",
-      "publications": 0,
-      "papersRead": 3,
-      "trainedModels": []
+      "publications": 1,
+      "papersRead": 2,
+      "trainedModels": [
+        {
+          "name": "VIT",
+          "data": {
+            "type": "Images",
+            "size": 1000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
     },
     {
       "name": "Pumba",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 1,
-      "papersRead": 2,
+      "publications": 0,
+      "papersRead": 3,
       "trainedModels": [
         {
           "name": "Bert",
           "data": {
             "type": "Text",
-            "size": 1000000
+            "size": 1000
           },
           "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "GPT4",
-          "data": {
-            "type": "Text",
-            "size": 1000000
-          },
-          "status": "Trained",
-          "results": "none"
+          "results": "Bad"
         }
       ]
     },
@@ -57,26 +58,17 @@
       "name": "Timon",
       "department": "SE",
       "status": "PhD",
-      "publications": 1,
-      "papersRead": 2,
+      "publications": 0,
+      "papersRead": 3,
       "trainedModels": [
         {
           "name": "Percepetron",
           "data": {
             "type": "Tabular",
-            "size": 1000000
+            "size": 1000
           },
           "status": "Tested",
           "results": "Bad"
-        },
-        {
-          "name": "GNN",
-          "data": {
-            "type": "Tabular",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
         }
       ]
     },
@@ -91,16 +83,7 @@
           "name": "YOLO9000",
           "data": {
             "type": "Images",
-            "size": 100000
-          },
-          "status": "Trained",
-          "results": "none"
-        },
-        {
-          "name": "VIT2",
-          "data": {
-            "type": "Images",
-            "size": 1000000
+            "size": 1000
           },
           "status": "Tested",
           "results": "Good"
@@ -112,17 +95,27 @@
     {
       "name": "ICML",
       "date": 2000,
-      "publications": []
+      "publications": [
+        {
+          "name": "VIT",
+          "data": {
+            "type": "Images",
+            "size": 1000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
     },
     {
       "name": "NeurIPS",
       "date": 2500,
       "publications": [
         {
-          "name": "GNN",
+          "name": "YOLO9000",
           "data": {
-            "type": "Tabular",
-            "size": 1000000
+            "type": "Images",
+            "size": 1000
           },
           "status": "Tested",
           "results": "Good"
@@ -132,27 +125,17 @@
     {
       "name": "CVPR",
       "date": 3000,
-      "publications": [
-        {
-          "name": "VIT2",
-          "data": {
-            "type": "Images",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
+      "publications": []
     },
     {
       "name": "ECCV",
       "date": 4000,
       "publications": [
         {
-          "name": "Bert",
+          "name": "YOLO10",
           "data": {
-            "type": "Text",
-            "size": 1000000
+            "type": "Images",
+            "size": 1000
           },
           "status": "Tested",
           "results": "Good"
@@ -161,11 +144,11 @@
     },
     {
       "name": "AISTATS",
-      "date": 6000,
+      "date": 5500,
       "publications": []
     }
   ],
-  "cpuTimeUsed": 23742,
-  "gpuTimeUsed": 11880,
-  "batchesProcessed": 6577
+  "cpuTimeUsed": 26,
+  "gpuTimeUsed": 10,
+  "batchesProcessed": 5
 }

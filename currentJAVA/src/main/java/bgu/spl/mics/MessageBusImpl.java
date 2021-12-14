@@ -120,25 +120,26 @@ public class MessageBusImpl implements MessageBus {
 		else if(e.getClass() == PublishResultsEvent.class) {
 			boolean done = false;
 			LinkedBlockingDeque<MicroService> eventQ = EventList.get(e.getClass());
-			if (!eventQ.isEmpty()) {
-				while (!done) {
+				while (!eventQ.isEmpty() && !done) {
 					MicroService m = null;
 					try {
 						m = eventQ.take();
 					} catch (InterruptedException ex) {
 					}
-
-
 					LinkedBlockingDeque myQ = microServiceQueue.get(m);
 					if (myQ == null) {
 						eventQ.remove(m);
 					} else {
 						myQ.add(e);
+						try {
+							eventQ.put(m);
+						} catch (InterruptedException ex){}
 						done = true;
+
 					}
 				}
 			}
-		}
+
 
 		else
 		{

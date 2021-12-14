@@ -1,7 +1,6 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Callback;
-import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.TerminateCallback;
 import bgu.spl.mics.application.messages.PublishConferenceBroadcast;
@@ -25,6 +24,7 @@ public class ConferenceService extends MicroService {
         @Override
         public void call(PublishResultsEvent c) {
             confrence.addGoodResult(c.getModel());
+            System.out.println(name + "GOT MODEL");
         }
     }
 
@@ -46,9 +46,9 @@ public class ConferenceService extends MicroService {
     private ConfrenceInformation confrence ;
     private long currTick;
 
-    public ConferenceService(String name,ConfrenceInformation confrence, MessageBusImpl bus)
+    public ConferenceService(String name,ConfrenceInformation confrence)
     {
-        super(name,bus);
+        super(name);
         this.confrence = confrence;
         currTick=0;
     }

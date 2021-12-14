@@ -10,22 +10,22 @@
                 {
                     "name": "YOLO10",
                     "type": "Images",
-                    "size": 200000
+                    "size": 1000
                 },
                 {
                     "name": "ResNet9000",
                     "type": "Images",
-                    "size": 200000
+                    "size": 1000
                 },
                 {
                     "name": "LessEfficientNet",
                     "type": "Images",
-                    "size": 20000
+                    "size": 1000
                 },
                 {
                     "name": "DensestNet",
                     "type": "Images",
-                    "size": 200000
+                    "size": 1000
                 }
             ]
 
@@ -39,7 +39,7 @@
                 {
                     "name": "VIT",
                     "type": "Images",
-                    "size": 100000000
+                    "size": 1000
                 }
             ]
 
@@ -53,22 +53,22 @@
                 {
                     "name": "Bert",
                     "type": "Text",
-                    "size": 1000000
+                    "size": 1000
                 },
                 {
                     "name": "GPT4",
                     "type": "Text",
-                    "size": 1000000
+                    "size": 1000
                 },
                 {
                     "name": "GPT5",
                     "type": "Text",
-                    "size": 200000
+                    "size": 1000
                 },
                 {
                     "name": "GPT10",
                     "type": "Text",
-                    "size": 50000
+                    "size": 1000
                 }
             ]
 
@@ -82,22 +82,22 @@
                 {
                     "name": "Percepetron",
                     "type": "Tabular",
-                    "size": 1000000
+                    "size": 1000
                 },
                 {
                     "name": "GNN",
                     "type": "Tabular",
-                    "size": 1000000
+                    "size": 1000
                 },
                 {
                     "name": "MoreStyleGAN",
                     "type": "Images",
-                    "size": 100000
+                    "size": 1000
                 },
                 {
                     "name": "ConditionalGAN",
                     "type": "Images",
-                    "size": 500000
+                    "size": 1000
                 }
             ]
 
@@ -111,22 +111,22 @@
                 {
                     "name": "YOLO9000",
                     "type": "Images",
-                    "size": 100000
+                    "size": 1000
                 },
                 {
                     "name": "VIT2",
                     "type": "Images",
-                    "size": 1000000
+                    "size": 1000
                 },
                 {
                     "name": "MuchMoreEfficientNet",
                     "type": "Images",
-                    "size": 20000
+                    "size": 1000
                 },
                 {
                     "name": "DenserNet",
                     "type": "Images",
-                    "size": 100000
+                    "size": 1000
                 }
             ]
 
@@ -140,7 +140,7 @@
         {"name": "NeurIPS", "date": 2500},
         {"name": "CVPR", "date": 3000},
         {"name": "ECCV", "date": 4000},
-        {"name": "AISTATS", "date": 6000}
+        {"name": "AISTATS", "date": 5500}
     ],
     "TickTime": 1,
     "Duration": 5500

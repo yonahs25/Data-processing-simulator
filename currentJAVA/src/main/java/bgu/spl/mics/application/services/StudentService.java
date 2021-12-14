@@ -51,7 +51,6 @@ public class StudentService extends MicroService {
                 }
             }
             if (currentModel < student.getModels().size()) {
-                futureList.add(sendEvent(new TrainModelEvent(student.getModels().get(currentModel))));
                 currentModel++;
             }
         }
@@ -72,8 +71,8 @@ public class StudentService extends MicroService {
         }
     }
 
-    public StudentService(String name, MessageBusImpl bus,Student student) {
-        super(name,bus);
+    public StudentService(String name,Student student) {
+        super(name);
         this.student = student;
         future = null;
         currentModel = 0;

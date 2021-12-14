@@ -96,7 +96,7 @@ public class GPUTest {
         Student student = new Student("Simba", "Computer Science", "MSc");
         Data data = new Data(Data.Type.Images, 1000);
         Model model = new Model("YOLO10", data, student);
-        MicroService gpuService = new GPUService("hi", bus, gpu);
+        MicroService gpuService = new GPUService("hi", gpu);
         Thread t1 = new Thread(gpuService);
         bus.register(gpuService);
         t1.start();
@@ -118,7 +118,7 @@ public class GPUTest {
         Student student = new Student("Simba", "Computer Science", "MSc");
         Data data = new Data(Data.Type.Images, 1000);
         Model model = new Model("YOLO10", data, student);
-        GPUService gpuService = new GPUService("hi", bus, gpu);
+        GPUService gpuService = new GPUService("hi",  gpu);
 
 
         Thread t1 = new Thread(gpuService);

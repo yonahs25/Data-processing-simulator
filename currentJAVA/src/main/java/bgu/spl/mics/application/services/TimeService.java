@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.TerminateCallback;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
@@ -23,8 +22,8 @@ public class TimeService extends MicroService{
 	private final long speed;
 	private long duration;
 
-	public TimeService( MessageBusImpl bus, long speed, long duration) {
-		super("xyz", bus);
+	public TimeService(long speed, long duration) {
+		super("xyz");
 		this.speed = speed;
 		this.duration = duration;
 	}
@@ -41,13 +40,12 @@ public class TimeService extends MicroService{
 				duration = duration-speed;
 				if(duration == 0) {
 					timer.cancel();
-					System.out.println("terminating");
 					sendBroadcast(new TerminateBroadcast());
 				}else
 					sendBroadcast(new TickBroadcast());
 				// need to terminate
 			}
-		} ,5000,speed*5);
+		} ,1,speed*20);
 	}
 
 

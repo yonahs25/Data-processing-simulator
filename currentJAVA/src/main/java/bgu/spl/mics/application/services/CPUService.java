@@ -1,7 +1,6 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Callback;
-import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.TerminateCallback;
 import bgu.spl.mics.application.messages.TerminateBroadcast;
@@ -30,10 +29,10 @@ public class CPUService extends MicroService {
 
 
 
-    public CPUService(String name, MessageBusImpl bus,CPU cpu)
+    public CPUService(String name,CPU cpu)
     {
 
-        super(name,bus);
+        super(name);
         this.cpu = cpu;
         // TODO Implement this
     }
