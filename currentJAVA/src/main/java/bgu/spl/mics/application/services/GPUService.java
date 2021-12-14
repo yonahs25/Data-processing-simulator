@@ -27,8 +27,9 @@ public class GPUService extends MicroService {
         public void call(TickBroadcast c)
         {
             gpu.updateTick();
-            if(gpu.getModel() != null &&gpu.getModel().getStatus() == Model.Status.Trained)
+            if(currentEvent!= null&& gpu.getModel() != null && gpu.getModel().getStatus() == Model.Status.Trained)
             {
+                //System.out.println(gpu.getModel().getName() + " done");
                 complete(getCurrentEvent(),gpu.getModel());
                 currentEvent = null;
                 if(!waitingEvents.isEmpty())
@@ -68,6 +69,7 @@ public class GPUService extends MicroService {
         {
             if(currentEvent == null)
             {
+                System.out.println("testing " + c.getModel().getName());
                 gpu.setModel(c.getModel());
                 complete(c, c.getModel());
             }

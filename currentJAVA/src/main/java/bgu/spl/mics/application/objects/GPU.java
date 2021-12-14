@@ -156,6 +156,10 @@ public class GPU {
     }
 
 
+    public int getTickTimer() {
+        return tickTimer;
+    }
+
     /**
      * processing data, checking if model is done and sending back to bus
      */
@@ -168,13 +172,12 @@ public class GPU {
                 startTick = currTick;
                 cluster.incrementGpuTimeUsed(tickTimer);
                 workTime+=tickTimer;
-                batchesProcessed ++;
+                batchesProcessed += tickTimer;
 
                 //finished training
                 if (removed.getData().getProcessed() == removed.getData().getSize())
                 {
                     model.setStatus(Model.Status.Trained);
-                    System.out.println("done");
                     cluster.addModelTrained(model.getName());
                 }
 

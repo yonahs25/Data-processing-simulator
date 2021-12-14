@@ -41,12 +41,13 @@ public class TimeService extends MicroService{
 				duration = duration-speed;
 				if(duration == 0) {
 					timer.cancel();
+					System.out.println("terminating");
 					sendBroadcast(new TerminateBroadcast());
 				}else
 					sendBroadcast(new TickBroadcast());
 				// need to terminate
 			}
-		} ,5000,speed);
+		} ,5000,speed*5);
 	}
 
 

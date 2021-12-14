@@ -6,7 +6,7 @@ import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
 
 import java.util.Vector;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Student is responsible for sending the {@link TrainModelEvent},
@@ -21,7 +21,7 @@ public class StudentService extends MicroService {
 
     private Student student;
     private Future<Model> future;
-    private ConcurrentLinkedDeque<Future<Model>> futureList;
+    private LinkedBlockingDeque<Future<Model>> futureList;
     private int currentModel;
 
     private class tickCallback implements Callback<TickBroadcast> {
@@ -72,7 +72,7 @@ public class StudentService extends MicroService {
                 }
             }
             if (currentModel < student.getModels().size()) {
-                future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+                futureList.add(sendEvent(new TrainModelEvent(student.getModels().get(currentModel))));
                 currentModel++;
             }
         }
@@ -98,7 +98,7 @@ public class StudentService extends MicroService {
         this.student = student;
         future = null;
         currentModel = 0;
-        futureList = new ConcurrentLinkedDeque<>();
+        futureList = new LinkedBlockingDeque<>();
         // TODO Implement this
     }
 
@@ -116,8 +116,6 @@ public class StudentService extends MicroService {
         subscribeBroadcast(PublishConferenceBroadcast.class, new publishCallback());
         subscribeBroadcast(TerminateBroadcast.class,new TerminateCallback(this));
         subscribeBroadcast(TickBroadcast.class, new tickCallback());
-        // TODO Implement this
-
     }
 
 

@@ -108,4 +108,8 @@ public class CPU {
     public int getBatchesProcessed() {
         return batchesProcessed;
     }
+
+    public int getWorkTime() {
+        return workTime;
+    }
 }

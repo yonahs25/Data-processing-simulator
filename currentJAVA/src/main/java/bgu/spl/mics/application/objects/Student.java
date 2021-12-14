@@ -2,6 +2,7 @@ package bgu.spl.mics.application.objects;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class Student  {
     public Student(String name, String department, String status) {
         this.name = name;
         this.department = department;
+        this.trainedModels = new ArrayList<>();
         switch (status){
             case("MSc"):
                 this.status = Degree.MSc;

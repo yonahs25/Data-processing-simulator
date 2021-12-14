@@ -17,7 +17,7 @@ public class MessageBusImpl implements MessageBus {
 
 	private ConcurrentHashMap<MicroService, LinkedBlockingDeque<Message>> microServiceQueue = new ConcurrentHashMap();
 	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedDeque<MicroService>> BroadcastList = new ConcurrentHashMap();
-	private ConcurrentHashMap<Class<? extends Event>,ConcurrentLinkedDeque<MicroService>> EventList = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<Class<? extends Event>,LinkedBlockingDeque<MicroService>> EventList = new ConcurrentHashMap<>();
 	private ConcurrentHashMap<Event,Future> eventToFuture = new ConcurrentHashMap<>();
 	private AtomicInteger currentGpuToSend = new AtomicInteger(0);
 	private static class singeltonHolder
@@ -34,7 +34,7 @@ public class MessageBusImpl implements MessageBus {
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m)
 	{
 		if (EventList.get(type) == null)
-			EventList.put(type, new ConcurrentLinkedDeque<MicroService>()); // need to change linked list
+			EventList.put(type, new LinkedBlockingDeque<MicroService>()); // need to change linked list
 
 		EventList.get(type).add(m);
 
@@ -55,9 +55,7 @@ public class MessageBusImpl implements MessageBus {
 		try {
 			Future future = eventToFuture.get(e);
 			future.resolve(result);
-		} catch (Exception g){
-			System.out.println(e.getClass());
-		}
+		} catch (Exception g){}
 
 
 	}
@@ -89,19 +87,33 @@ public class MessageBusImpl implements MessageBus {
 
 		if(e.getClass() == TrainModelEvent.class)
 		{
-			MicroService m = EventList.get(e.getClass()).remove();
-			microServiceQueue.get(m).add(e);
+			MicroService m = null;
+			try {
+				m = EventList.get(e.getClass()).take();
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
 			EventList.get(e.getClass()).add(m);
+			microServiceQueue.get(m).add(e);
+
+			//microServiceQueue.get(EventList.get(e.getClass()).getFirst()).add(e);
 		}
 		else if(e.getClass() == TestModelEvent.class)
 		{
-			MicroService m = EventList.get(e.getClass()).remove();
-			microServiceQueue.get(m).add(e);
+			MicroService m = null;
+			try {
+				m = EventList.get(e.getClass()).take();
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
 			EventList.get(e.getClass()).add(m);
+			microServiceQueue.get(m).add(e);
+			//microServiceQueue.get(EventList.get(e.getClass()).getFirst()).add(e);
 		}
 		else
 		{
 			MicroService m = EventList.get(e.getClass()).getFirst();
+			if(m!=null)
 			microServiceQueue.get(m).addFirst(e);
 		}
 

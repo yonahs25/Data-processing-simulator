@@ -38,6 +38,8 @@ public class CRMSRunner {
         long tickTime;
         long duration;
         int batchesProcessedByCpus=0;
+        int cpuTimeUsed = 0;
+        int gpuTimeUsed = 0;
 
 
 
@@ -145,6 +147,15 @@ public class CRMSRunner {
         for (Thread t: aboutToRun){
             t.start();
         }
+        for (Thread t: aboutToRun){
+            try {
+                t.join();
+            } catch (InterruptedException e) {}
+        }
+
+        System.out.println("here");
+
+
 
         Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
         Writer writer = Files.newBufferedWriter(Paths.get(".//.//.//.//.//.//.//output.json"));
@@ -153,8 +164,15 @@ public class CRMSRunner {
         }
         for (CPU cpu:cpus){
             batchesProcessedByCpus+= cpu.getBatchesProcessed();
+            cpuTimeUsed += cpu.getWorkTime();
         }
-        GsonOutput output = new GsonOutput(students,confrences,cluster.getTimeUnitsCpu().get(),cluster.getTimeUnitsGpu().get(),batchesProcessedByCpus);
+        for(GPU gpu:gpus){
+            gpuTimeUsed += gpu.getWorkTime();
+        }
+        for (ConfrenceInformation c :confrences) {
+            System.out.println(c.getGoodResults().size());
+        }
+        GsonOutput output = new GsonOutput(students,confrences,cpuTimeUsed,gpuTimeUsed,batchesProcessedByCpus);
         gson.toJson(output,writer);
         writer.close();
 
