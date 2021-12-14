@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.objects;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Passive object representing a data used by a model.
  * Add fields and methods to this class as you see fit (including public methods and constructors).
@@ -12,9 +14,9 @@ public class Data {
         Images, Text, Tabular
     }
 
-    private Type type;
+    @Expose private Type type;
     private int processed;
-    private int size;
+    @Expose private int size;
 
     public Data(Type type, int size) {
         this.type = type;

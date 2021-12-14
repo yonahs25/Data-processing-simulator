@@ -1,4 +1,7 @@
 package bgu.spl.mics.application.objects;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -20,8 +23,10 @@ public class Cluster {
 	private LinkedBlockingDeque<DataBatch> waitingUnprocessedBatches;
 	private Vector<String> modelTrained;
 	private AtomicInteger dataProcessedCpu;
-	private AtomicInteger timeUnitsCpu;
-	private AtomicInteger timeUnitsGpu;
+	@SerializedName("cpuTimeUsed")
+	@Expose private AtomicInteger timeUnitsCpu;
+	@SerializedName("gpuTimeUsed")
+	@Expose private AtomicInteger timeUnitsGpu;
 
 	public Cluster() {
 		Cpus = new ArrayList<>();
@@ -128,6 +133,18 @@ public class Cluster {
 
 	public List<GPU> getGpus() {
 		return Gpus;
+	}
+
+	public AtomicInteger getDataProcessedCpu() {
+		return dataProcessedCpu;
+	}
+
+	public AtomicInteger getTimeUnitsCpu() {
+		return timeUnitsCpu;
+	}
+
+	public AtomicInteger getTimeUnitsGpu() {
+		return timeUnitsGpu;
 	}
 }
 

@@ -1,4 +1,7 @@
 package bgu.spl.mics.application.objects;
+
+import com.google.gson.annotations.Expose;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -6,21 +9,25 @@ import java.util.List;
  * Passive object representing single student.
  * Add fields and methods to this class as you see fit (including public methods and constructors).
  */
-public class Student {
+
+public class Student  {
+
     /**
      * Enum representing the Degree the student is studying for.
      */
+
     enum Degree {
         MSc, PhD
     }
 
-    private String  name;
-    private String department;
-    private Degree status;
-    private int publications;
-    private int papersRead;
-    private List<Model> models;
-    private int currModel;
+     @Expose private String  name;
+     @Expose private String department;
+     @Expose private Degree status;
+     @Expose private int publications;
+     @Expose private int papersRead;
+     private List<Model> models;
+     @Expose private List<Model> trainedModels;
+     private int currModel ;
 
 
     public Student(String name, String department, String status) {
@@ -78,4 +85,16 @@ public class Student {
     public void setPapersRead() {
         papersRead++;
     }
+
+    public List<Model> getTrainedModels() {
+        return trainedModels;
+    }
+
+    public void setTrainedModels() {
+        for(Model m : models){
+            if( m.getStatus() != Model.Status.PreTrained && m.getStatus() != Model.Status.Training)
+                trainedModels.add(m);
+        }
+    }
+
 }

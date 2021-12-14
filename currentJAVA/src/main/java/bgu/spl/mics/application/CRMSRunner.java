@@ -3,13 +3,19 @@ package bgu.spl.mics.application;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.application.objects.*;
 import bgu.spl.mics.application.services.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +25,8 @@ import java.util.List;
  */
 public class CRMSRunner {
 
+
+    private static FileWriter file;
     public static void main(String[] args) throws IOException, ParseException {
         MessageBusImpl bus = MessageBusImpl.getInstance();
         Cluster cluster = new Cluster();
@@ -29,6 +37,9 @@ public class CRMSRunner {
         List<ConfrenceInformation> confrences = new ArrayList<>();
         long tickTime;
         long duration;
+        int batchesProcessedByCpus=0;
+
+
 
 
         JSONParser jsonparser = new JSONParser();
@@ -135,6 +146,17 @@ public class CRMSRunner {
             t.start();
         }
 
+        Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().create();
+        Writer writer = Files.newBufferedWriter(Paths.get(".//.//.//.//.//.//.//output.json"));
+        for(Student s : students) {
+            s.setTrainedModels();
+        }
+        for (CPU cpu:cpus){
+            batchesProcessedByCpus+= cpu.getBatchesProcessed();
+        }
+        GsonOutput output = new GsonOutput(students,confrences,cluster.getTimeUnitsCpu().get(),cluster.getTimeUnitsGpu().get(),batchesProcessedByCpus);
+        gson.toJson(output,writer);
+        writer.close();
 
 
 
@@ -162,9 +184,10 @@ public class CRMSRunner {
 //                System.out.println(confrence.getDate());
 //            }
 
-
-
-
     }
 
+
+
 }
+
+

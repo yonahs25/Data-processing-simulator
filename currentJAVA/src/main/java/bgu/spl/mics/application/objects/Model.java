@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.objects;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Passive object representing a Deep Learning model.
  * Add all the fields described in the assignment as private fields.
@@ -11,11 +13,11 @@ public class Model {
     public enum Status {PreTrained, Training, Trained, Tested};
     public enum Results {none , Good, Bad};
 
-    private String name;
-    private Data data;
+    @Expose  private String name;
+    @Expose private Data data;
     private Student student;
-    private Status status;
-    private Results results;
+    @Expose private Status status;
+    @Expose private Results results;
 
     public Model(String name, Data data, Student student) {
         this.name = name;

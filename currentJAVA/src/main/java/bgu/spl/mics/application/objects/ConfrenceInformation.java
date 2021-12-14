@@ -1,5 +1,8 @@
 package bgu.spl.mics.application.objects;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Vector;
 
 /**
@@ -9,9 +12,10 @@ import java.util.Vector;
 public class ConfrenceInformation {
 
     private int currTime;
-    private String name;
-    private int date;
-    private Vector<Model> goodResults;
+    @Expose private String name;
+    @Expose private int date;
+    @SerializedName("publications")
+    @Expose private Vector<Model> goodResults;
 
     public ConfrenceInformation(String name, int date)
     {
@@ -35,5 +39,9 @@ public class ConfrenceInformation {
     public int getDate()
     {
         return date;
+    }
+
+    public String getName() {
+        return name;
     }
 }

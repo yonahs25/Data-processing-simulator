@@ -105,4 +105,7 @@ public class CPU {
         return !waitingOnProcess.isEmpty();
     }
 
+    public int getBatchesProcessed() {
+        return batchesProcessed;
+    }
 }
