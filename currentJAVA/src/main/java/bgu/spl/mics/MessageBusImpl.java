@@ -35,18 +35,13 @@ public class MessageBusImpl implements MessageBus {
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m)
 	{
 		if (EventList.get(type) == null)
-			EventList.put(type, new LinkedBlockingDeque<MicroService>()); // need to change linked list
+			EventList.putIfAbsent(type, new LinkedBlockingDeque<MicroService>()); // need to change linked list
 
 		try {
 			EventList.get(type).put(m);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		if (EventList.get(TrainModelEvent.class)!=null)
-			System.out.println(EventList.get(TrainModelEvent.class).size());
-
-		System.out.println("-----------------------------------------------------");
 	}
 
 
@@ -55,7 +50,7 @@ public class MessageBusImpl implements MessageBus {
 	{
 
 		if (BroadcastList.get(type) == null)
-			BroadcastList.put(type, new ConcurrentLinkedDeque<MicroService>()); // need to change linked list
+			BroadcastList.putIfAbsent(type, new ConcurrentLinkedDeque<MicroService>()); // need to change linked list
 		BroadcastList.get(type).add(m);
 
 
