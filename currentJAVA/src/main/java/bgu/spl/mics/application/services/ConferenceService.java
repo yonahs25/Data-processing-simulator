@@ -24,7 +24,6 @@ public class ConferenceService extends MicroService {
         @Override
         public void call(PublishResultsEvent c) {
             confrence.addGoodResult(c.getModel());
-            System.out.println(name + "GOT MODEL");
         }
     }
 

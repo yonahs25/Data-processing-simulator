@@ -8,7 +8,7 @@ import bgu.spl.mics.application.messages.TrainModelEvent;
 import bgu.spl.mics.application.objects.GPU;
 import bgu.spl.mics.application.objects.Model;
 
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * GPU service is responsible for handling the
@@ -27,9 +27,8 @@ public class GPUService extends MicroService {
         public void call(TickBroadcast c)
         {
             gpu.updateTick();
-            if(currentEvent!= null&& gpu.getModel() != null && gpu.getModel().getStatus() == Model.Status.Trained)
+            if(currentEvent != null &&  gpu.getModel().getStatus() == Model.Status.Trained)
             {
-                //System.out.println(gpu.getModel().getName() + " done");
                 complete(getCurrentEvent(),gpu.getModel());
                 currentEvent = null;
                 if(!waitingEvents.isEmpty())
@@ -48,15 +47,15 @@ public class GPUService extends MicroService {
         public void call(TrainModelEvent c)
         {
 
+
             if(currentEvent == null)
             {
                 gpu.setModel(c.getModel());
                 setCurrentEvent(c);
-                //System.out.println(name + "started working on " + c.getModel().getName() );
+//                System.out.println(name + "started working on " + c.getModel().getName() );
             }
             else
             {
-
                 waitingEvents.add(c);
                //System.out.println("added " + c.getModel().getName() + " to queue of" + name +
                //    " amount in queue:" + waitingEvents.size());
@@ -73,20 +72,27 @@ public class GPUService extends MicroService {
         {
             if(currentEvent == null)
             {
+                //System.out.println(name + " testing " + c.getModel().getName());
                 gpu.setModel(c.getModel());
                 complete(c, c.getModel());
+                currentEvent = null;
+                if(!waitingEvents.isEmpty())
+                {
+                    //System.out.println("pulled " + name);
+                    Message myMessage = waitingEvents.remove();
+                    callbackMap.get(myMessage.getClass()).call(myMessage);
+                }
             }
             else
             {
-                waitingEvents.addFirst(c);
+                waitingEvents.add(c);
             }
-
         }
     }
 
     private GPU gpu;
     private Event currentEvent;
-    private ConcurrentLinkedDeque<Event> waitingEvents;
+    private LinkedBlockingDeque<Event> waitingEvents;
 
     public void setCurrentEvent(Event currentEvent) {
         this.currentEvent = currentEvent;
@@ -101,7 +107,7 @@ public class GPUService extends MicroService {
         super(name);
         this.gpu = gpu;
         currentEvent = null;
-        waitingEvents = new ConcurrentLinkedDeque<>();
+        waitingEvents = new LinkedBlockingDeque<>();
     }
 
     public int getWaitingEventsSize() {

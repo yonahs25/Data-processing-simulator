@@ -59,12 +59,8 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public <T> void complete(Event<T> e, T result)
 	{
-		try {
 			Future future = eventToFuture.get(e);
 			future.resolve(result);
-		} catch (Exception g){}
-
-
 	}
 
 	@Override

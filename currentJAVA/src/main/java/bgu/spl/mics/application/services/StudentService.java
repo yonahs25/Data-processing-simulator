@@ -29,12 +29,37 @@ public class StudentService extends MicroService {
         @Override
         public void call(TickBroadcast c)
         {
+
+//            while (future==null){
+//                try {
+//                    future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+//                } catch (Exception e){}
+//            }
+//            if (currentModel==0)
+//                currentModel++;
+//            if (future != null) {
+//                if (future.isDone()){
+//                    future = sendEvent(new TestModelEvent(future.get()));
+//                    Model testResult = future.get();
+//                    if (testResult.getResults() == Model.Results.Good){
+////                        future = sendEvent(new PublishResultsEvent(testResult));
+//                        sendEvent(new PublishResultsEvent(testResult)).get(); //need to delete get?
+//                    }
+//                    if (currentModel < student.getModels().size()) {
+//                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+//                        currentModel++;
+//                    }
+//                }
+//            }
+
+
             while (futureList.isEmpty() && currentModel == 0){
                 try {
                     futureList.add(sendEvent(new TrainModelEvent(student.getModels().get(currentModel))));
                 } catch (Exception e){}
             }
-            if (currentModel==0) {
+
+            if (currentModel == 0) {
                 currentModel++;
             }
             for (Future<Model> f : futureList){
@@ -51,8 +76,10 @@ public class StudentService extends MicroService {
                 }
             }
             if (currentModel < student.getModels().size()) {
+                futureList.add(sendEvent(new TrainModelEvent(student.getModels().get(currentModel))));
                 currentModel++;
             }
+
         }
     }
     private class publishCallback implements Callback<PublishConferenceBroadcast>{

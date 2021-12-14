@@ -3,7 +3,6 @@ package bgu.spl.mics.application.objects;
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -42,7 +41,7 @@ public class Student  {
             default:
                 this.status = Degree.PhD;
         }
-        models = new LinkedList<>();
+        models = new ArrayList<>();
         currModel = 0;
         publications = 0;
         papersRead = 0;
