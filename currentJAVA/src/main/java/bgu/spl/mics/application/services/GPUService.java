@@ -43,13 +43,13 @@ public class GPUService extends MicroService {
 
     private class trainCallback implements Callback<TrainModelEvent>{
 
-        public trainCallback() {}
-
         @Override
         public void call(TrainModelEvent c)
         {
+
             if(currentEvent == null)
             {
+                System.out.println(name + " training " + c.getModel().getName());
                 gpu.setModel(c.getModel());
                 setCurrentEvent(c);
             }
@@ -108,9 +108,9 @@ public class GPUService extends MicroService {
     @Override
     protected void initialize()
     {
+        subscribeEvent(TestModelEvent.class, new testCallback());
         subscribeBroadcast(TickBroadcast.class , new tickCallback());
         subscribeEvent(TrainModelEvent.class, new trainCallback());
-        subscribeEvent(TestModelEvent.class, new testCallback());
         subscribeBroadcast(TerminateBroadcast.class,new TerminateCallback(this));
 
     }

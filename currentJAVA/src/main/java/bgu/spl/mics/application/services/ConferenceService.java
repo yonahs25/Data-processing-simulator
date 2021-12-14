@@ -38,8 +38,6 @@ public class ConferenceService extends MicroService {
                 sendBroadcast(new PublishConferenceBroadcast(confrence.getGoodResults()));
                 terminate();
             }
-
-
         }
     }
 

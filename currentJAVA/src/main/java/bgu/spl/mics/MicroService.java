@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -26,6 +27,8 @@ public abstract class MicroService implements Runnable {
     protected boolean terminated = false;
     protected final String name;
     protected ConcurrentHashMap<Class<? extends Message>, Callback> callbackMap = new ConcurrentHashMap();
+    protected LinkedList<Class<? extends Message>> whatSubbedTo = new LinkedList<>();
+
 
 
     /**
@@ -172,5 +175,6 @@ public abstract class MicroService implements Runnable {
         System.out.println("done " + this);
         bus.unregister(this);
         // delete stuff
+
     }
 }

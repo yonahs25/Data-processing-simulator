@@ -5,7 +5,7 @@
       "department": "Computer Science",
       "status": "MSc",
       "publications": 0,
-      "papersRead": 1,
+      "papersRead": 0,
       "trainedModels": []
     },
     {
@@ -13,33 +13,23 @@
       "department": "EE",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 1,
+      "papersRead": 0,
       "trainedModels": []
     },
     {
       "name": "Pumba",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 1,
+      "publications": 0,
       "papersRead": 0,
-      "trainedModels": [
-        {
-          "name": "Bert",
-          "data": {
-            "type": "Text",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
+      "trainedModels": []
     },
     {
       "name": "Timon",
       "department": "SE",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 1,
+      "papersRead": 0,
       "trainedModels": []
     },
     {
@@ -47,35 +37,15 @@
       "department": "Computer Science",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 1,
-      "trainedModels": [
-        {
-          "name": "YOLO9000",
-          "data": {
-            "type": "Images",
-            "size": 100000
-          },
-          "status": "Tested",
-          "results": "Bad"
-        }
-      ]
+      "papersRead": 0,
+      "trainedModels": []
     }
   ],
   "confrences": [
     {
       "name": "ICML",
       "date": 2000,
-      "publications": [
-        {
-          "name": "Bert",
-          "data": {
-            "type": "Text",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
+      "publications": []
     },
     {
       "name": "NeurIPS",
@@ -98,7 +68,7 @@
       "publications": []
     }
   ],
-  "cpuTimeUsed": 32512,
-  "gpuTimeUsed": 5481,
-  "batchesProcessed": 5503
+  "cpuTimeUsed": 17728,
+  "gpuTimeUsed": 5490,
+  "batchesProcessed": 2759
 }

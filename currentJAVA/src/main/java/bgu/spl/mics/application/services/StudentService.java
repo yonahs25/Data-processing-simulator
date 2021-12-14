@@ -27,36 +27,16 @@ public class StudentService extends MicroService {
     private class tickCallback implements Callback<TickBroadcast> {
 
         @Override
-        public void call(TickBroadcast c) {
-//            while (future==null){
-//                try {
-//                    future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
-//                } catch (Exception e){}
-//            }
-//            if (currentModel==0)
-//                currentModel++;
-//            if (future != null) {
-//                if (future.isDone()){
-//                    future = sendEvent(new TestModelEvent(future.get()));
-//                    Model testResult = future.get();
-//                    if (testResult.getResults() == Model.Results.Good){
-////                        future = sendEvent(new PublishResultsEvent(testResult));
-//                        sendEvent(new PublishResultsEvent(testResult)).get(); //need to delete get?
-//                    }
-//                    if (currentModel < student.getModels().size()) {
-//                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
-//                        currentModel++;
-//                    }
-//                }
-//            }
-
+        public void call(TickBroadcast c)
+        {
             while (futureList.isEmpty() && currentModel == 0){
                 try {
                     futureList.add(sendEvent(new TrainModelEvent(student.getModels().get(currentModel))));
                 } catch (Exception e){}
             }
-            if (currentModel==0)
+            if (currentModel==0) {
                 currentModel++;
+            }
             for (Future<Model> f : futureList){
                 if (f.isDone()){
                     futureList.remove(f);
@@ -65,7 +45,6 @@ public class StudentService extends MicroService {
                         futureList.add(sendEvent(new TestModelEvent(done)));
                     } else if (done.getStatus() == Model.Status.Tested){
                         if (done.getResults() == Model.Results.Good){
-//                        future = sendEvent(new PublishResultsEvent(testResult));
                             sendEvent(new PublishResultsEvent(done)); //need to delete get?
                         }
                     }

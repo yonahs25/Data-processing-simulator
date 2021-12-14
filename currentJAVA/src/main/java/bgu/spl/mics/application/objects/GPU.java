@@ -54,7 +54,6 @@ public class GPU {
         startTick = 0;
         missingData=0;
         workTime = 0;
-        //workingOn = null;
     }
 
     public List<DataBatch> getUnprocessedData() {
@@ -143,16 +142,6 @@ public class GPU {
                 }
                 cluster.sendUnprocessedData(toSend);
          }
-
-
-
-//        //need to check how to deal with empty unprocessedData.
-//        List<DataBatch> toSend = new ArrayList<>();
-//        for (int i = 0; i < 10; i++){
-//            if (!unprocessedData.isEmpty())
-//            toSend.add(unprocessedData.remove(0));
-//        }
-//        cluster.getUnprocessedData(toSend);
     }
 
 

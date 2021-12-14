@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.messages.PublishResultsEvent;
 import bgu.spl.mics.application.messages.TestModelEvent;
 import bgu.spl.mics.application.messages.TrainModelEvent;
 
@@ -36,17 +37,28 @@ public class MessageBusImpl implements MessageBus {
 		if (EventList.get(type) == null)
 			EventList.put(type, new LinkedBlockingDeque<MicroService>()); // need to change linked list
 
-		EventList.get(type).add(m);
+		try {
+			EventList.get(type).put(m);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
+		if (EventList.get(TrainModelEvent.class)!=null)
+			System.out.println(EventList.get(TrainModelEvent.class).size());
+
+		System.out.println("-----------------------------------------------------");
 	}
 
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m)
 	{
+
 		if (BroadcastList.get(type) == null)
 			BroadcastList.put(type, new ConcurrentLinkedDeque<MicroService>()); // need to change linked list
 		BroadcastList.get(type).add(m);
+
+
 	}
 
 	@Override
@@ -83,33 +95,56 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e)
 	{
-
-
 		if(e.getClass() == TrainModelEvent.class)
 		{
+
 			MicroService m = null;
 			try {
 				m = EventList.get(e.getClass()).take();
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
-			EventList.get(e.getClass()).add(m);
+			} catch (InterruptedException ex) {}
 			microServiceQueue.get(m).add(e);
+
+			EventList.get(e.getClass()).add(m);
+
 
 			//microServiceQueue.get(EventList.get(e.getClass()).getFirst()).add(e);
 		}
+
 		else if(e.getClass() == TestModelEvent.class)
 		{
 			MicroService m = null;
 			try {
 				m = EventList.get(e.getClass()).take();
-			} catch (InterruptedException ex) {
-				ex.printStackTrace();
-			}
+			} catch (InterruptedException ex) {}
+
 			EventList.get(e.getClass()).add(m);
 			microServiceQueue.get(m).add(e);
 			//microServiceQueue.get(EventList.get(e.getClass()).getFirst()).add(e);
 		}
+
+		else if(e.getClass() == PublishResultsEvent.class) {
+			boolean done = false;
+			LinkedBlockingDeque<MicroService> eventQ = EventList.get(e.getClass());
+			if (!eventQ.isEmpty()) {
+				while (!done) {
+					MicroService m = null;
+					try {
+						m = eventQ.take();
+					} catch (InterruptedException ex) {
+					}
+
+
+					LinkedBlockingDeque myQ = microServiceQueue.get(m);
+					if (myQ == null) {
+						eventQ.remove(m);
+					} else {
+						myQ.add(e);
+						done = true;
+					}
+				}
+			}
+		}
+
 		else
 		{
 			MicroService m = EventList.get(e.getClass()).getFirst();
@@ -140,6 +175,7 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void unregister(MicroService m)
 	{
+
 		microServiceQueue.remove(m); //TODO check if need to do more
 	}
 
