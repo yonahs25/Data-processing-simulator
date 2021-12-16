@@ -20,8 +20,6 @@ public class GPU {
     private int currTick;
     private List<DataBatch> unprocessedData;
     private Queue<DataBatch> processedData; //has a limit
-    //private DataBatch workingOn;
-    //how many processed data he can have in queue
     private final int limit;
     //time it takes to process data
     private  int tickTimer;
@@ -29,9 +27,11 @@ public class GPU {
     private int workTime;
     private int batchesProcessed;
 
+    //TODO check batches processed and work time
 
 
-    public GPU(Type type, Cluster cluster) {
+    public GPU(Type type, Cluster cluster)
+    {
         this.type = type;
         this.cluster = cluster;
         switch (type) {

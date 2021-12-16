@@ -10,10 +10,10 @@ public class DataBatch {
     private Data data;
     private long start_index;
     private GPU owner;
-    //private  int startTick;
 
 
-    public DataBatch(Data data, long start_index, GPU gpu) {
+    public DataBatch(Data data, long start_index, GPU gpu)
+    {
         this.data = data;
         this.start_index = start_index;
         owner = gpu;

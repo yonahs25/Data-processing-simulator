@@ -12,12 +12,14 @@ public class Model {
 
     public enum Status {PreTrained, Training, Trained, Tested};
     public enum Results {none , Good, Bad};
+    public enum Published {No, Yes}
 
     @Expose  private String name;
     @Expose private Data data;
     private Student student;
     @Expose private Status status;
     @Expose private Results results;
+    private Published published;
 
     public Model(String name, Data data, Student student) {
         this.name = name;
@@ -25,6 +27,16 @@ public class Model {
         this.student = student;
         status = Status.PreTrained;
         results = Results.none;
+        published = Published.No;
+    }
+
+
+    public Published getPublished() {
+        return published;
+    }
+
+    public void setPublished(Published published) {
+        this.published = published;
     }
 
     public Data getData() {

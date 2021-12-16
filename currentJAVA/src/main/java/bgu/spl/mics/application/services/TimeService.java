@@ -22,28 +22,32 @@ public class TimeService extends MicroService{
 	private final long speed;
 	private long duration;
 
-	public TimeService(long speed, long duration) {
-		super("xyz");
+	public TimeService(long speed, long duration)
+	{
+		super("timer");
 		this.speed = speed;
 		this.duration = duration;
 	}
 
-
-
 	@Override
-	protected void initialize() {
+	protected void initialize()
+	{
 		subscribeBroadcast(TerminateBroadcast.class, new TerminateCallback(this));
+
 		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
+		timer.schedule(new TimerTask()
+		{
 			@Override
-			public void run() {
+			public void run()
+			{
 				duration = duration-speed;
-				if(duration == 0) {
+				if(duration <= 0)
+				{
 					timer.cancel();
 					sendBroadcast(new TerminateBroadcast());
-				}else
+				}
+				else
 					sendBroadcast(new TickBroadcast());
-				// need to terminate
 			}
 		} ,100,speed);
 	}

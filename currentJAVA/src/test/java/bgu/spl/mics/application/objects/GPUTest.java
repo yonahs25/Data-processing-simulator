@@ -145,14 +145,5 @@ public class GPUTest {
 
         assertEquals(1, gpuService.getWaitingEventsSize());
 
-
-
-
-
-        //assertEquals(list.size(), 200000/1000);
-        //assertEquals(Model.Status.Training, gpu.getModel().getStatus());
-
-
-
     }
 }

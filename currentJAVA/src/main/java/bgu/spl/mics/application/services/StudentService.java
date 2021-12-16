@@ -29,7 +29,7 @@ public class StudentService extends MicroService {
         @Override
         public void call(TickBroadcast c)
         {
-
+            
             while (future==null){
                 try {
                     future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
@@ -37,18 +37,45 @@ public class StudentService extends MicroService {
             }
             if (currentModel==0)
                 currentModel++;
-            if (future != null) {
-                if (future.isDone()){
-                    future = sendEvent(new TestModelEvent(future.get()));
-                    Model testResult = future.get();
-                    if (testResult.getResults() == Model.Results.Good){
-                        future = sendEvent(new PublishResultsEvent(testResult));
-                        sendEvent(new PublishResultsEvent(testResult)).get(); //need to delete get?
+            if (future != null)
+            {
+                if (future.isDone())
+                {
+                    // checking if model even is done
+                    Model done = future.get();
+                    // if done training sending to test
+                    if (done.getStatus() == Model.Status.Trained)
+                    {
+                        future = sendEvent(new TestModelEvent(done));
+                    } // if tested
+                    else if (done.getStatus() == Model.Status.Tested && done.getPublished() == Model.Published.No)
+                    { // checking if test was good, if yes, sending publish result
+                        if (done.getResults() == Model.Results.Good)
+                        {
+                            future = sendEvent(new PublishResultsEvent(done));
+                        }  // if not, checking if we have more models to send, if yes, sending
+                        else if (currentModel < student.getModels().size())
+                        {
+                            future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+                            currentModel ++;
+                        }
                     }
-                    if (currentModel < student.getModels().size()) {
-                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
-                        currentModel++;
-                    }
+                    
+                    
+                    
+                    
+                    
+                    
+//                    future = sendEvent(new TestModelEvent(future.get()));
+//                    Model testResult = future.get();
+//                    if (testResult.getResults() == Model.Results.Good){
+//                        future = sendEvent(new PublishResultsEvent(testResult));
+//                        sendEvent(new PublishResultsEvent(testResult)).get(); //need to delete get?
+//                    }
+//                    if (currentModel < student.getModels().size()) {
+//                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+//                        currentModel++;
+//                    }
                 }
             }
 
@@ -90,10 +117,18 @@ public class StudentService extends MicroService {
         {
             Vector<Model> goodResults = c.getGoodResults();
             //List<Model> models = student.getModels();
-            for(int i = 0 ; i< goodResults.size(); i++){
-                if(goodResults.get(i).getStudent() == student)
+            for (Model goodResult : goodResults) {// if the model is of the student, increase publications by 1, and if sending new model if needed
+                if (goodResult.getStudent() == student) {
                     student.setPublications();
-                else
+                    //TODO check this!
+                    if (currentModel < student.getModels().size()) {
+                        System.out.println("published " + goodResult.getName());
+                        System.out.println("sending " + (student.getModels().get(currentModel)).getName());
+                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+                        currentModel++;
+                    }
+
+                } else
                     student.setPapersRead();
             }
         }
@@ -105,7 +140,6 @@ public class StudentService extends MicroService {
         future = null;
         currentModel = 0;
         futureList = new LinkedBlockingDeque<>();
-        // TODO Implement this
     }
 
 

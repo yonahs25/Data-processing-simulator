@@ -18,7 +18,8 @@ public class Data {
     private int processed;
     @Expose private int size;
 
-    public Data(Type type, int size) {
+    public Data(Type type, int size)
+    {
         this.type = type;
         this.size = size;
     }

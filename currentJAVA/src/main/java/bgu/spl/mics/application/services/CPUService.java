@@ -31,15 +31,12 @@ public class CPUService extends MicroService {
 
     public CPUService(String name,CPU cpu)
     {
-
         super(name);
         this.cpu = cpu;
-        // TODO Implement this
     }
 
     @Override
     protected void initialize() {
-        // TODO Implement this
         subscribeBroadcast(TickBroadcast.class , new tickCallback());
         subscribeBroadcast(TerminateBroadcast.class,new TerminateCallback(this));
 

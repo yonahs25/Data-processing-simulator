@@ -7,7 +7,6 @@ import bgu.spl.mics.application.messages.TrainModelEvent;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -16,11 +15,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class MessageBusImpl implements MessageBus {
 
-	private ConcurrentHashMap<MicroService, LinkedBlockingDeque<Message>> microServiceQueue = new ConcurrentHashMap();
-	private ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedDeque<MicroService>> BroadcastList = new ConcurrentHashMap();
-	private ConcurrentHashMap<Class<? extends Event>,LinkedBlockingDeque<MicroService>> EventList = new ConcurrentHashMap<>();
-	private ConcurrentHashMap<Event,Future> eventToFuture = new ConcurrentHashMap<>();
-	private AtomicInteger currentGpuToSend = new AtomicInteger(0);
+	private final ConcurrentHashMap<MicroService, LinkedBlockingDeque<Message>> microServiceQueue = new ConcurrentHashMap();
+	private final ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedDeque<MicroService>> BroadcastList = new ConcurrentHashMap();
+	private final ConcurrentHashMap<Class<? extends Event>,LinkedBlockingDeque<MicroService>> EventList = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<Event,Future> eventToFuture = new ConcurrentHashMap<>();
 	private static class singeltonHolder
 	{
 		private static MessageBusImpl instance = new MessageBusImpl();
@@ -60,6 +58,8 @@ public class MessageBusImpl implements MessageBus {
 	public <T> void complete(Event<T> e, T result)
 	{
 			Future future = eventToFuture.get(e);
+			if (future == null)
+				System.out.println("future null" + e.getClass());
 			future.resolve(result);
 	}
 
@@ -74,47 +74,23 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 
-	private void incrementGpuSpot(){
-		int oldVal;
-		int newVal;
-		do {
-			oldVal = currentGpuToSend.get();
-			newVal = (oldVal + 1) % (EventList.get(TrainModelEvent.class).size());
-		} while (!currentGpuToSend.compareAndSet(oldVal,newVal));
-	}
-
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e)
 	{
-		if(e.getClass() == TrainModelEvent.class)
-		{
-
-			MicroService m = null;
-			try {
-				m = EventList.get(e.getClass()).take();
-			} catch (InterruptedException ex) {}
-			microServiceQueue.get(m).add(e);
-
-			EventList.get(e.getClass()).add(m);
-
-
-			//microServiceQueue.get(EventList.get(e.getClass()).getFirst()).add(e);
-		}
-
-		else if(e.getClass() == TestModelEvent.class)
+		if(e.getClass() == TrainModelEvent.class || e.getClass() == TestModelEvent.class)
 		{
 			MicroService m = null;
 			try {
 				m = EventList.get(e.getClass()).take();
 			} catch (InterruptedException ex) {}
-
-			EventList.get(e.getClass()).add(m);
 			microServiceQueue.get(m).add(e);
-			//microServiceQueue.get(EventList.get(e.getClass()).getFirst()).add(e);
+			EventList.get(e.getClass()).add(m);
 		}
 
-		else if(e.getClass() == PublishResultsEvent.class) {
+		else if(e.getClass() == PublishResultsEvent.class)
+		{
 			boolean done = false;
+			// taking the event queue of the event class
 			LinkedBlockingDeque<MicroService> eventQ = EventList.get(e.getClass());
 				while (!eventQ.isEmpty() && !done) {
 					MicroService m = null;
@@ -136,25 +112,10 @@ public class MessageBusImpl implements MessageBus {
 				}
 			}
 
-
-		else
-		{
-			MicroService m = EventList.get(e.getClass()).getFirst();
-			if(m!=null)
-			microServiceQueue.get(m).addFirst(e);
-		}
-
-		Future<T> future = new Future<T>(); // where to store it?
-		synchronized (eventToFuture) {
+		Future<T> future = new Future<T>();
 			eventToFuture.put(e, future);
-		}
-//		// add to every event field future which will contains his personal future
-//		// e.setFuture(future);
-//		//MicroService m = EventList.get(e.getClass()).remove(); // remove the head TODO check
-//		microServiceQueue.get(m).add(e); // add e to m queue TODO check
-//		EventList.get(e.getClass()).add(m); // add the removed m to the tail for round robbing pattern
-//		// for now the future is empty until the complete method will be called
-		return  future; // for the student now he can loop this future untill it will be resolve
+
+		return  future;
 
 	}
 
@@ -205,10 +166,18 @@ public class MessageBusImpl implements MessageBus {
 
 	public <T> boolean wasEventSent(Event<T> type)
 	{
-		MicroService m = EventList.get(type.getClass()).getLast();
-		if(microServiceQueue.get(m).contains(type))
-			return true;
+		LinkedBlockingDeque<MicroService> thisQ = EventList.get(type.getClass());
+		for (MicroService m : thisQ){
+			LinkedBlockingDeque<Message> myQ = microServiceQueue.get(m);
+			if (myQ.contains(type))
+				return true;
+		}
 		return false;
+
+//		MicroService m = EventList.get(type.getClass()).getLast();
+//		if(microServiceQueue.get(m).contains(type))
+//			return true;
+//		return false;
 	}
 
 	public <T> boolean wasBroadcastSent(Broadcast type)

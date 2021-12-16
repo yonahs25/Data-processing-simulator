@@ -19,7 +19,6 @@ public class Cluster {
 	private List<CPU> Cpus;
 	private List<GPU> Gpus;
 	private HashMap<GPU, ConcurrentLinkedDeque<DataBatch>> returningProcessedBatches;
-	 //HashMap<CPU, Queue<DataBatch>> waitingUnprocessedBatches;
 	private LinkedBlockingDeque<DataBatch> waitingUnprocessedBatches;
 	private Vector<String> modelTrained;
 	private AtomicInteger dataProcessedCpu;

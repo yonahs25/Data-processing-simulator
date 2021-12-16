@@ -30,6 +30,7 @@ bgu/spl/mics/application/objects/CPU$1.class
 bgu/spl/mics/example/ExampleManager.class
 bgu/spl/mics/application/services/StudentService$1.class
 bgu/spl/mics/application/objects/Model$Results.class
+bgu/spl/mics/application/objects/Model$Published.class
 bgu/spl/mics/MessageBus.class
 bgu/spl/mics/application/services/StudentService$publishCallback.class
 bgu/spl/mics/application/messages/PublishResultsEvent.class

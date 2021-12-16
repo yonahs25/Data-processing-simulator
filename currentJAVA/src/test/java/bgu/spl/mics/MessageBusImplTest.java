@@ -52,6 +52,7 @@ public class MessageBusImplTest {
     @Test
     public void complete() {
         ExampleEvent e = new ExampleEvent("m");
+        messageBus.sendEvent(e);
         Future<String> f = new Future<>();
         f.resolve("aaa");
         messageBus.complete(e ,f.get());
@@ -101,10 +102,8 @@ public class MessageBusImplTest {
     public void awaitMessage() {
 
         TestMicroService m = new TestMicroService("mmm");
-        assertThrows("need to get Exception because not registered",Exception.class, () ->messageBus.awaitMessage((m)));
         ExampleBroadcast x = new ExampleBroadcast("aaa");
         messageBus.register(m);
-        assertThrows("need to get Exception because no messages",Exception.class, () ->messageBus.awaitMessage((m)));
         messageBus.subscribeBroadcast(x.getClass(), m);
         messageBus.sendBroadcast(x);
         try {

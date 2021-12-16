@@ -33,7 +33,6 @@ public class GPUService extends MicroService {
                 currentEvent = null;
                 if(!waitingEvents.isEmpty())
                 {
-                    //System.out.println("pulled " + name);
                     Message myMessage = waitingEvents.remove();
                     callbackMap.get(myMessage.getClass()).call(myMessage);
                 }
@@ -46,22 +45,15 @@ public class GPUService extends MicroService {
         @Override
         public void call(TrainModelEvent c)
         {
-
-
             if(currentEvent == null)
             {
                 gpu.setModel(c.getModel());
                 setCurrentEvent(c);
-//                System.out.println(name + "started working on " + c.getModel().getName() );
             }
             else
             {
                 waitingEvents.add(c);
-               //System.out.println("added " + c.getModel().getName() + " to queue of" + name +
-               //    " amount in queue:" + waitingEvents.size());
             }
-
-
         }
     }
 
@@ -72,13 +64,11 @@ public class GPUService extends MicroService {
         {
             if(currentEvent == null)
             {
-                //System.out.println(name + " testing " + c.getModel().getName());
                 gpu.setModel(c.getModel());
                 complete(c, c.getModel());
                 currentEvent = null;
                 if(!waitingEvents.isEmpty())
                 {
-                    //System.out.println("pulled " + name);
                     Message myMessage = waitingEvents.remove();
                     callbackMap.get(myMessage.getClass()).call(myMessage);
                 }
