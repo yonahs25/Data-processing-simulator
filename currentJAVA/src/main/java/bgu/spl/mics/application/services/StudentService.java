@@ -24,7 +24,8 @@ public class StudentService extends MicroService {
     private LinkedBlockingDeque<Future<Model>> futureList;
     private int currentModel;
 
-    private class tickCallback implements Callback<TickBroadcast> {
+    private class tickCallback implements Callback<TickBroadcast>
+    {
 
         @Override
         public void call(TickBroadcast c)
@@ -60,54 +61,10 @@ public class StudentService extends MicroService {
                             currentModel ++;
                         }
                     }
-                    
-                    
-                    
-                    
-                    
-                    
-//                    future = sendEvent(new TestModelEvent(future.get()));
-//                    Model testResult = future.get();
-//                    if (testResult.getResults() == Model.Results.Good){
-//                        future = sendEvent(new PublishResultsEvent(testResult));
-//                        sendEvent(new PublishResultsEvent(testResult)).get(); //need to delete get?
-//                    }
-//                    if (currentModel < student.getModels().size()) {
-//                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
-//                        currentModel++;
-//                    }
+
                 }
             }
 
-
-            /*
-            while (futureList.isEmpty() && currentModel == 0){
-                try {
-                    futureList.add(sendEvent(new TrainModelEvent(student.getModels().get(currentModel))));
-                } catch (Exception e){}
-            }
-
-            if (currentModel == 0) {
-                currentModel++;
-            }
-            for (Future<Model> f : futureList){
-                if (f.isDone()){
-                    futureList.remove(f);
-                    Model done = f.get();
-                    if(done.getStatus() == Model.Status.Trained){
-                        futureList.add(sendEvent(new TestModelEvent(done)));
-                    } else if (done.getStatus() == Model.Status.Tested){
-                        if (done.getResults() == Model.Results.Good){
-                            sendEvent(new PublishResultsEvent(done)); //need to delete get?
-                        }
-                    }
-                }
-            }
-            if (currentModel < student.getModels().size()) {
-                futureList.add(sendEvent(new TrainModelEvent(student.getModels().get(currentModel))));
-                currentModel++;
-            }
-            */
         }
     }
     private class publishCallback implements Callback<PublishConferenceBroadcast>{
@@ -118,7 +75,8 @@ public class StudentService extends MicroService {
             Vector<Model> goodResults = c.getGoodResults();
             //List<Model> models = student.getModels();
             for (Model goodResult : goodResults) {// if the model is of the student, increase publications by 1, and if sending new model if needed
-                if (goodResult.getStudent() == student) {
+                if (goodResult.getStudent() == student)
+                {
                     student.setPublications();
                     //TODO check this!
                     if (currentModel < student.getModels().size()) {
@@ -134,7 +92,8 @@ public class StudentService extends MicroService {
         }
     }
 
-    public StudentService(String name,Student student) {
+    public StudentService(String name,Student student)
+    {
         super(name);
         this.student = student;
         future = null;
@@ -143,16 +102,19 @@ public class StudentService extends MicroService {
     }
 
 
-    public int getCurrentModel() {
+    public int getCurrentModel()
+    {
         return currentModel;
     }
 
-    public Future<Model> getFuture() {
+    public Future<Model> getFuture()
+    {
         return future;
     }
 
     @Override
-    protected void initialize() {
+    protected void initialize()
+    {
         subscribeBroadcast(PublishConferenceBroadcast.class, new publishCallback());
         subscribeBroadcast(TerminateBroadcast.class,new TerminateCallback(this));
         subscribeBroadcast(TickBroadcast.class, new tickCallback());

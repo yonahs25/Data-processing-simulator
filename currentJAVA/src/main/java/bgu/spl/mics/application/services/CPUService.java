@@ -19,7 +19,8 @@ public class CPUService extends MicroService {
 
     private CPU cpu;
 
-    private class tickCallback implements Callback<TickBroadcast>{
+    private class tickCallback implements Callback<TickBroadcast>
+    {
         @Override
         public void call(TickBroadcast c)
         {
@@ -36,9 +37,9 @@ public class CPUService extends MicroService {
     }
 
     @Override
-    protected void initialize() {
+    protected void initialize()
+    {
         subscribeBroadcast(TickBroadcast.class , new tickCallback());
         subscribeBroadcast(TerminateBroadcast.class,new TerminateCallback(this));
-
     }
 }

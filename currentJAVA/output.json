@@ -5,7 +5,7 @@
       "department": "Computer Science",
       "status": "MSc",
       "publications": 1,
-      "papersRead": 4,
+      "papersRead": 3,
       "trainedModels": [
         {
           "name": "YOLO10",
@@ -15,6 +15,24 @@
           },
           "status": "Tested",
           "results": "Good"
+        },
+        {
+          "name": "ResNet9000",
+          "data": {
+            "type": "Images",
+            "size": 200000
+          },
+          "status": "Tested",
+          "results": "Bad"
+        },
+        {
+          "name": "LessEfficientNet",
+          "data": {
+            "type": "Images",
+            "size": 20000
+          },
+          "status": "Tested",
+          "results": "Bad"
         }
       ]
     },
@@ -23,56 +41,20 @@
       "department": "EE",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 5,
+      "papersRead": 4,
       "trainedModels": []
     },
     {
       "name": "Pumba",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 2,
-      "papersRead": 3,
+      "publications": 0,
+      "papersRead": 4,
       "trainedModels": [
         {
           "name": "Bert",
           "data": {
             "type": "Text",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "GPT4",
-          "data": {
-            "type": "Text",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "GPT5",
-          "data": {
-            "type": "Text",
-            "size": 200000
-          },
-          "status": "Tested",
-          "results": "Bad"
-        }
-      ]
-    },
-    {
-      "name": "Timon",
-      "department": "SE",
-      "status": "MSc",
-      "publications": 0,
-      "papersRead": 5,
-      "trainedModels": [
-        {
-          "name": "Percepetron",
-          "data": {
-            "type": "Tabular",
             "size": 1000000
           },
           "status": "Trained",
@@ -81,10 +63,46 @@
       ]
     },
     {
+      "name": "Timon",
+      "department": "SE",
+      "status": "MSc",
+      "publications": 2,
+      "papersRead": 2,
+      "trainedModels": [
+        {
+          "name": "Percepetron",
+          "data": {
+            "type": "Tabular",
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
+        },
+        {
+          "name": "GNN",
+          "data": {
+            "type": "Tabular",
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
+        },
+        {
+          "name": "MoreStyleGAN",
+          "data": {
+            "type": "Images",
+            "size": 100000
+          },
+          "status": "Tested",
+          "results": "Bad"
+        }
+      ]
+    },
+    {
       "name": "Nala",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 2,
+      "publications": 1,
       "papersRead": 3,
       "trainedModels": [
         {
@@ -101,15 +119,6 @@
           "data": {
             "type": "Images",
             "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "MuchMoreEfficientNet",
-          "data": {
-            "type": "Images",
-            "size": 20000
           },
           "status": "Trained",
           "results": "none"
@@ -128,10 +137,10 @@
       "date": 25000,
       "publications": [
         {
-          "name": "Bert",
+          "name": "YOLO10",
           "data": {
-            "type": "Text",
-            "size": 1000000
+            "type": "Images",
+            "size": 200000
           },
           "status": "Tested",
           "results": "Good"
@@ -143,10 +152,10 @@
       "date": 30000,
       "publications": [
         {
-          "name": "YOLO10",
+          "name": "Percepetron",
           "data": {
-            "type": "Images",
-            "size": 200000
+            "type": "Tabular",
+            "size": 1000000
           },
           "status": "Tested",
           "results": "Good"
@@ -173,18 +182,9 @@
       "date": 50000,
       "publications": [
         {
-          "name": "GPT4",
+          "name": "GNN",
           "data": {
-            "type": "Text",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "VIT2",
-          "data": {
-            "type": "Images",
+            "type": "Tabular",
             "size": 1000000
           },
           "status": "Tested",
@@ -193,7 +193,7 @@
       ]
     }
   ],
-  "cpuTimeUsed": 321877,
-  "gpuTimeUsed": 63804,
-  "batchesProcessed": 59503
+  "cpuTimeUsed": 167522,
+  "gpuTimeUsed": 68590,
+  "batchesProcessed": 32119
 }

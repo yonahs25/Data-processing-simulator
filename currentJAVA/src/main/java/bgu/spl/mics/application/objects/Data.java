@@ -35,6 +35,7 @@ public class Data {
     public int getSize() {
         return size;
     }
+
     public void increment(){
         processed+=1000;
     }

@@ -20,7 +20,12 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 public class GPUService extends MicroService {
 
-    private class tickCallback implements Callback<TickBroadcast> {
+    private GPU gpu;
+    private Event currentEvent;
+    private LinkedBlockingDeque<Event> waitingEvents;
+
+    private class tickCallback implements Callback<TickBroadcast>
+    {
         public tickCallback() {}
 
         @Override
@@ -40,7 +45,8 @@ public class GPUService extends MicroService {
         }
     }
 
-    private class trainCallback implements Callback<TrainModelEvent>{
+    private class trainCallback implements Callback<TrainModelEvent>
+    {
 
         @Override
         public void call(TrainModelEvent c)
@@ -57,7 +63,8 @@ public class GPUService extends MicroService {
         }
     }
 
-    private class testCallback implements Callback<TestModelEvent>{
+    private class testCallback implements Callback<TestModelEvent>
+    {
 
         @Override
         public void call(TestModelEvent c)
@@ -79,10 +86,6 @@ public class GPUService extends MicroService {
             }
         }
     }
-
-    private GPU gpu;
-    private Event currentEvent;
-    private LinkedBlockingDeque<Event> waitingEvents;
 
     public void setCurrentEvent(Event currentEvent) {
         this.currentEvent = currentEvent;
@@ -111,6 +114,5 @@ public class GPUService extends MicroService {
         subscribeBroadcast(TickBroadcast.class , new tickCallback());
         subscribeEvent(TrainModelEvent.class, new trainCallback());
         subscribeBroadcast(TerminateBroadcast.class,new TerminateCallback(this));
-
     }
 }

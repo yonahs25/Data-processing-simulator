@@ -21,8 +21,7 @@ public class GPU {
     private List<DataBatch> unprocessedData;
     private Queue<DataBatch> processedData; //has a limit
     private final int limit;
-    //time it takes to process data
-    private  int tickTimer;
+    private  int tickTimer; //time it takes to process data
     private int missingData;
     private int workTime;
     private int batchesProcessed;
@@ -159,7 +158,7 @@ public class GPU {
                 DataBatch removed = processedData.remove();
                 removed.getData().increment();
                 startTick = currTick;
-                cluster.incrementGpuTimeUsed(tickTimer);
+//                cluster.incrementGpuTimeUsed(tickTimer);
                 workTime+=tickTimer;
                 batchesProcessed += tickTimer;
 

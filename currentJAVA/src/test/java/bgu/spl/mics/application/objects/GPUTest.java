@@ -1,7 +1,6 @@
 package bgu.spl.mics.application.objects;
 
 import bgu.spl.mics.MessageBusImpl;
-import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.TrainModelEvent;
 import bgu.spl.mics.application.services.GPUService;
 import org.junit.Before;
@@ -9,7 +8,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class GPUTest {
 
@@ -90,24 +90,24 @@ public class GPUTest {
 
 
 
-    @Test
-    public void reactToEventTest(){
-        MessageBusImpl bus = MessageBusImpl.getInstance();
-        Student student = new Student("Simba", "Computer Science", "MSc");
-        Data data = new Data(Data.Type.Images, 1000);
-        Model model = new Model("YOLO10", data, student);
-        MicroService gpuService = new GPUService("hi", gpu);
-        Thread t1 = new Thread(gpuService);
-        t1.start();
-
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {}
-
-        bus.sendEvent(new TrainModelEvent(model));
-        assertEquals(model, gpu.getModel());
-
-    }
+//    @Test
+//    public void reactToEventTest(){
+//        MessageBusImpl bus = MessageBusImpl.getInstance();
+//        Student student = new Student("Simba", "Computer Science", "MSc");
+//        Data data = new Data(Data.Type.Images, 1000);
+//        Model model = new Model("YOLO10", data, student);
+//        MicroService gpuService = new GPUService("hi", gpu);
+//        Thread t1 = new Thread(gpuService);
+//        t1.start();
+//
+//        try {
+//            Thread.sleep(1500);
+//        } catch (InterruptedException e) {}
+//
+//        bus.sendEvent(new TrainModelEvent(model));
+//        assertEquals(model, gpu.getModel());
+//
+//    }
 
     @Test
     public void secondQueueTest(){

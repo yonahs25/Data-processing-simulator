@@ -22,9 +22,13 @@ import bgu.spl.mics.application.objects.Model;
  */
 public class ConferenceService extends MicroService {
 
+    private ConfrenceInformation confrence ;
+    private long currTick;
+
     private class publishResultsCallback implements Callback<PublishResultsEvent> {
         @Override
-        public void call(PublishResultsEvent c) {
+        public void call(PublishResultsEvent c)
+        {
             confrence.addGoodResult(c.getModel());
             c.getModel().setPublished(Model.Published.Yes);
             MessageBusImpl.getInstance().complete(c, c.getModel());
@@ -37,17 +41,13 @@ public class ConferenceService extends MicroService {
         public void call(TickBroadcast c)
         {
             currTick++;
-            if (currTick == confrence.getDate()) {
+            if (currTick == confrence.getDate())
+            {
                 sendBroadcast(new PublishConferenceBroadcast(confrence.getGoodResults()));
                 terminate();
             }
         }
     }
-
-
-
-    private ConfrenceInformation confrence ;
-    private long currTick;
 
     public ConferenceService(String name,ConfrenceInformation confrence)
     {

@@ -1,11 +1,8 @@
 package bgu.spl.mics.application.objects;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Passive object representing the cluster.
@@ -20,22 +17,20 @@ public class Cluster {
 	private List<GPU> Gpus;
 	private HashMap<GPU, ConcurrentLinkedDeque<DataBatch>> returningProcessedBatches;
 	private LinkedBlockingDeque<DataBatch> waitingUnprocessedBatches;
-	private Vector<String> modelTrained;
-	private AtomicInteger dataProcessedCpu;
-	@SerializedName("cpuTimeUsed")
-	@Expose private AtomicInteger timeUnitsCpu;
-	@SerializedName("gpuTimeUsed")
-	@Expose private AtomicInteger timeUnitsGpu;
+	private Vector<String> modelsTrained;
+//	private AtomicInteger dataProcessedByCpu;
+//	@Expose private AtomicInteger cpuTimeUsed;
+//	@Expose private AtomicInteger gpuTimeUsed;
 
 	public Cluster() {
 		Cpus = new ArrayList<>();
 		Gpus = new ArrayList<>();
 		returningProcessedBatches = new HashMap<>();
 		waitingUnprocessedBatches = new LinkedBlockingDeque<>();
-		modelTrained = new Vector<String>();
-		dataProcessedCpu = new AtomicInteger(0);
-		timeUnitsCpu = new AtomicInteger(0);
-		timeUnitsGpu = new AtomicInteger(0);
+		modelsTrained = new Vector<String>();
+//		dataProcessedByCpu = new AtomicInteger(0);
+//		cpuTimeUsed = new AtomicInteger(0);
+//		gpuTimeUsed = new AtomicInteger(0);
 	}
 
 	public void registerGpu(GPU gpu)
@@ -90,40 +85,40 @@ public class Cluster {
 
 	public void addModelTrained(String modelName)
 	{
-		modelTrained.add(modelName);
+		modelsTrained.add(modelName);
 	}
 
-	public  void  incrementGpuTimeUsed(int time)
-	{
-		int oldVal;
-		int newVal;
-		do
-		{
-			oldVal = timeUnitsGpu.get();
-			newVal = oldVal + time ;
-		}while (!timeUnitsGpu.compareAndSet(oldVal,newVal));
-	}
+//	public  void  incrementGpuTimeUsed(int time)
+//	{
+//		int oldVal;
+//		int newVal;
+//		do
+//		{
+//			oldVal = gpuTimeUsed.get();
+//			newVal = oldVal + time ;
+//		}while (!gpuTimeUsed.compareAndSet(oldVal,newVal));
+//	}
 
-	public  void  incrementCpuTimeUsed(int time)
-	{
-		int oldVal;
-		int newVal;
-		do
-		{
-			oldVal = timeUnitsCpu.get();
-			newVal = oldVal + time ;
-		}while (!timeUnitsCpu.compareAndSet(oldVal,newVal));
-	}
-	public  void  incrementCpuProcessedData(int time)
-	{
-		int oldVal;
-		int newVal;
-		do
-		{
-			oldVal = dataProcessedCpu.get();
-			newVal = oldVal + time ;
-		}while (!dataProcessedCpu.compareAndSet(oldVal,newVal));
-	}
+//	public  void  incrementCpuTimeUsed(int time)
+//	{
+//		int oldVal;
+//		int newVal;
+//		do
+//		{
+//			oldVal = cpuTimeUsed.get();
+//			newVal = oldVal + time ;
+//		}while (!cpuTimeUsed.compareAndSet(oldVal,newVal));
+//	}
+//	public  void  incrementCpuProcessedData(int time)
+//	{
+//		int oldVal;
+//		int newVal;
+//		do
+//		{
+//			oldVal = dataProcessedByCpu.get();
+//			newVal = oldVal + time ;
+//		}while (!dataProcessedByCpu.compareAndSet(oldVal,newVal));
+//	}
 
 
 	public List<CPU> getCpus() {
@@ -134,16 +129,16 @@ public class Cluster {
 		return Gpus;
 	}
 
-	public AtomicInteger getDataProcessedCpu() {
-		return dataProcessedCpu;
-	}
-
-	public AtomicInteger getTimeUnitsCpu() {
-		return timeUnitsCpu;
-	}
-
-	public AtomicInteger getTimeUnitsGpu() {
-		return timeUnitsGpu;
-	}
+//	public AtomicInteger getDataProcessedCpu() {
+//		return dataProcessedByCpu;
+//	}
+//
+//	public AtomicInteger getTimeUnitsCpu() {
+//		return cpuTimeUsed;
+//	}
+//
+//	public AtomicInteger getTimeUnitsGpu() {
+//		return gpuTimeUsed;
+//	}
 }
 

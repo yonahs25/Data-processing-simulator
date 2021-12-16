@@ -41,7 +41,6 @@ public class CPU {
     private void getUnprocessedData()
     {
         LinkedBlockingDeque<DataBatch> toTakeFrom = cluster.getWaitingUnprocessedBatches();
-        // synchronized(toTakeFrom) {
             while (!toTakeFrom.isEmpty() && waitingOnProcess.size() < limit) {
                 if (waitingOnProcess.isEmpty()) {
                     startTick = currTick;
@@ -50,7 +49,6 @@ public class CPU {
                     waitingOnProcess.add((toTakeFrom.take()));
                 } catch (InterruptedException e) {}
             }
-    //    }
     }
 
     private void sendProcessedData()
@@ -74,8 +72,8 @@ public class CPU {
                 cluster.putProcessedData(waitingOnProcess.remove());
                 workTime+=timeToProcess;
                 batchesProcessed++;
-                cluster.incrementCpuProcessedData(1);
-                cluster.incrementCpuTimeUsed(timeToProcess);
+//                cluster.incrementCpuProcessedData(1);
+//                cluster.incrementCpuTimeUsed(timeToProcess);
             }
         }
     }
@@ -92,7 +90,6 @@ public class CPU {
         //calling other functions
         getUnprocessedData();
         sendProcessedData();
-
     }
 
     /**
