@@ -73,15 +73,11 @@ public class StudentService extends MicroService {
         public void call(PublishConferenceBroadcast c)
         {
             Vector<Model> goodResults = c.getGoodResults();
-            //List<Model> models = student.getModels();
             for (Model goodResult : goodResults) {// if the model is of the student, increase publications by 1, and if sending new model if needed
                 if (goodResult.getStudent() == student)
                 {
                     student.setPublications();
-                    //TODO check this!
                     if (currentModel < student.getModels().size()) {
-                        System.out.println("published " + goodResult.getName());
-                        System.out.println("sending " + (student.getModels().get(currentModel)).getName());
                         future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
                         currentModel++;
                     }
@@ -102,15 +98,7 @@ public class StudentService extends MicroService {
     }
 
 
-    public int getCurrentModel()
-    {
-        return currentModel;
-    }
 
-    public Future<Model> getFuture()
-    {
-        return future;
-    }
 
     @Override
     protected void initialize()

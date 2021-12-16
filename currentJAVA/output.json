@@ -5,7 +5,7 @@
       "department": "Computer Science",
       "status": "MSc",
       "publications": 1,
-      "papersRead": 3,
+      "papersRead": 2,
       "trainedModels": [
         {
           "name": "YOLO10",
@@ -14,7 +14,7 @@
             "size": 200000
           },
           "status": "Tested",
-          "results": "Good"
+          "results": "Bad"
         },
         {
           "name": "ResNet9000",
@@ -32,7 +32,16 @@
             "size": 20000
           },
           "status": "Tested",
-          "results": "Bad"
+          "results": "Good"
+        },
+        {
+          "name": "DensestNet",
+          "data": {
+            "type": "Images",
+            "size": 200000
+          },
+          "status": "Trained",
+          "results": "none"
         }
       ]
     },
@@ -41,7 +50,7 @@
       "department": "EE",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 4,
+      "papersRead": 3,
       "trainedModels": []
     },
     {
@@ -49,7 +58,7 @@
       "department": "Computer Science",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 4,
+      "papersRead": 3,
       "trainedModels": [
         {
           "name": "Bert",
@@ -66,32 +75,14 @@
       "name": "Timon",
       "department": "SE",
       "status": "MSc",
-      "publications": 2,
-      "papersRead": 2,
+      "publications": 0,
+      "papersRead": 3,
       "trainedModels": [
         {
           "name": "Percepetron",
           "data": {
             "type": "Tabular",
             "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "GNN",
-          "data": {
-            "type": "Tabular",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "MoreStyleGAN",
-          "data": {
-            "type": "Images",
-            "size": 100000
           },
           "status": "Tested",
           "results": "Bad"
@@ -102,8 +93,8 @@
       "name": "Nala",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 1,
-      "papersRead": 3,
+      "publications": 2,
+      "papersRead": 1,
       "trainedModels": [
         {
           "name": "YOLO9000",
@@ -120,8 +111,8 @@
             "type": "Images",
             "size": 1000000
           },
-          "status": "Trained",
-          "results": "none"
+          "status": "Tested",
+          "results": "Good"
         }
       ]
     }
@@ -130,41 +121,6 @@
     {
       "name": "ICML",
       "date": 20000,
-      "publications": []
-    },
-    {
-      "name": "NeurIPS",
-      "date": 25000,
-      "publications": [
-        {
-          "name": "YOLO10",
-          "data": {
-            "type": "Images",
-            "size": 200000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
-    },
-    {
-      "name": "CVPR",
-      "date": 30000,
-      "publications": [
-        {
-          "name": "Percepetron",
-          "data": {
-            "type": "Tabular",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
-    },
-    {
-      "name": "ECCV",
-      "date": 40000,
       "publications": [
         {
           "name": "YOLO9000",
@@ -178,13 +134,38 @@
       ]
     },
     {
+      "name": "NeurIPS",
+      "date": 25000,
+      "publications": []
+    },
+    {
+      "name": "CVPR",
+      "date": 30000,
+      "publications": []
+    },
+    {
+      "name": "ECCV",
+      "date": 40000,
+      "publications": [
+        {
+          "name": "LessEfficientNet",
+          "data": {
+            "type": "Images",
+            "size": 20000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
+    },
+    {
       "name": "AISTATS",
       "date": 50000,
       "publications": [
         {
-          "name": "GNN",
+          "name": "VIT2",
           "data": {
-            "type": "Tabular",
+            "type": "Images",
             "size": 1000000
           },
           "status": "Tested",
@@ -193,7 +174,7 @@
       ]
     }
   ],
-  "cpuTimeUsed": 167522,
-  "gpuTimeUsed": 68590,
-  "batchesProcessed": 32119
+  "cpuTimeUsed": 334167,
+  "gpuTimeUsed": 60847,
+  "batchesProcessed": 58705
 }

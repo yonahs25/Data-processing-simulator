@@ -120,11 +120,7 @@ public interface MessageBus {
 
     <T> boolean isMicroServiceInBroadcast( Class<? extends Broadcast> type , MicroService m );
 
-    <T> boolean didMicroServiceReceiveBroadcast(Broadcast type , MicroService m);
-
     <T> boolean wasBroadcastSent(Broadcast type);
-
-    <T> boolean didMicroServiceReceiveEvent(Event<T> type , MicroService m);
 
     <T> boolean wasEventSent(Event<T> type);
 

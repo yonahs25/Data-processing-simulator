@@ -72,8 +72,6 @@ public class CPU {
                 cluster.putProcessedData(waitingOnProcess.remove());
                 workTime+=timeToProcess;
                 batchesProcessed++;
-//                cluster.incrementCpuProcessedData(1);
-//                cluster.incrementCpuTimeUsed(timeToProcess);
             }
         }
     }

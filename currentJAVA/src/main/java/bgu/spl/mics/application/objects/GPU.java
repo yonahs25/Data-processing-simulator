@@ -81,7 +81,6 @@ public class GPU {
         this.model = model;
         if(model.getStatus() == Model.Status.PreTrained) {
             Data data = model.getData();
-            //need to deal with Incomplete number of data (4876)
             int amountBatches = data.getSize() / 1000;
             for (int i = 0; i < amountBatches; i++) {
                 unprocessedData.add(new DataBatch(data, i * 1000, this));
@@ -101,8 +100,8 @@ public class GPU {
     /**
      * sending list of unprocessed chunk to cluster
      */
-    private void sendUnprocessed(){
-
+    private void sendUnprocessed()
+    {
         if(type == Type.RTX3090)
         {
             if(processedData.size() < 20)
@@ -115,7 +114,6 @@ public class GPU {
                 }
                         cluster.sendUnprocessedData(toSend);
             }
-
         }
         else if(type == Type.RTX2080)
         {
@@ -143,7 +141,6 @@ public class GPU {
          }
     }
 
-
     public int getTickTimer() {
         return tickTimer;
     }
@@ -158,7 +155,6 @@ public class GPU {
                 DataBatch removed = processedData.remove();
                 removed.getData().increment();
                 startTick = currTick;
-//                cluster.incrementGpuTimeUsed(tickTimer);
                 workTime+=tickTimer;
                 batchesProcessed += tickTimer;
 

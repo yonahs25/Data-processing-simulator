@@ -18,9 +18,11 @@ public class Cluster {
 	private HashMap<GPU, ConcurrentLinkedDeque<DataBatch>> returningProcessedBatches;
 	private LinkedBlockingDeque<DataBatch> waitingUnprocessedBatches;
 	private Vector<String> modelsTrained;
-//	private AtomicInteger dataProcessedByCpu;
-//	@Expose private AtomicInteger cpuTimeUsed;
-//	@Expose private AtomicInteger gpuTimeUsed;
+	private static class singeltonHolder
+	{
+		private static Cluster instance = new Cluster();
+	}
+
 
 	public Cluster() {
 		Cpus = new ArrayList<>();
@@ -28,9 +30,6 @@ public class Cluster {
 		returningProcessedBatches = new HashMap<>();
 		waitingUnprocessedBatches = new LinkedBlockingDeque<>();
 		modelsTrained = new Vector<String>();
-//		dataProcessedByCpu = new AtomicInteger(0);
-//		cpuTimeUsed = new AtomicInteger(0);
-//		gpuTimeUsed = new AtomicInteger(0);
 	}
 
 	public void registerGpu(GPU gpu)
@@ -49,8 +48,7 @@ public class Cluster {
      */
 	public static Cluster getInstance()
 	{
-		//TODO: Implement this
-		return null;
+		return Cluster.singeltonHolder.instance;
 	}
 
 	// the gpu call this function to send unprocessed data to the cluster
@@ -88,37 +86,6 @@ public class Cluster {
 		modelsTrained.add(modelName);
 	}
 
-//	public  void  incrementGpuTimeUsed(int time)
-//	{
-//		int oldVal;
-//		int newVal;
-//		do
-//		{
-//			oldVal = gpuTimeUsed.get();
-//			newVal = oldVal + time ;
-//		}while (!gpuTimeUsed.compareAndSet(oldVal,newVal));
-//	}
-
-//	public  void  incrementCpuTimeUsed(int time)
-//	{
-//		int oldVal;
-//		int newVal;
-//		do
-//		{
-//			oldVal = cpuTimeUsed.get();
-//			newVal = oldVal + time ;
-//		}while (!cpuTimeUsed.compareAndSet(oldVal,newVal));
-//	}
-//	public  void  incrementCpuProcessedData(int time)
-//	{
-//		int oldVal;
-//		int newVal;
-//		do
-//		{
-//			oldVal = dataProcessedByCpu.get();
-//			newVal = oldVal + time ;
-//		}while (!dataProcessedByCpu.compareAndSet(oldVal,newVal));
-//	}
 
 
 	public List<CPU> getCpus() {
@@ -129,16 +96,5 @@ public class Cluster {
 		return Gpus;
 	}
 
-//	public AtomicInteger getDataProcessedCpu() {
-//		return dataProcessedByCpu;
-//	}
-//
-//	public AtomicInteger getTimeUnitsCpu() {
-//		return cpuTimeUsed;
-//	}
-//
-//	public AtomicInteger getTimeUnitsGpu() {
-//		return gpuTimeUsed;
-//	}
 }
 

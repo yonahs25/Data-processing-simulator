@@ -21,10 +21,7 @@ public class MessageBusImplTest {
         }
 
         protected void initialize() {
-
         }
-
-
     }
 
     @Before
@@ -54,13 +51,6 @@ public class MessageBusImplTest {
 
     @Test
     public void complete() {
-//        ExampleEvent e = new ExampleEvent("m");
-//        messageBus.sendEvent(e);
-//        Future<String> f = new Future<>();
-//        f.resolve("aaa");
-//        messageBus.complete(e ,f.get());
-//        assertEquals("aaa", f.get());
-
         MessageBusImpl bus = MessageBusImpl.getInstance();
         Student student = new Student("Simba", "Computer Science", "MSc");
         Data data = new Data(Data.Type.Images, 1000);
@@ -128,11 +118,6 @@ public class MessageBusImplTest {
             Message test = messageBus.awaitMessage(m);
             assertEquals(test, x);
         }catch (Exception e){}
-
-
-
-
-
 
     }
 }

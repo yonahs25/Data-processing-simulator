@@ -1,8 +1,5 @@
 package bgu.spl.mics;
 
-import bgu.spl.mics.application.messages.TestModelEvent;
-import bgu.spl.mics.application.messages.TrainModelEvent;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -32,8 +29,7 @@ public class MessageBusImpl implements MessageBus {
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m)
 	{
 		if (EventList.get(type) == null)
-			EventList.putIfAbsent(type, new LinkedBlockingDeque<MicroService>()); // need to change linked list
-
+			EventList.putIfAbsent(type, new LinkedBlockingDeque<MicroService>());
 		try {
 			EventList.get(type).put(m);
 		} catch (InterruptedException e) {
@@ -45,12 +41,9 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m)
 	{
-
 		if (BroadcastList.get(type) == null)
-			BroadcastList.putIfAbsent(type, new ConcurrentLinkedDeque<MicroService>()); // need to change linked list
+			BroadcastList.putIfAbsent(type, new ConcurrentLinkedDeque<>());
 		BroadcastList.get(type).add(m);
-
-
 	}
 
 	@Override
@@ -58,7 +51,7 @@ public class MessageBusImpl implements MessageBus {
 	{
 			Future future = eventToFuture.get(e);
 			if (future == null)
-				System.out.println("future null" + e.getClass());
+				System.out.println("future null ---- " + e.getClass());
 			future.resolve(result);
 	}
 
@@ -76,19 +69,22 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e)
 	{
-		if(e.getClass() == TrainModelEvent.class || e.getClass() == TestModelEvent.class)
-		{
-			MicroService m = null;
-			try {
-				m = EventList.get(e.getClass()).take();
-			} catch (InterruptedException ex) {}
-			microServiceQueue.get(m).add(e);
-			EventList.get(e.getClass()).add(m);
-		}
+		Future<T> future = new Future<T>();
+		eventToFuture.put(e, future);
 
-//		else if(e.getClass() == PublishResultsEvent.class)
-		else
-		{
+		//if(e.getClass() == TrainModelEvent.class || e.getClass() == TestModelEvent.class)
+		//{
+		//	MicroService m = null;
+		//	try {
+		//		m = EventList.get(e.getClass()).take();
+		//	} catch (InterruptedException ex) {}
+		//	microServiceQueue.get(m).add(e);
+		//	EventList.get(e.getClass()).add(m);
+		//}
+//
+//		//else if(e.getClass() == PublishResultsEvent.class)
+		//else
+		//{
 			boolean done = false;
 			// taking the event queue of the event class
 			LinkedBlockingDeque<MicroService> eventQ = EventList.get(e.getClass());
@@ -98,7 +94,7 @@ public class MessageBusImpl implements MessageBus {
 						m = eventQ.take();
 					} catch (InterruptedException ex) {
 					}
-					LinkedBlockingDeque myQ = microServiceQueue.get(m);
+					LinkedBlockingDeque<Message> myQ = microServiceQueue.get(m);
 					if (myQ == null) {
 						eventQ.remove(m);
 					} else {
@@ -107,16 +103,10 @@ public class MessageBusImpl implements MessageBus {
 							eventQ.put(m);
 						} catch (InterruptedException ex){}
 						done = true;
-
 					}
 				}
-			}
-
-		Future<T> future = new Future<T>();
-			eventToFuture.put(e, future);
-
+			//}
 		return  future;
-
 	}
 
 	@Override
@@ -128,7 +118,6 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void unregister(MicroService m)
 	{
-
 		microServiceQueue.remove(m); //TODO check if need to do more
 	}
 
@@ -139,32 +128,22 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 
-	public boolean isMicroServiceRegistered(MicroService m)
+	public boolean isMicroServiceRegistered(MicroService m) //
 	{
 		return microServiceQueue.get(m) != null;
 	}
 
-	public <T> boolean isMicroServiceInEvent(Class<? extends Event<T>> type , MicroService m)
+	public <T> boolean isMicroServiceInEvent(Class<? extends Event<T>> type , MicroService m) //
 	{
 		return EventList.get(type).contains(m);
 	}
 
-	public <T> boolean isMicroServiceInBroadcast( Class<? extends Broadcast> type , MicroService m)
+	public <T> boolean isMicroServiceInBroadcast( Class<? extends Broadcast> type , MicroService m) //
 	{
 		return BroadcastList.get(type).contains(m);
 	}
 
-	public <T> boolean didMicroServiceReceiveBroadcast(Broadcast type , MicroService m)
-	{
-		return microServiceQueue.get(m).contains(type);
-	}
-
-	public <T> boolean didMicroServiceReceiveEvent(Event<T> type , MicroService m)
-	{
-		return microServiceQueue.get(m).contains(type);
-	}
-
-	public <T> boolean wasEventSent(Event<T> type)
+	public <T> boolean wasEventSent(Event<T> type) //
 	{
 		LinkedBlockingDeque<MicroService> thisQ = EventList.get(type.getClass());
 		for (MicroService m : thisQ){
@@ -173,14 +152,9 @@ public class MessageBusImpl implements MessageBus {
 				return true;
 		}
 		return false;
-
-//		MicroService m = EventList.get(type.getClass()).getLast();
-//		if(microServiceQueue.get(m).contains(type))
-//			return true;
-//		return false;
 	}
 
-	public <T> boolean wasBroadcastSent(Broadcast type)
+	public <T> boolean wasBroadcastSent(Broadcast type) //
 	{
 		boolean ans = true;
 		for(MicroService m : BroadcastList.get(type.getClass()))

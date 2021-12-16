@@ -28,6 +28,7 @@ bgu/spl/mics/application/objects/Student$Degree.class
 bgu/spl/mics/example/messages/ExampleEvent.class
 bgu/spl/mics/application/objects/CPU$1.class
 bgu/spl/mics/example/ExampleManager.class
+bgu/spl/mics/application/objects/Cluster$singeltonHolder.class
 bgu/spl/mics/application/services/StudentService$1.class
 bgu/spl/mics/application/objects/Model$Results.class
 bgu/spl/mics/application/objects/Model$Published.class
