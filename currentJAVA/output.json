@@ -5,7 +5,7 @@
       "department": "Computer Science",
       "status": "MSc",
       "publications": 1,
-      "papersRead": 2,
+      "papersRead": 4,
       "trainedModels": [
         {
           "name": "YOLO10",
@@ -15,24 +15,6 @@
           },
           "status": "Tested",
           "results": "Good"
-        },
-        {
-          "name": "ResNet9000",
-          "data": {
-            "type": "Images",
-            "size": 200000
-          },
-          "status": "Tested",
-          "results": "Bad"
-        },
-        {
-          "name": "LessEfficientNet",
-          "data": {
-            "type": "Images",
-            "size": 20000
-          },
-          "status": "Tested",
-          "results": "Bad"
         }
       ]
     },
@@ -41,15 +23,15 @@
       "department": "EE",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 3,
+      "papersRead": 5,
       "trainedModels": []
     },
     {
       "name": "Pumba",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 1,
-      "papersRead": 2,
+      "publications": 2,
+      "papersRead": 3,
       "trainedModels": [
         {
           "name": "Bert",
@@ -67,6 +49,15 @@
             "size": 1000000
           },
           "status": "Tested",
+          "results": "Good"
+        },
+        {
+          "name": "GPT5",
+          "data": {
+            "type": "Text",
+            "size": 200000
+          },
+          "status": "Tested",
           "results": "Bad"
         }
       ]
@@ -76,7 +67,7 @@
       "department": "SE",
       "status": "MSc",
       "publications": 0,
-      "papersRead": 3,
+      "papersRead": 5,
       "trainedModels": [
         {
           "name": "Percepetron",
@@ -93,8 +84,8 @@
       "name": "Nala",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 1,
-      "papersRead": 2,
+      "publications": 2,
+      "papersRead": 3,
       "trainedModels": [
         {
           "name": "YOLO9000",
@@ -103,7 +94,7 @@
             "size": 100000
           },
           "status": "Tested",
-          "results": "Bad"
+          "results": "Good"
         },
         {
           "name": "VIT2",
@@ -130,6 +121,26 @@
     {
       "name": "ICML",
       "date": 20000,
+      "publications": []
+    },
+    {
+      "name": "NeurIPS",
+      "date": 25000,
+      "publications": [
+        {
+          "name": "Bert",
+          "data": {
+            "type": "Text",
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
+    },
+    {
+      "name": "CVPR",
+      "date": 30000,
       "publications": [
         {
           "name": "YOLO10",
@@ -143,9 +154,33 @@
       ]
     },
     {
-      "name": "NeurIPS",
-      "date": 25000,
+      "name": "ECCV",
+      "date": 40000,
       "publications": [
+        {
+          "name": "YOLO9000",
+          "data": {
+            "type": "Images",
+            "size": 100000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
+    },
+    {
+      "name": "AISTATS",
+      "date": 50000,
+      "publications": [
+        {
+          "name": "GPT4",
+          "data": {
+            "type": "Text",
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
+        },
         {
           "name": "VIT2",
           "data": {
@@ -156,34 +191,9 @@
           "results": "Good"
         }
       ]
-    },
-    {
-      "name": "CVPR",
-      "date": 30000,
-      "publications": []
-    },
-    {
-      "name": "ECCV",
-      "date": 40000,
-      "publications": []
-    },
-    {
-      "name": "AISTATS",
-      "date": 50000,
-      "publications": [
-        {
-          "name": "Bert",
-          "data": {
-            "type": "Text",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
     }
   ],
-  "cpuTimeUsed": 338430,
-  "gpuTimeUsed": 66876,
-  "batchesProcessed": 59430
+  "cpuTimeUsed": 321877,
+  "gpuTimeUsed": 63804,
+  "batchesProcessed": 59503
 }

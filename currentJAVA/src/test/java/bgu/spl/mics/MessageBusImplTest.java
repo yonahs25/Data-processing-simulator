@@ -1,5 +1,8 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.messages.TestModelEvent;
+import bgu.spl.mics.application.objects.*;
+import bgu.spl.mics.application.services.GPUService;
 import bgu.spl.mics.example.messages.ExampleBroadcast;
 import bgu.spl.mics.example.messages.ExampleEvent;
 import org.junit.Before;
@@ -51,12 +54,27 @@ public class MessageBusImplTest {
 
     @Test
     public void complete() {
-        ExampleEvent e = new ExampleEvent("m");
-        messageBus.sendEvent(e);
-        Future<String> f = new Future<>();
-        f.resolve("aaa");
-        messageBus.complete(e ,f.get());
-        assertEquals("aaa", f.get());
+//        ExampleEvent e = new ExampleEvent("m");
+//        messageBus.sendEvent(e);
+//        Future<String> f = new Future<>();
+//        f.resolve("aaa");
+//        messageBus.complete(e ,f.get());
+//        assertEquals("aaa", f.get());
+
+        MessageBusImpl bus = MessageBusImpl.getInstance();
+        Student student = new Student("Simba", "Computer Science", "MSc");
+        Data data = new Data(Data.Type.Images, 1000);
+        Model model = new Model("YOLO10", data, student);
+        model.setStatus(Model.Status.Trained);
+        GPU gpu = new GPU(GPU.Type.RTX3090,new Cluster());
+        MicroService gpuService = new GPUService("hi", gpu);
+        bus.register(gpuService);
+        bus.subscribeEvent(TestModelEvent.class,gpuService);
+        TestModelEvent e = new TestModelEvent(model);
+        Future<Model> f = bus.sendEvent(e);
+        model.setStatus(Model.Status.Tested);
+        gpuService.complete(e,model);
+        assertEquals(f.get(), model);
     }
 
     @Test

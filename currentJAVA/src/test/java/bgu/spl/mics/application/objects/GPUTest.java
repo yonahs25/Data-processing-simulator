@@ -92,13 +92,12 @@ public class GPUTest {
 
     @Test
     public void reactToEventTest(){
-        MessageBusImpl bus = new MessageBusImpl();
+        MessageBusImpl bus = MessageBusImpl.getInstance();
         Student student = new Student("Simba", "Computer Science", "MSc");
         Data data = new Data(Data.Type.Images, 1000);
         Model model = new Model("YOLO10", data, student);
         MicroService gpuService = new GPUService("hi", gpu);
         Thread t1 = new Thread(gpuService);
-        bus.register(gpuService);
         t1.start();
 
         try {
@@ -106,15 +105,13 @@ public class GPUTest {
         } catch (InterruptedException e) {}
 
         bus.sendEvent(new TrainModelEvent(model));
-
-
         assertEquals(model, gpu.getModel());
 
     }
 
     @Test
     public void secondQueueTest(){
-        MessageBusImpl bus = new MessageBusImpl();
+        MessageBusImpl bus = MessageBusImpl.getInstance();
         Student student = new Student("Simba", "Computer Science", "MSc");
         Data data = new Data(Data.Type.Images, 1000);
         Model model = new Model("YOLO10", data, student);

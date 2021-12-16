@@ -1,6 +1,5 @@
 package bgu.spl.mics;
 
-import bgu.spl.mics.application.messages.PublishResultsEvent;
 import bgu.spl.mics.application.messages.TestModelEvent;
 import bgu.spl.mics.application.messages.TrainModelEvent;
 
@@ -87,7 +86,8 @@ public class MessageBusImpl implements MessageBus {
 			EventList.get(e.getClass()).add(m);
 		}
 
-		else if(e.getClass() == PublishResultsEvent.class)
+//		else if(e.getClass() == PublishResultsEvent.class)
+		else
 		{
 			boolean done = false;
 			// taking the event queue of the event class
