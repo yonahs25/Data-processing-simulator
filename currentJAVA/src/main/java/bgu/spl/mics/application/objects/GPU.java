@@ -63,7 +63,6 @@ public class GPU {
         return processedData;
     }
 
-
     public Model getModel() {
         return model;
     }
@@ -85,7 +84,7 @@ public class GPU {
             for (int i = 0; i < amountBatches; i++) {
                 unprocessedData.add(new DataBatch(data, i * 1000, this));
             }
-            ////
+
             if(amountBatches == 0)
                 model.setStatus(Model.Status.Trained);
             else

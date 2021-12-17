@@ -5,7 +5,7 @@
       "department": "Computer Science",
       "status": "MSc",
       "publications": 2,
-      "papersRead": 4,
+      "papersRead": 0,
       "trainedModels": [
         {
           "name": "YOLO10",
@@ -14,7 +14,7 @@
             "size": 200000
           },
           "status": "Tested",
-          "results": "Good"
+          "results": "Bad"
         },
         {
           "name": "ResNet9000",
@@ -32,6 +32,15 @@
             "size": 20000
           },
           "status": "Tested",
+          "results": "Bad"
+        },
+        {
+          "name": "DensestNet",
+          "data": {
+            "type": "Images",
+            "size": 200000
+          },
+          "status": "Tested",
           "results": "Good"
         }
       ]
@@ -41,15 +50,15 @@
       "department": "EE",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 6,
+      "papersRead": 2,
       "trainedModels": []
     },
     {
       "name": "Pumba",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 2,
-      "papersRead": 4,
+      "publications": 0,
+      "papersRead": 2,
       "trainedModels": [
         {
           "name": "Bert",
@@ -58,7 +67,7 @@
             "size": 1000000
           },
           "status": "Tested",
-          "results": "Good"
+          "results": "Bad"
         },
         {
           "name": "GPT4",
@@ -67,7 +76,7 @@
             "size": 1000000
           },
           "status": "Tested",
-          "results": "Good"
+          "results": "Bad"
         }
       ]
     },
@@ -76,7 +85,7 @@
       "department": "SE",
       "status": "MSc",
       "publications": 0,
-      "papersRead": 6,
+      "papersRead": 2,
       "trainedModels": [
         {
           "name": "Percepetron",
@@ -93,32 +102,14 @@
       "name": "Nala",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 2,
-      "papersRead": 4,
+      "publications": 0,
+      "papersRead": 2,
       "trainedModels": [
         {
           "name": "YOLO9000",
           "data": {
             "type": "Images",
             "size": 100000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "VIT2",
-          "data": {
-            "type": "Images",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "MuchMoreEfficientNet",
-          "data": {
-            "type": "Images",
-            "size": 20000
           },
           "status": "Trained",
           "results": "none"
@@ -130,42 +121,22 @@
     {
       "name": "ICML",
       "date": 20000,
-      "publications": [
-        {
-          "name": "Bert",
-          "data": {
-            "type": "Text",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
+      "publications": []
     },
     {
       "name": "NeurIPS",
       "date": 25000,
-      "publications": [
-        {
-          "name": "YOLO10",
-          "data": {
-            "type": "Images",
-            "size": 200000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
+      "publications": []
     },
     {
       "name": "CVPR",
       "date": 30000,
       "publications": [
         {
-          "name": "GPT4",
+          "name": "ResNet9000",
           "data": {
-            "type": "Text",
-            "size": 1000000
+            "type": "Images",
+            "size": 200000
           },
           "status": "Tested",
           "results": "Good"
@@ -177,10 +148,10 @@
       "date": 40000,
       "publications": [
         {
-          "name": "YOLO9000",
+          "name": "DensestNet",
           "data": {
             "type": "Images",
-            "size": 100000
+            "size": 200000
           },
           "status": "Tested",
           "results": "Good"
@@ -190,29 +161,10 @@
     {
       "name": "AISTATS",
       "date": 50000,
-      "publications": [
-        {
-          "name": "ResNet9000",
-          "data": {
-            "type": "Images",
-            "size": 200000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "VIT2",
-          "data": {
-            "type": "Images",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
+      "publications": []
     }
   ],
-  "cpuTimeUsed": 346924,
-  "gpuTimeUsed": 67034,
-  "batchesProcessed": 59539
+  "cpuTimeUsed": 313179,
+  "gpuTimeUsed": 62797,
+  "batchesProcessed": 58717
 }

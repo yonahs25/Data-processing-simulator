@@ -1,12 +1,14 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.*;
+import bgu.spl.mics.Callback;
+import bgu.spl.mics.Future;
+import bgu.spl.mics.MicroService;
+import bgu.spl.mics.TerminateCallback;
 import bgu.spl.mics.application.messages.*;
 import bgu.spl.mics.application.objects.Model;
 import bgu.spl.mics.application.objects.Student;
 
 import java.util.Vector;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Student is responsible for sending the {@link TrainModelEvent},
@@ -21,7 +23,6 @@ public class StudentService extends MicroService {
 
     private Student student;
     private Future<Model> future;
-    private LinkedBlockingDeque<Future<Model>> futureList;
     private int currentModel;
 
     private class tickCallback implements Callback<TickBroadcast>
@@ -60,11 +61,14 @@ public class StudentService extends MicroService {
                             future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
                             currentModel ++;
                         }
+                    } //model was published, sending next model if there is
+                    else if (currentModel < student.getModels().size())
+                    {
+                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+                        currentModel ++;
                     }
-
                 }
             }
-
         }
     }
     private class publishCallback implements Callback<PublishConferenceBroadcast>{
@@ -77,10 +81,10 @@ public class StudentService extends MicroService {
                 if (goodResult.getStudent() == student)
                 {
                     student.setPublications();
-                    if (currentModel < student.getModels().size()) {
-                        future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
-                        currentModel++;
-                    }
+                    //if (currentModel < student.getModels().size()) {
+                    //    future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
+                    //    currentModel++;
+                    //}
 
                 } else
                     student.setPapersRead();
@@ -94,7 +98,6 @@ public class StudentService extends MicroService {
         this.student = student;
         future = null;
         currentModel = 0;
-        futureList = new LinkedBlockingDeque<>();
     }
 
 

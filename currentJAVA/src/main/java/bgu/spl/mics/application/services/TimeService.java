@@ -43,6 +43,8 @@ public class TimeService extends MicroService{
 				duration = duration-speed;
 				if(duration <= 0)
 				{
+
+					System.out.println("im done");
 					timer.cancel();
 					sendBroadcast(new TerminateBroadcast());
 				}
