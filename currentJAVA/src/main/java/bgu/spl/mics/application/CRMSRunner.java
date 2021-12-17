@@ -36,11 +36,8 @@ public class CRMSRunner {
         int cpuTimeUsed;
         int gpuTimeUsed;
 
-
-
-
         JSONParser parser = new JSONParser();
-        FileReader reader = new FileReader(".//.//.//.//.//.//.//example_input.json");
+        FileReader reader = new FileReader(args[0]);
         Object input = parser.parse(reader);
         JSONObject jsonInput = (JSONObject) input;
         JSONArray studentsArray = (JSONArray) jsonInput.get("Students");

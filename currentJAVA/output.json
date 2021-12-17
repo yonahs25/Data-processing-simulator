@@ -4,14 +4,32 @@
       "name": "Simba",
       "department": "Computer Science",
       "status": "MSc",
-      "publications": 1,
-      "papersRead": 3,
+      "publications": 2,
+      "papersRead": 4,
       "trainedModels": [
         {
           "name": "YOLO10",
           "data": {
             "type": "Images",
             "size": 200000
+          },
+          "status": "Tested",
+          "results": "Good"
+        },
+        {
+          "name": "ResNet9000",
+          "data": {
+            "type": "Images",
+            "size": 200000
+          },
+          "status": "Tested",
+          "results": "Good"
+        },
+        {
+          "name": "LessEfficientNet",
+          "data": {
+            "type": "Images",
+            "size": 20000
           },
           "status": "Tested",
           "results": "Good"
@@ -23,14 +41,14 @@
       "department": "EE",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 4,
+      "papersRead": 6,
       "trainedModels": []
     },
     {
       "name": "Pumba",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 0,
+      "publications": 2,
       "papersRead": 4,
       "trainedModels": [
         {
@@ -39,8 +57,17 @@
             "type": "Text",
             "size": 1000000
           },
-          "status": "Trained",
-          "results": "none"
+          "status": "Tested",
+          "results": "Good"
+        },
+        {
+          "name": "GPT4",
+          "data": {
+            "type": "Text",
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
         }
       ]
     },
@@ -48,8 +75,8 @@
       "name": "Timon",
       "department": "SE",
       "status": "MSc",
-      "publications": 1,
-      "papersRead": 3,
+      "publications": 0,
+      "papersRead": 6,
       "trainedModels": [
         {
           "name": "Percepetron",
@@ -57,26 +84,8 @@
             "type": "Tabular",
             "size": 1000000
           },
-          "status": "Tested",
-          "results": "Bad"
-        },
-        {
-          "name": "GNN",
-          "data": {
-            "type": "Tabular",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "MoreStyleGAN",
-          "data": {
-            "type": "Images",
-            "size": 100000
-          },
-          "status": "Tested",
-          "results": "Good"
+          "status": "Trained",
+          "results": "none"
         }
       ]
     },
@@ -85,7 +94,7 @@
       "department": "Computer Science",
       "status": "PhD",
       "publications": 2,
-      "papersRead": 2,
+      "papersRead": 4,
       "trainedModels": [
         {
           "name": "YOLO9000",
@@ -121,16 +130,51 @@
     {
       "name": "ICML",
       "date": 20000,
-      "publications": []
+      "publications": [
+        {
+          "name": "Bert",
+          "data": {
+            "type": "Text",
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
     },
     {
       "name": "NeurIPS",
       "date": 25000,
-      "publications": []
+      "publications": [
+        {
+          "name": "YOLO10",
+          "data": {
+            "type": "Images",
+            "size": 200000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
     },
     {
       "name": "CVPR",
       "date": 30000,
+      "publications": [
+        {
+          "name": "GPT4",
+          "data": {
+            "type": "Text",
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
+    },
+    {
+      "name": "ECCV",
+      "date": 40000,
       "publications": [
         {
           "name": "YOLO9000",
@@ -144,11 +188,11 @@
       ]
     },
     {
-      "name": "ECCV",
-      "date": 40000,
+      "name": "AISTATS",
+      "date": 50000,
       "publications": [
         {
-          "name": "YOLO10",
+          "name": "ResNet9000",
           "data": {
             "type": "Images",
             "size": 200000
@@ -166,24 +210,9 @@
           "results": "Good"
         }
       ]
-    },
-    {
-      "name": "AISTATS",
-      "date": 50000,
-      "publications": [
-        {
-          "name": "GNN",
-          "data": {
-            "type": "Tabular",
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
     }
   ],
-  "cpuTimeUsed": 327117,
-  "gpuTimeUsed": 65056,
-  "batchesProcessed": 59420
+  "cpuTimeUsed": 346924,
+  "gpuTimeUsed": 67034,
+  "batchesProcessed": 59539
 }

@@ -2,10 +2,10 @@ bgu/spl/mics/application/services/GPUService.class
 bgu/spl/mics/application/services/ConferenceService$1.class
 bgu/spl/mics/example/ServiceCreator.class
 bgu/spl/mics/MessageBusImpl$singeltonHolder.class
-bgu/spl/mics/Event.class
 bgu/spl/mics/MessageBusImpl.class
-bgu/spl/mics/application/messages/TickBroadcast.class
+bgu/spl/mics/Event.class
 bgu/spl/mics/MicroService.class
+bgu/spl/mics/application/messages/TickBroadcast.class
 bgu/spl/mics/application/messages/TerminateBroadcast.class
 bgu/spl/mics/application/objects/Cluster.class
 bgu/spl/mics/application/messages/TestModelEvent.class
@@ -15,8 +15,8 @@ bgu/spl/mics/application/CRMSRunner.class
 bgu/spl/mics/application/objects/Data.class
 bgu/spl/mics/application/objects/GPU.class
 bgu/spl/mics/application/objects/GPU$1.class
-bgu/spl/mics/application/objects/Model$Status.class
 bgu/spl/mics/application/objects/GPU$Type.class
+bgu/spl/mics/application/objects/Model$Status.class
 bgu/spl/mics/Callback.class
 bgu/spl/mics/application/services/CPUService$tickCallback.class
 bgu/spl/mics/example/services/ExampleEventHandlerService.class
@@ -37,8 +37,8 @@ bgu/spl/mics/application/services/StudentService$publishCallback.class
 bgu/spl/mics/application/messages/PublishResultsEvent.class
 bgu/spl/mics/application/services/ConferenceService.class
 bgu/spl/mics/application/messages/TrainModelEvent.class
-bgu/spl/mics/Message.class
 bgu/spl/mics/example/services/ExampleMessageSenderService.class
+bgu/spl/mics/Message.class
 bgu/spl/mics/application/services/GPUService$tickCallback.class
 bgu/spl/mics/Broadcast.class
 bgu/spl/mics/application/services/StudentService$tickCallback.class
