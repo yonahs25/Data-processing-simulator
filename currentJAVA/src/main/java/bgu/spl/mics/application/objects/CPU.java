@@ -13,10 +13,10 @@ public class CPU {
     private int cores;
     private Cluster cluster;
     private int currTick;
-    private Queue<DataBatch> waitingOnProcess;
-    private int limit; // how much the have in queue
-    private int workTime;
     private int startTick;
+    private Queue<DataBatch> batchesToBeProcessed;
+    private int limit;
+    private int workTime;
     private int batchesProcessed;
 
 
@@ -24,12 +24,11 @@ public class CPU {
         this.cores = cores;
         this.cluster = cluster;
         currTick = 0;
-        waitingOnProcess = new LinkedBlockingDeque<>();
+        batchesToBeProcessed = new LinkedBlockingDeque<>();
         limit = cores/4;
         workTime = 0;
         startTick = 0;
         batchesProcessed = 0;
-
     }
 
 
@@ -40,23 +39,23 @@ public class CPU {
 
     private void getUnprocessedData()
     {
-        LinkedBlockingDeque<DataBatch> toTakeFrom = cluster.getWaitingUnprocessedBatches();
-            while (!toTakeFrom.isEmpty() && waitingOnProcess.size() < limit) {
-                if (waitingOnProcess.isEmpty()) {
+        LinkedBlockingDeque<DataBatch> UnprocessedBatchesFromCluster = cluster.getWaitingUnprocessedBatches();
+            while (!UnprocessedBatchesFromCluster.isEmpty() && batchesToBeProcessed.size() < limit) {
+                if (batchesToBeProcessed.isEmpty()) {
                     startTick = currTick;
                 }
                 try {
-                    waitingOnProcess.add((toTakeFrom.take()));
+                    batchesToBeProcessed.add((UnprocessedBatchesFromCluster.take()));
                 } catch (InterruptedException e) {}
             }
     }
 
     private void sendProcessedData()
     {
-        if(!waitingOnProcess.isEmpty())
+        if(!batchesToBeProcessed.isEmpty())
         {
             int timeToProcess = (32/cores);
-            switch (waitingOnProcess.peek().getData().getType())
+            switch (batchesToBeProcessed.peek().getData().getType())
             {
                 case Images:
                     timeToProcess*=4;
@@ -69,7 +68,7 @@ public class CPU {
             }
             if (currTick-startTick >= timeToProcess)
             {
-                cluster.putProcessedData(waitingOnProcess.remove());
+                cluster.putProcessedData(batchesToBeProcessed.remove());
                 workTime+=timeToProcess;
                 batchesProcessed++;
             }
@@ -96,7 +95,7 @@ public class CPU {
      * @return if cpu is processing data
      */
     public boolean isProcessing (){
-        return !waitingOnProcess.isEmpty();
+        return !batchesToBeProcessed.isEmpty();
     }
 
     public int getBatchesProcessed() {

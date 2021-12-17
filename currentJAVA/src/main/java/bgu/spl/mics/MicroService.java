@@ -1,6 +1,5 @@
 package bgu.spl.mics;
 
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -23,24 +22,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class MicroService implements Runnable {
 
-    //protected MessageBusImpl bus;
+
     protected boolean terminated = false;
     protected final String name;
-    protected ConcurrentHashMap<Class<? extends Message>, Callback> callbackMap = new ConcurrentHashMap();
-    protected LinkedList<Class<? extends Message>> whatSubbedTo = new LinkedList<>();
-
-
+    protected ConcurrentHashMap<Class<? extends Message>, Callback> callbackMap = new ConcurrentHashMap<>();
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
      *             does not have to be unique)
      */
-    // new constructor
-    public MicroService(String name, MessageBusImpl bus)
-    {
-        this.name = name;
-        //this.bus = bus;
-    }
     public MicroService(String name)
     {
         this.name = name;
@@ -67,7 +57,8 @@ public abstract class MicroService implements Runnable {
      *                 {@code type} are taken from this micro-service message
      *                 queue.
      */
-    protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
+    protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback)
+    {
         MessageBusImpl.getInstance().subscribeEvent(type, this);
         callbackMap.put(type, callback);
     }
@@ -92,7 +83,8 @@ public abstract class MicroService implements Runnable {
      *                 {@code type} are taken from this micro-service message
      *                 queue.
      */
-    protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
+    protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback)
+    {
         MessageBusImpl.getInstance().subscribeBroadcast(type, this);
         callbackMap.put(type, callback);
     }
@@ -109,7 +101,8 @@ public abstract class MicroService implements Runnable {
      *         			micro-service processing this event.
      * 	       			null in case no micro-service has subscribed to {@code e.getClass()}.
      */
-    protected final <T> Future<T> sendEvent(Event<T> e) {
+    protected final <T> Future<T> sendEvent(Event<T> e)
+    {
         return MessageBusImpl.getInstance().sendEvent(e);
     }
 
@@ -119,7 +112,8 @@ public abstract class MicroService implements Runnable {
      * <p>
      * @param b The broadcast message to send
      */
-    protected final void sendBroadcast(Broadcast b) {
+    protected final void sendBroadcast(Broadcast b)
+    {
         MessageBusImpl.getInstance().sendBroadcast(b);
     }
 
@@ -133,7 +127,8 @@ public abstract class MicroService implements Runnable {
      * @param result The result to resolve the relevant Future object.
      *               {@code e}.
      */
-    protected final <T> void complete(Event<T> e, T result) {
+    protected final <T> void complete(Event<T> e, T result)
+    {
         MessageBusImpl.getInstance().complete(e,result);
     }
 
@@ -146,7 +141,8 @@ public abstract class MicroService implements Runnable {
      * Signals the event loop that it must terminate after handling the current
      * message.
      */
-    protected final void terminate() {
+    protected final void terminate()
+    {
         this.terminated = true;
     }
 
@@ -154,7 +150,8 @@ public abstract class MicroService implements Runnable {
      * @return the name of the service - the service name is given to it in the
      *         construction time and is used mainly for debugging purposes.
      */
-    public final String getName() {
+    public final String getName()
+    {
         return name;
     }
 
@@ -163,14 +160,16 @@ public abstract class MicroService implements Runnable {
      * otherwise you will end up in an infinite loop.
      */
     @Override
-    public final void run() {
+    public final void run()
+    {
         MessageBusImpl.getInstance().register(this);
         initialize();
-        while (!terminated) {
+        while (!terminated)
+        {
             try {
                 Message myMessage = MessageBusImpl.getInstance().awaitMessage(this);
                 callbackMap.get(myMessage.getClass()).call(myMessage);
-            } catch (InterruptedException e) {};
+            } catch (InterruptedException e) {}
         }
         MessageBusImpl.getInstance().unregister(this);
     }

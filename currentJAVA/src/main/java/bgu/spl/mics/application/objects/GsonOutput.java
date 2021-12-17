@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import java.util.List;
 
 public class GsonOutput {
+    //class for the output file
     @Expose List<Student> students;
     @Expose List<ConfrenceInformation> confrences;
     @Expose int cpuTimeUsed;

@@ -11,7 +11,7 @@ import java.util.Vector;
  */
 public class ConfrenceInformation {
 
-    private int currTime;
+
     @Expose private String name;
     @Expose private int date;
     @SerializedName("publications")
@@ -22,10 +22,8 @@ public class ConfrenceInformation {
         this.name = name;
         this.date = date;
         goodResults = new Vector<>();
-        currTime = 0;
     }
-    
-    
+
     public void addGoodResult(Model e)
     {
         goodResults.add(e);

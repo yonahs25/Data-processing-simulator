@@ -22,6 +22,7 @@ public class Data {
     {
         this.type = type;
         this.size = size;
+        processed=0;
     }
 
     public int getProcessed() {

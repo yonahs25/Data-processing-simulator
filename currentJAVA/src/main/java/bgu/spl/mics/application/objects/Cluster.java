@@ -17,10 +17,20 @@ public class Cluster {
 	private List<GPU> Gpus;
 	private HashMap<GPU, ConcurrentLinkedDeque<DataBatch>> returningProcessedBatches;
 	private LinkedBlockingDeque<DataBatch> waitingUnprocessedBatches;
+	// statistics
 	private Vector<String> modelsTrained;
+	private int cpuTimeUsed;
+	private int gpuTimeUsed;
+	private int batchesProcessed;
+
 	private static class singeltonHolder
+
 	{
 		private static Cluster instance = new Cluster();
+	}
+	public static Cluster getInstance()
+	{
+		return Cluster.singeltonHolder.instance;
 	}
 
 
@@ -30,6 +40,9 @@ public class Cluster {
 		returningProcessedBatches = new HashMap<>();
 		waitingUnprocessedBatches = new LinkedBlockingDeque<>();
 		modelsTrained = new Vector<String>();
+		cpuTimeUsed = 0;
+		gpuTimeUsed = 0;
+		batchesProcessed = 0;
 	}
 
 	public void registerGpu(GPU gpu)
@@ -46,10 +59,7 @@ public class Cluster {
 	/**
      * Retrieves the single instance of this class.
      */
-	public static Cluster getInstance()
-	{
-		return Cluster.singeltonHolder.instance;
-	}
+
 
 	// the gpu call this function to send unprocessed data to the cluster
 	public void sendUnprocessedData(List<DataBatch> list)
@@ -86,8 +96,6 @@ public class Cluster {
 		modelsTrained.add(modelName);
 	}
 
-
-
 	public List<CPU> getCpus() {
 		return Cpus;
 	}
@@ -96,5 +104,36 @@ public class Cluster {
 		return Gpus;
 	}
 
+	public void setCpuInfo()
+	{
+		for (CPU cpu:Cpus)
+		{
+			cpuTimeUsed += cpu.getWorkTime();
+			batchesProcessed += cpu.getBatchesProcessed();
+		}
+	}
+
+	public void setGpuInfo()
+	{
+		for(GPU gpu:Gpus)
+		{
+			gpuTimeUsed += gpu.getWorkTime();
+		}
+	}
+
+	public int getCpuTimeUsed()
+	{
+		return cpuTimeUsed;
+	}
+
+	public int getGpuTimeUsed()
+	{
+		return gpuTimeUsed;
+	}
+
+	public int getBatchesProcessed()
+	{
+		return batchesProcessed;
+	}
 }
 

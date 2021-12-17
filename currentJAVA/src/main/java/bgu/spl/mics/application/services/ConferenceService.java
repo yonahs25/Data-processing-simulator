@@ -13,7 +13,7 @@ import bgu.spl.mics.application.objects.Model;
 
 /**
  * Conference service is in charge of
- * aggregating good results and publishing them via the {@link PublishConfrenceBroadcast},
+ * aggregating good results and publishing them via the {@link PublishConferenceBroadcast},
  * after publishing results the conference will unregister from the system.
  * This class may not hold references for objects which it is not responsible for.
  *
@@ -22,14 +22,14 @@ import bgu.spl.mics.application.objects.Model;
  */
 public class ConferenceService extends MicroService {
 
-    private ConfrenceInformation confrence ;
+    private ConfrenceInformation conference ;
     private long currTick;
 
     private class publishResultsCallback implements Callback<PublishResultsEvent> {
         @Override
         public void call(PublishResultsEvent c)
         {
-            confrence.addGoodResult(c.getModel());
+            conference.addGoodResult(c.getModel());
             c.getModel().setPublished(Model.Published.Yes);
             MessageBusImpl.getInstance().complete(c, c.getModel());
         }
@@ -41,9 +41,9 @@ public class ConferenceService extends MicroService {
         public void call(TickBroadcast c)
         {
             currTick++;
-            if (currTick == confrence.getDate())
+            if (currTick == conference.getDate())
             {
-                sendBroadcast(new PublishConferenceBroadcast(confrence.getGoodResults()));
+                sendBroadcast(new PublishConferenceBroadcast(conference.getGoodResults()));
                 terminate();
             }
         }
@@ -52,7 +52,7 @@ public class ConferenceService extends MicroService {
     public ConferenceService(String name,ConfrenceInformation confrence)
     {
         super(name);
-        this.confrence = confrence;
+        this.conference = confrence;
         currTick=0;
     }
 

@@ -32,9 +32,7 @@ public class MessageBusImpl implements MessageBus {
 			EventList.putIfAbsent(type, new LinkedBlockingDeque<MicroService>());
 		try {
 			EventList.get(type).put(m);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		} catch (InterruptedException e) {}
 	}
 
 
@@ -50,18 +48,17 @@ public class MessageBusImpl implements MessageBus {
 	public <T> void complete(Event<T> e, T result)
 	{
 			Future future = eventToFuture.get(e);
-			if (future == null)
-				System.out.println("future null ---- " + e.getClass());
 			future.resolve(result);
 	}
 
 	@Override
 	public void sendBroadcast(Broadcast b)
 	{
-		for (MicroService m : BroadcastList.get(b.getClass())) {
-			LinkedBlockingDeque me = microServiceQueue.get(m);
-			if (me!=null)
-				me.add(b);
+		for (MicroService m : BroadcastList.get(b.getClass()))
+		{
+			LinkedBlockingDeque list = microServiceQueue.get(m);
+			if (list!=null)
+				list.add(b);
 		}
 	}
 
@@ -71,20 +68,6 @@ public class MessageBusImpl implements MessageBus {
 	{
 		Future<T> future = new Future<T>();
 		eventToFuture.put(e, future);
-
-		//if(e.getClass() == TrainModelEvent.class || e.getClass() == TestModelEvent.class)
-		//{
-		//	MicroService m = null;
-		//	try {
-		//		m = EventList.get(e.getClass()).take();
-		//	} catch (InterruptedException ex) {}
-		//	microServiceQueue.get(m).add(e);
-		//	EventList.get(e.getClass()).add(m);
-		//}
-//
-//		//else if(e.getClass() == PublishResultsEvent.class)
-		//else
-		//{
 			boolean done = false;
 			// taking the event queue of the event class
 			LinkedBlockingDeque<MicroService> eventQ = EventList.get(e.getClass());
@@ -105,7 +88,6 @@ public class MessageBusImpl implements MessageBus {
 						done = true;
 					}
 				}
-			//}
 		return  future;
 	}
 
@@ -143,7 +125,7 @@ public class MessageBusImpl implements MessageBus {
 		return BroadcastList.get(type).contains(m);
 	}
 
-	public <T> boolean wasEventSent(Event<T> type) //
+	public <T> boolean wasEventSent(Event<T> type)
 	{
 		LinkedBlockingDeque<MicroService> thisQ = EventList.get(type.getClass());
 		for (MicroService m : thisQ){
@@ -154,7 +136,7 @@ public class MessageBusImpl implements MessageBus {
 		return false;
 	}
 
-	public <T> boolean wasBroadcastSent(Broadcast type) //
+	public <T> boolean wasBroadcastSent(Broadcast type)
 	{
 		boolean ans = true;
 		for(MicroService m : BroadcastList.get(type.getClass()))
@@ -164,9 +146,4 @@ public class MessageBusImpl implements MessageBus {
 		}
 		return ans;
 	}
-
-
-
-
-
 }
