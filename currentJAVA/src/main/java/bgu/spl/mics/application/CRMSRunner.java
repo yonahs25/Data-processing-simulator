@@ -131,7 +131,10 @@ public class CRMSRunner {
         }
         tickTime = (long)jsonInput.get("TickTime");
         duration = (long)jsonInput.get("Duration");
-        threadsToRun.add(new Thread(new TimeService(tickTime,duration)));
+//        threadsToRun.add(new Thread(new TimeService(tickTime,duration)));
+        TimeService timer = new TimeService(tickTime, duration);
+        timer.setHowManyToSubscribe(threadsToRun.size());
+        threadsToRun.add(new Thread(timer));
 
         // start all the threads
         for (Thread t: threadsToRun)

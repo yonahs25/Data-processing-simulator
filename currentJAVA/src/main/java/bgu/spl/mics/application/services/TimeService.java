@@ -21,18 +21,42 @@ public class TimeService extends MicroService{
 
 	private final long speed;
 	private long duration;
+	private boolean canStart;
+	int howManyToSubscribe;
+
+	public void setHowManyToSubscribe(int howManyToSubscribe) {
+		this.howManyToSubscribe = howManyToSubscribe;
+	}
+
+	public void setCanStart(boolean canStart) {
+		this.canStart = canStart;
+	}
+
+	public int getHowManyToSubscribe() {
+		return howManyToSubscribe;
+	}
 
 	public TimeService(long speed, long duration)
 	{
 		super("timer");
+		boolean canStart = false;
 		this.speed = speed;
 		this.duration = duration;
+		howManyToSubscribe = 0;
 	}
 
 	@Override
 	protected void initialize()
 	{
+		//MessageBusImpl.getInstance().register(this);
 		subscribeBroadcast(TerminateBroadcast.class, new TerminateCallback(this));
+
+		while(!canStart) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {}
+		}
+		System.out.println("im starting");
 
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask()
@@ -43,7 +67,6 @@ public class TimeService extends MicroService{
 				duration = duration-speed;
 				if(duration <= 0)
 				{
-
 					System.out.println("im done");
 					timer.cancel();
 					sendBroadcast(new TerminateBroadcast());

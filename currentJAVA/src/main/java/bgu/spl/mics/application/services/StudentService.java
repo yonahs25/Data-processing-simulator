@@ -31,11 +31,8 @@ public class StudentService extends MicroService {
         @Override
         public void call(TickBroadcast c)
         {
-            
-            while (future==null){
-                try {
-                    future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
-                } catch (Exception e){}
+            if (future == null) {
+                future = sendEvent(new TrainModelEvent(student.getModels().get(currentModel)));
             }
             if (currentModel==0)
                 currentModel++;

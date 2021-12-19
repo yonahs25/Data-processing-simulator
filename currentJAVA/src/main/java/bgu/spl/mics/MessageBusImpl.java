@@ -1,8 +1,11 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.services.TimeService;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -15,6 +18,8 @@ public class MessageBusImpl implements MessageBus {
 	private final ConcurrentHashMap<Class<? extends Broadcast>, ConcurrentLinkedDeque<MicroService>> BroadcastList = new ConcurrentHashMap();
 	private final ConcurrentHashMap<Class<? extends Event>,LinkedBlockingDeque<MicroService>> EventList = new ConcurrentHashMap<>();
 	private final ConcurrentHashMap<Event,Future> eventToFuture = new ConcurrentHashMap<>();
+	private AtomicInteger subscribed =  new AtomicInteger(0);
+	TimeService timer;
 	private static class singeltonHolder
 	{
 		private static MessageBusImpl instance = new MessageBusImpl();
@@ -90,11 +95,32 @@ public class MessageBusImpl implements MessageBus {
 				}
 		return  future;
 	}
+	private void incrementRegistered(){
+		int oldVal;
+		int newVal;
+		do {
+			oldVal = subscribed.get();
+			newVal = oldVal + 1;
+		} while (!subscribed.compareAndSet(oldVal, newVal));
+	}
 
 	@Override
 	public void register(MicroService m)
 	{
-		microServiceQueue.putIfAbsent(m, new LinkedBlockingDeque<>());
+		System.out.println("here2");
+		System.out.println(subscribed.get());
+
+		LinkedBlockingDeque e = microServiceQueue.putIfAbsent(m, new LinkedBlockingDeque<>());
+		if (e == null) {
+			if (m.getClass() == TimeService.class)
+				timer = (TimeService) m;
+			else
+				incrementRegistered();
+			if (timer != null && subscribed.get() == timer.getHowManyToSubscribe()){
+				timer.setCanStart(true);
+			}
+
+		}
 	}
 
 	@Override
