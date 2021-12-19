@@ -107,9 +107,6 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void register(MicroService m)
 	{
-		System.out.println("here2");
-		System.out.println(subscribed.get());
-
 		LinkedBlockingDeque e = microServiceQueue.putIfAbsent(m, new LinkedBlockingDeque<>());
 		if (e == null) {
 			if (m.getClass() == TimeService.class)

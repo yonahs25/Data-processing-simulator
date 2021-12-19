@@ -56,7 +56,6 @@ public class TimeService extends MicroService{
 				Thread.sleep(100);
 			} catch (InterruptedException e) {}
 		}
-		System.out.println("im starting");
 
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask()
@@ -67,14 +66,13 @@ public class TimeService extends MicroService{
 				duration = duration-speed;
 				if(duration <= 0)
 				{
-					System.out.println("im done");
 					timer.cancel();
 					sendBroadcast(new TerminateBroadcast());
 				}
 				else
 					sendBroadcast(new TickBroadcast());
 			}
-		} ,100,speed);
+		} ,5,speed);
 	}
 
 
